@@ -176,7 +176,7 @@ function AnchoredWhitespace({
           </div>
           <div className="mt-4 h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
           <div className="mt-3 text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
-            (This space is intentional.)
+             
           </div>
         </div>
       </div>
