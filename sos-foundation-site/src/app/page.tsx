@@ -653,13 +653,16 @@ export default function SOSFoundationFramework() {
       >
         <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl overflow-hidden">
+            <button 
+              onClick={() => scrollToId("hero")} 
+              className="h-9 w-9 rounded-2xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+            >
               <img 
               src="/logo/SOS-LOGO_v3-icon.svg" 
               alt="SOS Foundation Logo" 
               className="h-full w-full object-cover"
               />
-            </div>
+            </button>
             <div className="leading-tight">
               <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
                 Sustainability of Sustainability Initiative
@@ -690,8 +693,8 @@ export default function SOSFoundationFramework() {
       {/* Side “chapter” indicator — reinforces whitespace as structure */}
       <div className="hidden lg:block fixed top-28 left-8 z-40">
         <div className="w-31 rounded-3xl border px-5 py-4" style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.72)" }}>
-          <div className="text-sm" style={{ color: "rgba(31,42,51,0.55)" }}>Now</div>
-            <div className="mt-1 text-m font-semibold text-center" style={{ color: COLORS.ink }}>{headline}</div>
+          <div className="text-sm" style={{ color: COLORS.ink }}>Now</div>
+            <div className="mt-1 text-lg font-semibold text-center" style={{ color: COLORS.ink }}>{headline}</div>
           <div className="mt-3"><LogoDerivedMark progress={clamp01(progress)} active={active} /></div>
           <div className="mt-3 text-xs" style={{ color: COLORS.ink }}>Scroll to reveal</div>
         </div>
