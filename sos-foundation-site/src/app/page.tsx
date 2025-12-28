@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import {
   Infinity as InfinityIcon,
   Sparkles,
@@ -59,32 +59,48 @@ const DIVISIONS: Record<DivKey, any> = {
     name: "Art & Cultural Language",
     color: COLORS.art,
     icon: Sparkles,
+    meaningImage: "/pics/meaning_img.JPG",
+    layout: "hero-plus-explain",
     question: "What if sustainability had a language people actually feel?",
     thesis:
-      "We translate sustainability into shared meaning through art, design, and cultural experiences—so engagement starts without persuasion.",
-    anchors: ["Exhibitions", "Installations", "Public experiences"],
+      "Art, design, and culture give sustainability a shared language—felt before it is explained.",
+    anchors: ["Exhibitions", "Installations", "Narratives & Archives"],
+
+    explainTitle: "Meaning layer",
+    explainBody:
+      "Meaning is where sustainability becomes felt rather than argued. Through art, design, and cultural experience, it creates shared understanding before debate, policy, or persuasion takes place.",
   },
   pattern: {
     key: "pattern",
     label: "Pattern",
-    name: "Digitization & Natural Intelligence",
+    name: "Digitization & Natural Patterns",
     color: COLORS.data,
     icon: Scan,
-    question: "What if nature became a shared, computable knowledge commons?",
+    patternImage: "/pics/pattern.jpg",
+    question: "What if nature were readable as a shared, computable knowledge commons?",
     thesis:
-      "We digitize collections into 2D/3D/VR assets and open pathways for research, education, and bio-inspired innovation.",
-    anchors: ["Digitization demos", "Virtual museums", "Shared datasets"],
+      "By transforming natural collections into structured, computable representations, we create a shared foundation for research, education, and bio-inspired innovation.",
+    anchors: ["Digitized representations", "Virtual collections", "Open datasets"],
+
+    explainTitle: "Pattern layer",
+    explainBody:
+      "Pattern is where ecosystems become legible: we translate natural collections into shared, computable representations—supporting research, education, and bio-inspired inquiry.",
   },
   mechanism: {
     key: "mechanism",
     label: "Mechanism",
-    name: "Sustainable Systems & Economic Mechanisms",
+    name: "Economic Mechanisms & Sustainable Systems",
     color: COLORS.mech,
     icon: Network,
+    mechanismImage: "/pics/mechanism.jpg",
     question: "What if sustainability happened by default—because the system rewards it?",
     thesis:
-      "We design distributed, closed-loop incentive systems where value is shared—so sustainability scales through economics, not slogans.",
-    anchors: ["Incentive loops", "Partner ecosystems", "System prototypes"],
+      "Distributed, closed-loop incentive systems align shared value with economic behavior—allowing sustainability to scale through economics rather than slogans.",
+    anchors: ["Incentive loops", "Ecosystem partnerships", "System prototypes"],
+
+    explainTitle: "Mechanism layer",
+    explainBody:
+      "Mechanism is where sustainability becomes automatic—when incentive structures and closed-loop systems align default behavior with long-term outcomes.",
   },
 };
 
@@ -128,6 +144,55 @@ function mixHex(a: string, b: string, t: number) {
   const g = Math.round(lerp(A.g, B.g, t));
   const bb = Math.round(lerp(A.b, B.b, t));
   return `rgb(${r}, ${g}, ${bb})`;
+}
+
+function useCenterFocusOpacity(
+  targetRef: React.RefObject<HTMLElement | null>,
+  {
+    minOpacity = 0,
+    maxOpacity = 1,
+    focusRadius = 0.6,
+  }: { minOpacity?: number; maxOpacity?: number; focusRadius?: number } = {}
+) {
+  const raw = useMotionValue(maxOpacity);
+  const opacity = useSpring(raw, { stiffness: 140, damping: 22, mass: 0.25 });
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const el = targetRef.current;
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
+      const elementCenter = rect.top + rect.height / 2;
+      const maxDistance = Math.max(1, window.innerHeight * focusRadius);
+      const distance = Math.abs(elementCenter - viewportCenter);
+      const clampedDistance = distance <= 0.4 * maxDistance ? 0 : distance;
+      const t = 1 - Math.pow(Math.min(1, clampedDistance / maxDistance), 2);
+
+      // Ease-in as we approach center.
+      const eased = t * t;
+      raw.set(minOpacity + (maxOpacity - minOpacity) * eased);
+    };
+
+    const onScrollOrResize = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, [targetRef, raw, minOpacity, maxOpacity, focusRadius]);
+
+  return opacity;
 }
 
 function Pill({ label, color }: { label: string; color: string }) {
@@ -188,10 +253,12 @@ function ImagePanel({
   label,
   tone,
   aspect = "aspect-[16/10]",
+  children,
 }: {
   label: string;
   tone: string;
   aspect?: string;
+  children?: React.ReactNode;
 }) {
   // Minimal “visual placeholder” card.
   // Replace with real images (img/video) as you populate content.
@@ -210,7 +277,7 @@ function ImagePanel({
       style={{ borderColor: "rgba(31,42,51,0.12)", background: bg }}
     >
       <div className="absolute inset-0" />
-      <div className="absolute inset-0 flex items-end p-4">
+      <div className="pointer-events-none absolute inset-0 flex items-end p-4">
         <div
           className="rounded-2xl px-3 py-2 text-xs"
           style={{
@@ -222,10 +289,18 @@ function ImagePanel({
           {label}
         </div>
       </div>
-      <div className="absolute left-4 top-4">
-        <div className="text-[11px]" style={{ color: "rgba(31,42,51,0.45)" }}>
-          Visual placeholder
-        </div>
+      <div className="absolute inset-0">
+        {children ? (
+          children
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <img
+              src="/logo/SOS-LOGO_v2-for_SVG.svg"
+              alt={label}
+              className="h-3/4 w-3/4 object-contain opacity-20"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -330,31 +405,19 @@ function FullscreenVisual({ division, accent }: { division: any; accent: string 
 }
 
 function LogoDerivedMark({ progress, active }: { progress: number; active: string }) {
-  /**
-   * Logo-derived animation scaffold.
-   *
-   * How to use with your real logo:
-   * 1) Export your SOS logo as SVG (Illustrator/Figma).
-   * 2) Paste your real path 'd' strings into the placeholders below.
-   * 3) This component will then animate: division emphasis, continuity loop, and ∞ draw by scroll.
-   */
+  // progress is kept in the signature because callers pass it today.
+  void progress;
 
-  const mv = useMotionValue(progress);
-  useEffect(() => mv.set(progress), [progress, mv]);
-  const sp = useSpring(mv, { stiffness: 70, damping: 20, mass: 0.6 });
+  const tint =
+    active === "meaning"
+      ? COLORS.art
+      : active === "pattern"
+      ? COLORS.data
+      : active === "mechanism"
+      ? COLORS.mech
+      : COLORS.blue;
 
-  const isMeaning = active === "meaning";
-  const isPattern = active === "pattern";
-  const isMechanism = active === "mechanism";
-
-  // PLACEHOLDERS — replace with your real logo path data (SVG 'd' strings)
-  const sMeaningPathD = "M25 30 C 18 40, 18 52, 30 58 C 44 65, 42 78, 30 86";
-  const sPatternPathD = "M60 30 C 48 40, 48 52, 60 58 C 74 65, 72 78, 60 86";
-  const sMechanismPathD = "M95 30 C 82 40, 82 52, 90 58 C 104 65, 102 78, 90 86";
-
-  const ringPathD = "M60 60 m-26 0 a 26 26 0 1 0 52 0 a 26 26 0 1 0 -52 0";
-  const infinityPathD =
-    "M 22 60 C 36 42, 52 42, 60 60 C 68 78, 84 78, 98 60 C 84 42, 68 42, 60 60 C 52 78, 36 78, 22 60";
+  const tintStrength = active === "meaning" || active === "pattern" || active === "mechanism" ? 0.65 : 0.18;
 
   return (
     <div className="relative h-16 w-16 md:h-20 md:w-20">
@@ -366,69 +429,106 @@ function LogoDerivedMark({ progress, active }: { progress: number; active: strin
         }}
       />
 
-      <svg viewBox="0 0 120 120" className="absolute inset-0">
-        {/* Continuity loop */}
-        <motion.path
-          d={ringPathD}
-          fill="none"
-          stroke="rgba(224,182,62,0.45)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          animate={{ rotate: 360 }}
-          style={{ transformOrigin: "60px 60px" }}
-          transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+      {/* Static SVG from /public/icon/icon.svg with blend tint */}
+      <div className="absolute inset-0 overflow-hidden rounded-[28px] isolate">
+        <img
+          src="/logo/SOS-LOGO_v2-for_SVG.svg"
+          alt="SOS icon"
+          className="absolute inset-0 h-full w-full object-contain p-3"
+          style={{ filter: "contrast(1.05)" }}
         />
+        <motion.div
+          className="absolute inset-0 mix-blend-multiply pointer-events-none"
+          initial={false}
+          animate={{ backgroundColor: tint, opacity: tintStrength }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        />
+      </div>
+    </div>
+  );
+}
 
-        {/* Infinity baseline */}
-        <path
-          d={infinityPathD}
-          fill="none"
-          stroke="rgba(47,93,138,0.28)"
-          strokeWidth="6"
-          strokeLinecap="round"
-        />
-        {/* Infinity draw by scroll */}
-        <motion.path
-          d={infinityPathD}
-          fill="none"
-          stroke={COLORS.gold}
-          strokeWidth="6"
-          strokeLinecap="round"
-          style={{ pathLength: sp }}
-        />
+function DivisionBackgroundCrossfade({
+  active,
+  bgTint,
+}: {
+  active: string;
+  bgTint: string;
+}) {
+  const key =
+    active === "hero" ||
+    active === "meaning" ||
+    active === "pattern" ||
+    active === "mechanism" ||
+    active === "work" ||
+    active === "involved"
+      ? active
+      : "none";
 
-        {/* Division strokes */}
-        <motion.path
-          d={sMeaningPathD}
-          fill="none"
-          stroke={COLORS.art}
-          strokeWidth="6"
-          strokeLinecap="round"
-          animate={{ opacity: isMeaning ? 1 : 0.35, scale: isMeaning ? 1.02 : 1 }}
-          style={{ transformOrigin: "30px 60px" }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        />
-        <motion.path
-          d={sPatternPathD}
-          fill="none"
-          stroke={COLORS.data}
-          strokeWidth="6"
-          strokeLinecap="round"
-          animate={{ opacity: isPattern ? 1 : 0.35, scale: isPattern ? 1.02 : 1 }}
-          style={{ transformOrigin: "60px 60px" }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        />
-        <motion.path
-          d={sMechanismPathD}
-          fill="none"
-          stroke={COLORS.mech}
-          strokeWidth="6"
-          strokeLinecap="round"
-          animate={{ opacity: isMechanism ? 1 : 0.35, scale: isMechanism ? 1.02 : 1 }}
-          style={{ transformOrigin: "90px 60px" }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        />
-      </svg>
+  const cfg =
+    key === "meaning"
+      ? {
+          image: DIVISIONS.meaning.meaningImage as string,
+          overlay:
+            "linear-gradient(180deg, rgba(31,42,51,0) 0%, rgba(31,42,51,0.10) 6%, rgba(0,0,0,0.58) 100%)",
+        }
+      : key === "pattern"
+      ? {
+          image: DIVISIONS.pattern.patternImage as string,
+          overlay:
+            "linear-gradient(180deg, rgba(6, 50, 3, 0.2) 5%, rgba(4, 34, 2, 0.4) 22%, rgba(4, 34, 2, 0.70) 100%)",
+        }
+      : key === "mechanism"
+      ? {
+          image: DIVISIONS.mechanism.mechanismImage as string,
+          overlay:
+            "linear-gradient(180deg, rgba(106, 66, 81, 0.20) 5%, rgba(106, 66, 81, 0.4) 8%, rgba(0,0,0,0.7) 100%)",
+        }
+      : key === "hero"
+      ? {
+          image: "/pics/Vision_bg.png",
+          overlay: "rgba(8, 24, 36, 0.85)",
+          position: "center top -100px",
+        }
+      : key === "work"
+      ? {
+          image: "/pics/work.JPG",
+          overlay:
+            "linear-gradient(180deg, rgba(245,247,246,0.3) 0%, rgba(245,247,246,0.3) 55%, rgba(245,247,246,0.3) 100%)",
+        }
+      : key === "involved"
+      ? {
+          image: "/pics/involved.JPG",
+          overlay:
+            "linear-gradient(180deg, rgba(245,247,246,0.5) 0%, rgba(245,247,246,0.5) 55%, rgba(245,247,246,0.5) 100%)",
+        }
+      : null;
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0">
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={key}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="absolute inset-0"
+          style={{ background: bgTint }}
+        >
+          {cfg?.image ? (
+            <img
+              src={cfg.image}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: (cfg as any).position || "center" }}
+            />
+          ) : null}
+          {cfg?.overlay ? (
+            <div className="absolute inset-0" style={{ background: cfg.overlay }} />
+          ) : null}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
@@ -512,14 +612,16 @@ export default function SOSFoundationFramework() {
   // Background “soft transitions” by active section
   const bgTint = useMemo(() => {
     const t =
-      active === "meaning" ? mixHex(COLORS.bg, COLORS.art, 0.06) :
-      active === "pattern" ? mixHex(COLORS.bg, COLORS.data, 0.06) :
-      active === "mechanism" ? mixHex(COLORS.bg, COLORS.mech, 0.06) :
+      active === "hero" ? mixHex(COLORS.bg, "rgba(0, 123, 51, 0.92)", 0.92) :
+      active === "meaning" ? mixHex(COLORS.bg, COLORS.art, 0.9) :
+      active === "pattern" ? mixHex(COLORS.bg, COLORS.data, 0.9) :
+      active === "mechanism" ? mixHex(COLORS.bg, COLORS.mech, 0.9) :
       COLORS.bg;
     return t;
   }, [active]);
 
   const headline = useMemo(() => {
+    if (active === "hero") return "Vision";
     if (active === "meaning") return "Meaning";
     if (active === "pattern") return "Pattern";
     if (active === "mechanism") return "Mechanism";
@@ -528,9 +630,11 @@ export default function SOSFoundationFramework() {
 
   return (
     <div className="min-h-screen transition-colors duration-700" style={{ background: bgTint }}>
+      <DivisionBackgroundCrossfade active={active} bgTint={bgTint} />
+
       {/* Floating background grid (anchored whitespace signal) */}
       <div
-        className="pointer-events-none fixed inset-0 opacity-[0.18]"
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.18]"
         style={{
           backgroundImage:
             "linear-gradient(to right, rgba(31,42,51,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(31,42,51,0.06) 1px, transparent 1px)",
@@ -540,6 +644,8 @@ export default function SOSFoundationFramework() {
         }}
       />
 
+      <div className="relative z-10">
+
       {/* Top nav */}
       <header
         className="sticky top-0 z-50 backdrop-blur-xl"
@@ -547,37 +653,32 @@ export default function SOSFoundationFramework() {
       >
         <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl grid place-items-center" style={{ background: "rgba(47,93,138,0.10)" }}>
-              <InfinityIcon size={18} style={{ color: COLORS.blue }} />
+            <div className="h-9 w-9 rounded-2xl overflow-hidden">
+              <img 
+              src="/logo/SOS-LOGO_v3-icon.svg" 
+              alt="SOS Foundation Logo" 
+              className="h-full w-full object-cover"
+              />
             </div>
             <div className="leading-tight">
-              <div className="text-sm font-semibold" style={{ color: COLORS.ink }}>
-                SOS Foundation
+              <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
+                Sustainability of Sustainability Initiative
               </div>
-              <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
-                Meaning → Pattern → Mechanism → Continuity
+              <div className="text-s" style={{ color: "rgba(31,42,51,0.55)" }}>
+                Meaning + Pattern + Mechanism → Continuity
               </div>
             </div>
           </div>
 
           <nav className="hidden md:flex items-center gap-5 text-sm" style={{ color: "rgba(31,42,51,0.75)" }}>
-            <button className="hover:opacity-80" onClick={() => scrollToId("meaning")}>Meaning</button>
-            <button className="hover:opacity-80" onClick={() => scrollToId("pattern")}>Pattern</button>
-            <button className="hover:opacity-80" onClick={() => scrollToId("mechanism")}>Mechanism</button>
-            <button className="hover:opacity-80" onClick={() => scrollToId("work")}>Work</button>
-            <button className="hover:opacity-80" onClick={() => scrollToId("involved")}>Get involved</button>
+            <button className="text-m hover:opacity-80" onClick={() => scrollToId("meaning")}>Meaning</button>
+            <button className="text-m hover:opacity-80" onClick={() => scrollToId("pattern")}>Pattern</button>
+            <button className="text-m hover:opacity-80" onClick={() => scrollToId("mechanism")}>Mechanism</button>
+            <button className="text-m hover:opacity-80" onClick={() => scrollToId("work")}>Work</button>
+            <button className="text-m hover:opacity-80" onClick={() => scrollToId("involved")}>Get involved</button>
           </nav>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              className="rounded-2xl"
-              style={{ borderColor: "rgba(31,42,51,0.18)", color: COLORS.ink }}
-              onClick={() => setAudioOn((v) => !v)}
-              title="Ambient audio (optional)"
-            >
-              {audioOn ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            </Button>
             <Button className="rounded-2xl" style={{ background: COLORS.blue, color: "white" }} onClick={() => scrollToId("work")}
             >
               See work <ArrowRight className="ml-2" size={16} />
@@ -588,76 +689,57 @@ export default function SOSFoundationFramework() {
 
       {/* Side “chapter” indicator — reinforces whitespace as structure */}
       <div className="hidden lg:block fixed top-28 left-8 z-40">
-        <div className="rounded-3xl border px-4 py-4" style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.72)" }}>
-          <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>Now</div>
-          <div className="mt-1 text-sm font-semibold" style={{ color: COLORS.ink }}>{headline}</div>
+        <div className="w-31 rounded-3xl border px-5 py-4" style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.72)" }}>
+          <div className="text-sm" style={{ color: "rgba(31,42,51,0.55)" }}>Now</div>
+            <div className="mt-1 text-m font-semibold text-center" style={{ color: COLORS.ink }}>{headline}</div>
           <div className="mt-3"><LogoDerivedMark progress={clamp01(progress)} active={active} /></div>
-          <div className="mt-3 text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>Scroll to reveal</div>
+          <div className="mt-3 text-xs" style={{ color: COLORS.ink }}>Scroll to reveal</div>
         </div>
       </div>
 
       {/* HERO */}
       <main>
-        <section id="hero" className="mx-auto max-w-6xl px-5 pt-14 md:pt-20">
-          <div className="grid md:grid-cols-12 gap-10 items-center">
-            <motion.div className="md:col-span-6" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.45 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs" style={{ background: "rgba(47,93,138,0.10)", color: COLORS.blue }}>
-                <InfinityIcon size={14} /> Sustainability of Sustainability
-              </div>
-              <h1 className="mt-4 text-4xl md:text-6xl font-semibold tracking-tight" style={{ color: COLORS.ink }}>
-                What if sustainability could sustain itself?
-              </h1>
-              <p className="mt-5 text-base md:text-lg leading-relaxed" style={{ color: "rgba(31,42,51,0.78)" }}>
-                SOS builds a complete model—cultural meaning, natural patterns, and economic mechanisms—designed for continuity.
-              </p>
-
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <Button className="rounded-2xl" style={{ background: COLORS.green, color: "white" }} onClick={() => scrollToId("meaning")}>
-                  Enter the model <ChevronDown className="ml-2" size={16} />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="rounded-2xl"
-                  style={{ borderColor: "rgba(31,42,51,0.18)", color: COLORS.ink }}
-                  onClick={() => scrollToId("involved")}
-                >
-                  Partner with us
-                </Button>
-              </div>
-
-              {/* Anchored whitespace: looks intentional */}
-              <div className="mt-10">
-                <AnchoredWhitespace
-                  prompt="Why do so many sustainability efforts fade?"
-                  note="Because meaning, knowledge, and incentives are rarely designed as one reinforcing system."
-                  color={COLORS.gold}
+        <section id="hero" className="relative w-full min-h-screen pt-14 md:pt-20 flex items-center justify-center overflow-hidden">
+            {/* Foreground content (kept as-is) */}
+            <div className="relative z-10 mx-auto w-full max-w-7xl px-5 flex items-center justify-center">
+            <motion.div
+              className="w-full max-w-4xl -translate-y-10 md:-translate-y-14"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <div className="flex justify-center mb-0">
+                <img 
+                  src="/logo/SOS-LOGO_v2-for_SVG.svg" 
+                  alt="SOS Foundation Icon" 
+                  className="h-24 w-24 md:h-50 md:w-50 opacity-90"
+                  style={{ filter: "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg)" }}
                 />
               </div>
-            </motion.div>
-
-            <motion.div className="md:col-span-6" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.35 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-              <div className="relative">
-                <ImagePanel label="Hero visual: SOS logo / exhibition hero photo / short loop video" tone="neutral" aspect="aspect-[16/12]" />
-                <div className="absolute -bottom-6 left-6 right-6">
-                  <Card className="rounded-3xl shadow-sm" style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.92)" }}>
-                    <CardContent className="p-4 md:p-5 flex items-start gap-3">
-                      <div className="h-10 w-10 rounded-2xl grid place-items-center" style={{ background: "rgba(224,182,62,0.18)" }}>
-                        <InfinityIcon size={18} style={{ color: COLORS.gold }} />
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold" style={{ color: COLORS.ink }}>
-                          Thesis
-                        </div>
-                        <div className="mt-1 text-sm" style={{ color: "rgba(31,42,51,0.72)" }}>
-                          Sustainability scales when Meaning, Pattern, and Mechanism form a loop—until Continuity becomes automatic.
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+              <div
+                className="-mt-13 text-xs font-medium text-center tracking-wide leading-none"
+                style={{ color: COLORS.bg, opacity: 0.85 }}
+              >
+              Sustainability of Sustainability
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <h1
+                className="mt-10 text-6xl md:text-6xl font-semibold tracking-tight max-w-6xl"
+                style={{ color: COLORS.bg }}
+                >
+                Sustainability isn't self-sustaining
+                </h1>
+              <p
+                className="mt-5 text-4xl md:text-4xl leading-relaxed max-w-2xl"
+                style={{ color: COLORS.mech }}
+              >
+                Sustainability scales when Meaning, Pattern, and Mechanism form a loop —enabling Continuity to emerge
+              </p>
+              {/* Anchored whitespace: looks intentional */}
               </div>
             </motion.div>
-          </div>
+            </div>
         </section>
 
         {/* Spacer that reads as intentional breathing room */}
@@ -666,9 +748,26 @@ export default function SOSFoundationFramework() {
         </div>
 
         {/* DIVISION CHAPTERS */}
-        <ChapterSection division={DIVISIONS.meaning} id="meaning" />
-        <ChapterSection division={DIVISIONS.pattern} id="pattern" />
-        <ChapterSection division={DIVISIONS.mechanism} id="mechanism" />
+        <MeaningSection cfg={DIVISIONS.meaning as MeaningConfig} id="meaning" />
+
+        {/* Spacer that reads as intentional breathing room */}
+        <div className="mx-auto max-w-6xl px-5 mt-20 md:mt-28">
+          <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
+        </div>
+
+        <PatternSection cfg={DIVISIONS.pattern as PatternConfig} id="pattern" />
+
+        {/* Spacer that reads as intentional breathing room */}
+        <div className="mx-auto max-w-6xl px-5 mt-20 md:mt-28">
+          <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
+        </div>
+
+        <MechanismSection cfg={DIVISIONS.mechanism as MechanismConfig} id="mechanism" />
+
+        {/* Spacer that reads as intentional breathing room */}
+        <div className="mx-auto max-w-6xl px-5 mt-20 md:mt-28">
+          <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
+        </div>
 
         {/* WORK (visual gallery) */}
         <section id="work" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
@@ -677,102 +776,628 @@ export default function SOSFoundationFramework() {
               <div>
                 <Pill label="Work" color={COLORS.blue} />
                 <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
-                  What is happening right now?
+                  What is taking shape?
                 </h2>
                 <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
-                  Visual updates across divisions. Minimal text. Maximum signal.
+                  Selected works and signals emerging across Meaning, Pattern, and Mechanism.
                 </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <LogoDerivedMark progress={clamp01(progress)} active={active} />
               </div>
             </div>
           </motion.div>
 
-          <div className="mt-10 grid md:grid-cols-3 gap-5">
-            <ImagePanel label="Featured exhibition / installation" tone="meaning" aspect="aspect-[4/5]" />
-            <ImagePanel label="Digitization demo / virtual museum preview" tone="pattern" aspect="aspect-[4/5]" />
-            <ImagePanel label="System prototype / incentive loop" tone="mechanism" aspect="aspect-[4/5]" />
-          </div>
-
-          <div className="mt-6 grid md:grid-cols-2 gap-5">
-            <AnchoredWhitespace
-              prompt="What will fill this space next?"
-              note="This page is designed to expand as new pilots, exhibitions, and collaborations launch."
-              color={COLORS.blue}
-            />
-            <ImagePanel label="Future slot: partner spotlight / upcoming event" tone="neutral" aspect="aspect-[16/10]" />
-          </div>
-        </section>
-
-        {/* GET INVOLVED */}
-        <section id="involved" className="mx-auto max-w-6xl px-5 pb-24">
-          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.35 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-            <Pill label="Get involved" color={COLORS.blue} />
-            <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
-              Want to build continuity with us?
-            </h2>
-            <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
-              Artists, museums, researchers, and builders—start small, scale thoughtfully.
-            </p>
-          </motion.div>
-
-          <div className="mt-10 grid md:grid-cols-3 gap-5">
-            <RoleCard title="Artists & Curators" body="Exhibitions and cultural experiences." color={COLORS.art} />
-            <RoleCard title="Museums & Universities" body="Digitization pilots and virtual access." color={COLORS.data} />
-            <RoleCard title="Industry & Builders" body="Systems and incentive mechanisms." color={COLORS.mech} />
-          </div>
-
-          <div className="mt-10 rounded-3xl p-6 md:p-8 border" style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(47,93,138,0.06)" }}>
-            <div className="flex items-start gap-4">
-              <div className="h-11 w-11 rounded-2xl grid place-items-center" style={{ background: "rgba(47,93,138,0.16)" }}>
-                <InfinityIcon size={18} style={{ color: COLORS.blue }} />
-              </div>
-              <div className="flex-1">
-                <div className="text-sm font-semibold" style={{ color: COLORS.ink }}>Contact</div>
-                <p className="mt-2 text-sm" style={{ color: "rgba(31,42,51,0.72)" }}>
-                  Hook this to your email, a form, or a Typeform. Keep it lightweight now; expand later.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Button className="rounded-2xl" style={{ background: COLORS.blue, color: "white" }}>
-                    Email us
-                  </Button>
-                  <Button variant="outline" className="rounded-2xl" style={{ borderColor: "rgba(31,42,51,0.18)", color: COLORS.ink }}>
-                    Download one-pager (soon)
-                  </Button>
+            <div className="mt-10 grid md:grid-cols-3 gap-5">
+            <ImagePanel label="Featured exhibition / installation" tone="meaning" aspect="aspect-[4/5]">
+              <iframe
+                title="Poppish-Patrick Hughes"
+                src="https://www.kiriengine.app/share/3dgsEmbed/1992812111444574208?userId=923097&type=0&bg_theme=bright&auto_spin=0"
+                className="h-full w-full"
+                style={{ border: 0 }}
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                loading="lazy"
+              />
+              {/* 3D interaction hint badge */}
+              <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
+                <div
+                  className="rounded-full px-3 py-1 text-[11px] tracking-wide"
+                  style={{
+                    background: "rgba(31,42,51,0.75)",
+                    color: "white",
+                    border: "1px solid rgba(255,255,255,0.14)",
+                    backdropFilter: "blur(6px)",
+                  }}
+                >
+                  3D Interactive   drag / zoom / explore
                 </div>
               </div>
+
+              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+                <div
+                  className="rounded-2xl px-3 py-2 text-xs"
+                  style={{
+                    background: "rgba(31,42,51,0.85)",
+                    color: "white",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                  }}
+                >
+                  Patrick Hughes | Poppish (3D Dillustion)
+                </div>
+              </div>
+            </ImagePanel>
+            <ImagePanel label="Digitization demo / virtual museum preview" tone="pattern" aspect="aspect-[4/5]">
+              <iframe
+              title='Hippopotamus "William"'
+              src="https://www.kiriengine.app/share/3dgsEmbed/1994757825678540800?userId=923097&type=0&bg_theme=dark&auto_spin=0"
+              className="h-full w-full"
+              style={{ border: 0 }}
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              loading="lazy"
+              />
+              {/* 3D interaction hint badge */}
+              <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
+                <div
+                  className="rounded-full px-3 py-1 text-[11px] tracking-wide"
+                  style={{
+                    background: "rgba(31,42,51,0.75)",
+                    color: "white",
+                    border: "1px solid rgba(255,255,255,0.14)",
+                    backdropFilter: "blur(6px)",
+                  }}
+                >
+                  3D Interactive   drag / zoom / explore
+                </div>
+              </div>
+
+              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+                <div
+                  className="rounded-2xl px-3 py-2 text-xs"
+                  style={{
+                    background: "rgba(31,42,51,0.85)",
+                    color: "white",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                  }}
+                >
+                  Met Museum | “William” the Hippopotamus (3D)
+                </div>
+              </div>
+            </ImagePanel>
+            <ImagePanel label="System prototype / incentive loop" tone="mechanism" aspect="aspect-[4/5]">
+              <img
+              src="/pics/talk.png"
+              alt="Featured exhibition"
+              className="h-full w-full object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+              <div
+                className="rounded-2xl px-3 py-2 text-xs"
+                style={{
+                  background: "rgba(31,42,51,0.85)",
+                  color: "white",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                }}
+              >
+                Presenting a system prototype
+              </div>
+              </div>
+            </ImagePanel>
+            </div>
+
+            <div className="mt-6 grid md:grid-cols-2 gap-5">
+              <div
+                className="rounded-3xl border p-6 md:p-8"
+                style={{
+                borderColor: "rgba(31,42,51,0.10)",
+                background: "rgba(245,247,246,0.85)",
+                }}
+              >
+                <div className="flex items-start gap-4">
+                <div className="flex-1">
+                  <div className="text-xl font-semibold" style={{ color: COLORS.ink }}>
+                  Signals across the loop
+                  </div>
+                  <div className="mt-2 text-lg" style={{ color: COLORS.ink }}>
+                  A few concrete artifacts across Meaning, Pattern, and Mechanism. Less explanation here; more evidence. Each piece is a doorway into the loop.
+                  </div>
+                </div>
+                </div>
+              </div>
+            <ImagePanel label="Future slot: partner spotlight / upcoming event" tone="neutral" aspect="aspect-[16/10]" >
+              <img
+              src="/pics/Nature_Salon.png"
+              alt="Featured exhibition"
+              className="h-full w-full object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+              <div
+              className="rounded-2xl px-3 py-2 text-sm"
+              style={{
+              background: "rgba(31,42,51,0.85)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.10)",
+              }}
+              >
+              Upcoming | Nature Salon-Art for the Dialog of Sustainability
+              </div>
+              </div>
+            </ImagePanel>
+            </div>
+        </section>
+
+        {/* Spacer that reads as intentional breathing room */}
+        <div className="mx-auto max-w-6xl px-5 mt-20 md:mt-28">
+          <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
+        </div>
+
+      {/* GET INVOLVED */}
+      <section id="involved" className="mx-auto max-w-6xl px-5 pb-24">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <Pill label="Get involved" color={COLORS.blue} />
+          <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
+            Want to turn the loop into continuity?
+          </h2>
+          <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
+            Join at the layer where you contribute most—Meaning, Pattern, Mechanism, or Continuity.
+          </p>
+        </motion.div>
+
+        {/* 4 RoleCards */}
+        <div className="mt-10 grid md:grid-cols-4 gap-5">
+          <RoleCard
+            title="Artists, Curators & Cultural Producers"
+            body="Meaning: translate sustainability into shared language: through art, culture, and lived experience (exhibitions, installations, storytelling, and more)."
+            color={COLORS.art}
+            bgImage="/pics/aritsts.jpg"
+          />
+          <RoleCard
+            title="Museums, Universities & Researchers"
+            body="Pattern: turn nature and collections into shared, computable representations: through digitization, virtual access, and open datasets."
+            color={COLORS.data}
+            bgImage="/pics/museums.JPG"
+          />
+          <RoleCard
+            title="Entrepreneurs & System Builders"
+            body="Mechanism: design incentive loops and closed-loop operations: so sustainable behavior is rewarded by default (pilots, prototypes, partnerships, and beyond)."
+            color={COLORS.mech}
+            bgImage="/pics/industry.JPG"
+          />
+          <RoleCard
+            title="Partners, Funders & Hosts"
+            body="Continuity: provide the support and infrastructure that lets projects persist and compound: funding, hosting, partnerships, and long-term stewardship."
+            color={COLORS.blue}
+            bgImage="/pics/partners.JPG"
+          />
+        </div>
+
+        {/* Contact */}
+        <div
+          className="mt-10 rounded-3xl p-6 md:p-8 border relative overflow-hidden"
+          style={{ borderColor: "rgba(31,42,51,0.10)" }}
+        >
+          {/* Background image */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0" style={{ background: "rgba(31,42,51,0.85)" }} />
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 flex items-start gap-4">
+              <div className="h-12 w-12 rounded-2xl overflow-hidden">
+                <img 
+                src="/logo/SOS-LOGO_v3-icon.svg" 
+                alt="SOS Foundation Logo" 
+                className="h-full w-full object-cover"
+                />
+              </div>
+            <div className="flex-1">
+              <p className="mt-2 text-lg" style={{ color: COLORS.gold }}>
+          Leave your email and tell us which layer you're coming from. We'll follow up with the most relevant next step.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+            <Button className="rounded-2xl border-2 border-white" style={{ background: COLORS.blue, color: "white" }}>
+            <a href={formUrl} target="_blank" rel="noopener noreferrer">
+            Leave your email
+            </a>
+          </Button>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+
 
         {/* FOOTER */}
         <footer className="border-t" style={{ borderColor: "rgba(31,42,51,0.10)" }}>
           <div className="mx-auto max-w-6xl px-5 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
             <div>
-              <div className="text-sm font-semibold" style={{ color: COLORS.ink }}>SOS Foundation</div>
-              <div className="mt-1 text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
-                Meaning → Pattern → Mechanism → Continuity
+              <div className="text-sm font-semibold" style={{ color: COLORS.bg }}>Sustainability of Sustainability Initiative</div>
+              <div className="mt-1 text-xs" style={{ color: COLORS.bg }}>
+                Meaning + Pattern + Mechanism → Continuity
               </div>
             </div>
-            <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
-              © {new Date().getFullYear()} SOS Foundation. All rights reserved.
+            <div className="text-xs" style={{ color: COLORS.bg }}>
+              © {new Date().getFullYear()} SOS Initiative. All rights reserved.
             </div>
           </div>
         </footer>
       </main>
+
+      </div>
     </div>
   );
 }
 
-function RoleCard({ title, body, color }: { title: string; body: string; color: string }) {
+type MeaningConfig = {
+  key: string;
+  label: string;
+  name: string;
+  color: string;
+  icon: React.ElementType;
+  meaningImage: string;
+  question: string;
+  thesis: string;
+  anchors: string[];
+  explainTitle: string;
+  explainBody: string;
+};
+
+function MeaningSection({ cfg, id }: { cfg: MeaningConfig; id: string }) {
+  const focusRef = useRef<HTMLDivElement | null>(null);
+  const focusOpacity = useCenterFocusOpacity(focusRef);
+
   return (
-    <Card className="rounded-3xl" style={{ borderColor: "rgba(31,42,51,0.10)" }}>
-      <CardContent className="p-6">
-        <div className="text-sm font-semibold" style={{ color: COLORS.ink }}>{title}</div>
-        <p className="mt-2 text-sm" style={{ color: "rgba(31,42,51,0.72)" }}>{body}</p>
-        <Button className="mt-4 rounded-2xl" style={{ background: color, color: "white" }}>Reach out</Button>
-      </CardContent>
+    <section id={id} className="relative w-full min-h-screen overflow-hidden flex items-center">
+      <motion.div
+        ref={focusRef}
+        style={{ opacity: focusOpacity }}
+        className="relative z-10 mx-auto w-full max-w-6xl px-6 py-20 md:py-32 -translate-y-6 md:-translate-y-20"
+      >
+        <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-12">
+          {/* Question + thesis card */}
+          <div className="md:col-span-8">
+        <div
+        className="rounded-3xl border p-6 md:p-10"
+        style={{
+        background: "transparent",
+        borderColor: "rgba(255,255,255,0.0)",
+        }}
+        >
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-white/85">
+          <span className="text-lg font-semibold">{cfg.name}</span>
+          </div>
+
+          <h2 className="max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
+          {cfg.question}
+          </h2>
+
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/80 md:text-2xl">
+          {cfg.thesis}
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-2">
+          {cfg.anchors.map((a) => (
+          <span
+          key={a}
+          className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-white/75"
+          >
+          {a}
+          </span>
+          ))}
+          </div>
+        </div>
+        </div>
+
+          {/* Explanation card */}
+          <div className="md:col-span-4">
+            <div
+              className="h-full rounded-3xl p-6 md:p-8 border flex flex-col"
+              style={{
+              background: "rgba(31,42,51,0.92)",
+              borderColor: "rgba(255,255,255,0.06)",
+              }}
+            >
+              <div>
+              <div className="mb-4">
+              <div className="text-sm font-medium tracking-wide text-white/60">{cfg.explainTitle}</div>
+              <div className="mt-2 h-[2px] w-10 rounded-full" style={{ background: cfg.color, opacity: 0.7 }} />
+              </div>
+
+              <h3 className="text-lg font-semibold text-white">What is happening in this division?</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/78">{cfg.explainBody}</p>
+              </div>
+
+              <div className="mt-auto rounded-2xl bg-white/5 p-4">
+              <div className="text-xs font-medium text-white/60">This layer takes shape through:</div>
+              <ul className="mt-2 space-y-2 text-sm text-white/80">
+                {cfg.anchors.map((a) => (
+                <li key={a} className="flex items-start gap-2">
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full" style={{ background: cfg.color, opacity: 0.8 }} />
+                  <span>{a}</span>
+                </li>
+                ))}
+              </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+type PatternConfig = {
+  key: string;
+  label: string;
+  name: string;
+  color: string;
+  icon: React.ElementType;
+  patternImage: string;
+  question: string;
+  thesis: string;
+  anchors: string[];
+  explainTitle: string;
+  explainBody: string;
+};
+
+function PatternSection({ cfg, id }: { cfg: PatternConfig; id: string }) {
+  const focusRef = useRef<HTMLDivElement | null>(null);
+  const focusOpacity = useCenterFocusOpacity(focusRef);
+
+  return (
+    <section id={id} className="relative w-full min-h-screen overflow-hidden flex items-center">
+      <motion.div
+        ref={focusRef}
+        style={{ opacity: focusOpacity }}
+        className="relative z-10 mx-auto w-full max-w-6xl px-6 py-20 md:py-32 -translate-y-6 md:-translate-y-20"
+      >
+        <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-12">
+          {/* Explanation card */}
+          <div className="md:col-span-4">
+            <div
+              className="h-full rounded-3xl p-6 md:p-8 border flex flex-col"
+              style={{
+                background: "rgba(31,42,51,0.92)",
+                borderColor: "rgba(255,255,255,0.06)",
+              }}
+            >
+              <div>
+              <div className="mb-4">
+                <div className="text-sm font-medium tracking-wide text-white/60">{cfg.explainTitle}</div>
+                <div className="mt-2 h-[2px] w-10 rounded-full" style={{ background: cfg.color, opacity: 0.7 }} />
+              </div>
+
+              <h3 className="text-lg font-semibold text-white">What is happening in this division?</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/78">{cfg.explainBody}</p>
+              </div>
+
+              <div className="mt-auto rounded-2xl bg-white/5 p-4">
+                <div className="text-xs font-medium text-white/60">This layer takes shape through:</div>
+                <ul className="mt-2 space-y-2 text-sm text-white/80">
+                  {cfg.anchors.map((a) => (
+                    <li key={a} className="flex items-start gap-2">
+                      <span
+                        className="mt-2 h-1.5 w-1.5 rounded-full"
+                        style={{ background: cfg.color, opacity: 0.8 }}
+                      />
+                      <span>{a}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          {/* Question + thesis card */}
+          <div className="md:col-span-8">
+            <div
+              className="rounded-3xl border p-6 md:p-10"
+              style={{
+                background: "transparent",
+                borderColor: "rgba(255,255,255,0.0)",
+              }}
+            >
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-white/85">
+                <span className="text-lg font-semibold">{cfg.name}</span>
+              </div>
+
+              <h2 className="max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
+                {cfg.question}
+              </h2>
+
+              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/80 md:text-2xl">
+                {cfg.thesis}
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-2">
+                {cfg.anchors.map((a) => (
+                  <span
+                    key={a}
+                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-white/75"
+                  >
+                    {a}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+type MechanismConfig = {
+  key: string;
+  label: string;
+  name: string;
+  color: string;
+  icon: React.ElementType;
+  mechanismImage: string;
+  question: string;
+  thesis: string;
+  anchors: string[];
+  explainTitle: string;
+  explainBody: string;
+};
+
+function MechanismSection({ cfg, id }: { cfg: MechanismConfig; id: string }) {
+  const focusRef = useRef<HTMLDivElement | null>(null);
+  const focusOpacity = useCenterFocusOpacity(focusRef);
+
+  return (
+    <section id={id} className="relative w-full min-h-screen overflow-hidden flex items-center">
+      <motion.div
+        ref={focusRef}
+        style={{ opacity: focusOpacity }}
+        className="relative z-10 mx-auto w-full max-w-6xl px-6 py-20 md:py-32 -translate-y-6 md:-translate-y-20"
+      >
+        <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-12">
+          {/* Question + thesis card */}
+          <div className="md:col-span-8">
+            <div
+              className="rounded-3xl border p-6 md:p-10"
+              style={{
+                background: "transparent",
+                borderColor: "rgba(255,255,255,0.0)",
+              }}
+            >
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-white/85">
+                <span className="text-lg font-semibold">{cfg.name}</span>
+              </div>
+
+              <h2 className="max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
+                {cfg.question}
+              </h2>
+
+              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/80 md:text-2xl">
+                {cfg.thesis}
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-2">
+                {cfg.anchors.map((a) => (
+                  <span
+                    key={a}
+                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-white/75"
+                  >
+                    {a}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Explanation card */}
+          <div className="md:col-span-4">
+            <div
+              className="h-full rounded-3xl p-6 md:p-8 border flex flex-col"
+              style={{
+                background: "rgba(31,42,51,0.92)",
+                borderColor: "rgba(255,255,255,0.06)",
+              }}
+            >
+              <div>
+              <div className="mb-4">
+                <div className="text-sm font-medium tracking-wide text-white/60">{cfg.explainTitle}</div>
+                <div className="mt-2 h-[2px] w-10 rounded-full" style={{ background: cfg.color, opacity: 0.7 }} />
+              </div>
+
+              <h3 className="text-lg font-semibold text-white">What is happening in this division?</h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/78">{cfg.explainBody}</p>
+              </div>
+
+              <div className="mt-auto rounded-2xl bg-white/5 p-4">
+                <div className="text-xs font-medium text-white/60">This layer takes shape through:</div>
+                <ul className="mt-2 space-y-2 text-sm text-white/80">
+                  {cfg.anchors.map((a) => (
+                    <li key={a} className="flex items-start gap-2">
+                      <span
+                        className="mt-2 h-1.5 w-1.5 rounded-full"
+                        style={{ background: cfg.color, opacity: 0.8 }}
+                      />
+                      <span>{a}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+const formUrl = "https://forms.gle/kzxSKDewYjhxLeyBA";
+function RoleCard({
+  title,
+  body,
+  color,
+  bgImage,
+}: {
+  title: string;
+  body: string;
+  color: string;
+  bgImage?: string;
+}) {
+
+  return (
+    <Card
+      className="group rounded-3xl overflow-hidden h-90"
+      style={{ borderColor: "rgba(31,42,51,0.10)" }}
+    >
+      <div className="relative h-full">
+        {bgImage ? (
+            <div className="absolute inset-0">
+            <img src={bgImage} alt="" className="h-full w-full object-cover" />
+            <div
+              className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-60 group-focus-within:opacity-60"
+              style={{ background: "rgb(31,42,51)" }}
+            />
+            </div>
+        ) : null}
+
+        <CardContent className="relative flex h-full flex-col p-4">
+          <div className="flex-1">
+            <div
+              className="w-full px-1 py-1 text-lg font-semibold text-center"
+              style={{ 
+              color: bgImage ? COLORS.bg : COLORS.ink,
+              background: bgImage 
+                ? `${color}DD` 
+                : `${color}99`
+              }}
+            >
+              {title}
+            </div>
+            <div
+              className="overflow-hidden transition-all duration-300 ease-out max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-focus-within:max-h-40 group-focus-within:opacity-100"
+            >
+              <p
+                className="mt-5 text-m"
+                style={{ color: bgImage ? COLORS.bg : COLORS.ink }}
+              >
+                {body}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-auto">
+            <Button
+              asChild
+              className="rounded-2xl border-2 border-white"
+              style={{ background: color, color: "white" }}
+            >
+              <a href={formUrl} target="_blank" rel="noopener noreferrer">
+                Reach out
+              </a>
+            </Button>
+          </div>
+        </CardContent>
+      </div>
     </Card>
   );
 }
