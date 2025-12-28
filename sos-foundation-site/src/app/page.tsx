@@ -1388,6 +1388,43 @@ function ContactSection() {
 }
 
 const formUrl = "https://forms.gle/kzxSKDewYjhxLeyBA";
+
+// RoleCard toggle behavior:
+// - "auto": tap-to-toggle only on touch-like devices (recommended)
+// - "on": enable toggle everywhere
+// - "off": disable toggle everywhere (hover/focus still works)
+const ROLE_CARD_TOGGLE_MODE: "auto" | "on" | "off" = "auto";
+
+function useIsTouchLikeDevice() {
+  const [touchLike, setTouchLike] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+
+    const mql = window.matchMedia("(hover: none), (pointer: coarse)");
+    const update = () => setTouchLike(!!mql.matches);
+    update();
+
+    if (typeof mql.addEventListener === "function") {
+      mql.addEventListener("change", update);
+      return () => mql.removeEventListener("change", update);
+    }
+
+    // Safari < 14
+    mql.addListener(update);
+    return () => mql.removeListener(update);
+  }, []);
+
+  return touchLike;
+}
+
+function useRoleCardToggleEnabled() {
+  const touchLike = useIsTouchLikeDevice();
+  if (ROLE_CARD_TOGGLE_MODE === "on") return true;
+  if (ROLE_CARD_TOGGLE_MODE === "off") return false;
+  return touchLike;
+}
+
 function RoleCard({
   title,
   body,
@@ -1399,18 +1436,47 @@ function RoleCard({
   color: string;
   bgImage?: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const toggleEnabled = useRoleCardToggleEnabled();
+
+  useEffect(() => {
+    if (!toggleEnabled) setOpen(false);
+  }, [toggleEnabled]);
+
+  const toggle = () => setOpen((v) => !v);
+
+  const onCardClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    if (!toggleEnabled) return;
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("a,button,input,textarea,select,label")) return;
+    toggle();
+  };
+
+  const onCardKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (!toggleEnabled) return;
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    toggle();
+  };
 
   return (
     <Card
-      className="group rounded-3xl overflow-hidden h-90"
+      className="group rounded-3xl overflow-hidden h-90 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
       style={{ borderColor: "rgba(31,42,51,0.10)" }}
+      role="button"
+      tabIndex={0}
+      aria-expanded={open}
+      onClick={onCardClick}
+      onKeyDown={onCardKeyDown}
     >
       <div className="relative h-full">
         {bgImage ? (
             <div className="absolute inset-0">
             <img src={bgImage} alt="" className="h-full w-full object-cover" />
             <div
-              className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-60 group-focus-within:opacity-60"
+              className={`absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-60 group-focus-within:opacity-60 ${
+                open ? "opacity-60" : ""
+              }`}
               style={{ background: "rgb(31,42,51)" }}
             />
             </div>
@@ -1430,7 +1496,9 @@ function RoleCard({
               {title}
             </div>
             <div
-              className="overflow-hidden transition-all duration-300 ease-out max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-focus-within:max-h-40 group-focus-within:opacity-100"
+              className={`overflow-hidden transition-all duration-300 ease-out max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-focus-within:max-h-40 group-focus-within:opacity-100 ${
+                open ? "max-h-40 opacity-100" : ""
+              }`}
             >
               <p
                 className="mt-5 text-m"
