@@ -76,7 +76,7 @@ const DIVISIONS: Record<DivKey, any> = {
     name: "Digitization & Natural Patterns",
     color: COLORS.data,
     icon: Scan,
-    patternImage: "/pics/pattern.jpg",
+    patternImage: "/pics/pattern.JPG",
     question: "What if nature were readable as a shared, computable knowledge commons?",
     thesis:
       "By transforming natural collections into structured, computable representations, we create a shared foundation for research, education, and bio-inspired innovation.",
@@ -92,7 +92,7 @@ const DIVISIONS: Record<DivKey, any> = {
     name: "Economic Mechanisms & Sustainable Systems",
     color: COLORS.mech,
     icon: Network,
-    mechanismImage: "/pics/mechanism.jpg",
+    mechanismImage: "/pics/mechanism.JPG",
     question: "What if sustainability happened by default—because the system rewards it?",
     thesis:
       "Distributed, closed-loop incentive systems align shared value with economic behavior—allowing sustainability to scale through economics rather than slogans.",
