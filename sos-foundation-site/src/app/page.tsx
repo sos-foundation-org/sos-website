@@ -531,25 +531,65 @@ function DivisionBackgroundCrossfade({
 }
 
 function useActiveSection(sectionIds: string[]) {
+  const idsKey = sectionIds.join("|");
   const [active, setActive] = useState(sectionIds[0] || "");
+
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) setActive(id);
-          });
-        },
-        { root: null, threshold: 0.55 }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, [sectionIds]);
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (!elements.length) return;
+
+    const ratios = new Map<string, number>();
+    let raf = 0;
+
+    const commitBest = () => {
+      raf = 0;
+      setActive((prev) => {
+        let bestId = prev || sectionIds[0] || "";
+        let bestScore = -1;
+
+        for (const id of sectionIds) {
+          const score = ratios.get(id) ?? 0;
+          if (score > bestScore + 1e-6) {
+            bestScore = score;
+            bestId = id;
+          }
+        }
+
+        if (!bestId) return prev;
+        return prev === bestId ? prev : bestId;
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = (entry.target as HTMLElement).id;
+          ratios.set(id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        }
+
+        if (!raf) raf = window.requestAnimationFrame(commitBest);
+      },
+      {
+        root: null,
+        // More forgiving than 0.55 so smaller sections (Work/Involved) can activate on mobile.
+        threshold: [0, 0.08, 0.15, 0.25, 0.4, 0.55, 0.7],
+        // Bias toward the center area, and account for the sticky header.
+        rootMargin: "-84px 0px -40% 0px",
+      }
+    );
+
+    for (const el of elements) observer.observe(el);
+
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
+    // Depend on a stable key, not the array identity.
+  }, [idsKey]);
+
   return active;
 }
 
@@ -601,7 +641,8 @@ function useAmbientAudio(activeId: string, enabled: boolean) {
 
 export default function SOSFoundationFramework() {
   const progress = useScrollProgress();
-  const active = useActiveSection(["hero", "meaning", "pattern", "mechanism", "work", "involved"]);
+  const sectionIds = useMemo(() => ["hero", "meaning", "pattern", "mechanism", "work", "involved"], []);
+  const active = useActiveSection(sectionIds);
 
   const [audioOn, setAudioOn] = useState(false);
   useAmbientAudio(active, audioOn);
