@@ -42,6 +42,8 @@ const COLORS = {
   mech: "#C9A23A",
 };
 
+const DARK_BG = "#081824";
+
 // Optional: plug in actual audio later
 const AUDIO_TRACKS: Record<string, string> = {
   hero: "",
@@ -195,6 +197,62 @@ function useCenterFocusOpacity(
   return opacity;
 }
 
+function usePreloadedImages(urls: string[]) {
+  const loadedRef = useRef<Set<string>>(new Set());
+  const [, forceRerender] = useState(0);
+
+  const isLoaded = React.useCallback((url?: string | null) => {
+    if (!url) return true;
+    return loadedRef.current.has(url);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      for (const url of urls) {
+        if (cancelled) return;
+        if (!url || loadedRef.current.has(url)) continue;
+
+        try {
+          const img = new Image();
+          img.decoding = "async";
+          img.src = url;
+
+          if ("decode" in img) {
+            await (img as any).decode();
+          } else {
+            await new Promise<void>((resolve) => {
+              (img as HTMLImageElement).onload = () => resolve();
+              (img as HTMLImageElement).onerror = () => resolve();
+            });
+          }
+        } catch {
+          // Ignore decode errors; load best-effort.
+        }
+
+        if (cancelled) return;
+        loadedRef.current.add(url);
+        forceRerender((t) => t + 1);
+      }
+    };
+
+    const w = window as any;
+    const handle =
+      typeof w.requestIdleCallback === "function"
+        ? w.requestIdleCallback(run, { timeout: 1500 })
+        : window.setTimeout(run, 250);
+
+    return () => {
+      cancelled = true;
+      if (typeof handle === "number") window.clearTimeout(handle);
+      else if (typeof w.cancelIdleCallback === "function") w.cancelIdleCallback(handle);
+    };
+  }, [urls.join("|")]);
+
+  return { isLoaded };
+}
+
 function Pill({ label, color }: { label: string; color: string }) {
   return (
     <span
@@ -306,104 +364,6 @@ function ImagePanel({
   );
 }
 
-function FullscreenVisual({ division, accent }: { division: any; accent: string }) {
-  /**
-   * Full-screen image section with an overlay “blank area” for text.
-   * Mobile: text panel becomes a bottom sheet; desktop: left panel.
-   */
-  return (
-    <div className="relative h-[92vh] min-h-[620px] w-full overflow-hidden">
-      {/* Background visual */}
-      <div className="absolute inset-0">
-        {/* Replace this panel with your real media */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              division.key === "meaning"
-                ? "radial-gradient(1200px 900px at 20% 10%, rgba(46,102,80,0.35), rgba(245,247,246,0.0)), linear-gradient(120deg, rgba(31,42,51,0.12), rgba(245,247,246,0.0))"
-                : division.key === "pattern"
-                ? "radial-gradient(1200px 900px at 20% 10%, rgba(47,93,138,0.33), rgba(245,247,246,0.0)), linear-gradient(120deg, rgba(31,42,51,0.10), rgba(245,247,246,0.0))"
-                : "radial-gradient(1200px 900px at 20% 10%, rgba(224,182,62,0.24), rgba(245,247,246,0.0)), linear-gradient(120deg, rgba(31,42,51,0.10), rgba(245,247,246,0.0))",
-          }}
-        />
-
-        {/* Subtle darkening for contrast */}
-        <div className="absolute inset-0" style={{ background: "rgba(31,42,51,0.20)" }} />
-      </div>
-
-      {/* Overlay typography panel — desktop */}
-      <div className="relative z-10 mx-auto h-full max-w-6xl px-5">
-        <div className="flex h-full items-end md:items-center">
-          <div className="w-full md:max-w-xl">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="rounded-3xl border p-5 md:p-7"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(245,247,246,0.92), rgba(245,247,246,0.78))",
-                borderColor: "rgba(245,247,246,0.35)",
-                boxShadow: "0 18px 60px rgba(0,0,0,0.18)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-2.5 w-2.5 rounded-full" style={{ background: accent }} />
-                <div className="text-xs" style={{ color: "rgba(31,42,51,0.62)" }}>
-                  {division.label} → {division.name}
-                </div>
-              </div>
-
-              <h2
-                className="mt-3 text-2xl md:text-4xl font-semibold leading-tight"
-                style={{ color: COLORS.ink }}
-              >
-                {division.question}
-              </h2>
-              <p className="mt-3 text-sm md:text-base" style={{ color: "rgba(31,42,51,0.72)" }}>
-                {division.thesis}
-              </p>
-
-              <div className="mt-5 flex flex-wrap items-center gap-2">
-                {division.anchors.slice(0, 3).map((a: string) => (
-                  <span
-                    key={a}
-                    className="rounded-2xl px-3 py-1 text-[12px]"
-                    style={{
-                      background: "rgba(31,42,51,0.06)",
-                      color: "rgba(31,42,51,0.70)",
-                    }}
-                  >
-                    {a}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-6 flex items-center gap-3">
-                <Button className="rounded-2xl" style={{ background: accent, color: "white" }}>
-                  Explore this division <ArrowRight className="ml-2" size={16} />
-                </Button>
-                <span className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
-                  Scroll to continue
-                </span>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom fade to separate the next section */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-28"
-        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0), rgba(245,247,246,1))" }}
-      />
-    </div>
-  );
-}
-
 function LogoDerivedMark({ progress, active }: { progress: number; active: string }) {
   // progress is kept in the signature because callers pass it today.
   void progress;
@@ -465,38 +425,51 @@ function DivisionBackgroundCrossfade({
       ? active
       : "none";
 
-  const cfg =
-    key === "meaning"
+  const preloadUrls = useMemo(
+    () => [
+      "/pics/Vision_bg.png",
+      DIVISIONS.meaning.meaningImage as string,
+      DIVISIONS.pattern.patternImage as string,
+      DIVISIONS.mechanism.mechanismImage as string,
+      "/pics/work.JPG",
+      "/pics/involved.JPG",
+    ],
+    []
+  );
+  const { isLoaded } = usePreloadedImages(preloadUrls);
+
+  const cfgFor = (k: string) =>
+    k === "meaning"
       ? {
           image: DIVISIONS.meaning.meaningImage as string,
           overlay:
             "linear-gradient(180deg, rgba(31,42,51,0) 0%, rgba(31,42,51,0.10) 6%, rgba(0,0,0,0.58) 100%)",
         }
-      : key === "pattern"
+      : k === "pattern"
       ? {
           image: DIVISIONS.pattern.patternImage as string,
           overlay:
             "linear-gradient(180deg, rgba(6, 50, 3, 0.2) 5%, rgba(4, 34, 2, 0.4) 22%, rgba(4, 34, 2, 0.70) 100%)",
         }
-      : key === "mechanism"
+      : k === "mechanism"
       ? {
           image: DIVISIONS.mechanism.mechanismImage as string,
           overlay:
             "linear-gradient(180deg, rgba(106, 66, 81, 0.20) 5%, rgba(106, 66, 81, 0.4) 8%, rgba(0,0,0,0.7) 100%)",
         }
-      : key === "hero"
+      : k === "hero"
       ? {
           image: "/pics/Vision_bg.png",
           overlay: "rgba(8, 24, 36, 0.85)",
           position: "center top -100px",
         }
-      : key === "work"
+      : k === "work"
       ? {
           image: "/pics/work.JPG",
           overlay:
             "linear-gradient(180deg, rgba(245,247,246,0.3) 0%, rgba(245,247,246,0.3) 55%, rgba(245,247,246,0.3) 100%)",
         }
-      : key === "involved"
+      : k === "involved"
       ? {
           image: "/pics/involved.JPG",
           overlay:
@@ -504,24 +477,48 @@ function DivisionBackgroundCrossfade({
         }
       : null;
 
+  const [displayKey, setDisplayKey] = useState(key);
+
+  useEffect(() => {
+    if (key === "none") {
+      setDisplayKey("none");
+      return;
+    }
+
+    const next = cfgFor(key);
+    if (!next?.image || isLoaded(next.image)) {
+      setDisplayKey(key);
+    }
+  }, [key, isLoaded]);
+
+  const cfg = cfgFor(displayKey);
+
   return (
     <div className="pointer-events-none fixed inset-0 z-0">
+      <motion.div
+        className="absolute inset-0"
+        initial={false}
+        animate={{ backgroundColor: bgTint }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        style={{ willChange: "background-color" }}
+      />
       <AnimatePresence mode="sync">
         <motion.div
-          key={key}
+          key={displayKey}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
           className="absolute inset-0"
-          style={{ background: bgTint }}
+          style={{ willChange: "opacity" }}
         >
           {cfg?.image ? (
             <img
               src={cfg.image}
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: (cfg as any).position || "center" }}
+              style={{ objectPosition: (cfg as any).position || "center", transform: "translateZ(0)" }}
+              decoding="async"
             />
           ) : null}
           {cfg?.overlay ? (
@@ -612,11 +609,11 @@ export default function SOSFoundationFramework() {
   // Background “soft transitions” by active section
   const bgTint = useMemo(() => {
     const t =
-      active === "hero" ? mixHex(COLORS.bg, "rgba(0, 123, 51, 0.92)", 0.92) :
-      active === "meaning" ? mixHex(COLORS.bg, COLORS.art, 0.9) :
-      active === "pattern" ? mixHex(COLORS.bg, COLORS.data, 0.9) :
-      active === "mechanism" ? mixHex(COLORS.bg, COLORS.mech, 0.9) :
-      COLORS.bg;
+      active === "hero" ? mixHex(DARK_BG, "#007B33", 0.35) :
+      active === "meaning" ? mixHex(DARK_BG, COLORS.art, 0.55) :
+      active === "pattern" ? mixHex(DARK_BG, COLORS.data, 0.55) :
+      active === "mechanism" ? mixHex(DARK_BG, COLORS.mech, 0.55) :
+      DARK_BG;
     return t;
   }, [active]);
 
@@ -665,7 +662,7 @@ export default function SOSFoundationFramework() {
             </button>
             <div className="leading-tight">
               <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
-                Sustainability of Sustainability Initiative
+                Sustainability of Sustainability
               </div>
               <div className="text-s" style={{ color: "rgba(31,42,51,0.55)" }}>
                 Meaning + Pattern + Mechanism → Continuity
@@ -712,19 +709,22 @@ export default function SOSFoundationFramework() {
               viewport={{ once: true, amount: 0.45 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <div className="flex justify-center mb-0">
-                <img 
-                  src="/logo/SOS-LOGO_v2-for_SVG.svg" 
-                  alt="SOS Foundation Icon" 
-                  className="h-24 w-24 md:h-50 md:w-50 opacity-90"
-                  style={{ filter: "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg)" }}
+              <div className="flex flex-col items-center">
+                <img
+                  src="/logo/SOS-LOGO_v2-for_SVG.svg"
+                  alt="SOS Foundation Icon"
+                  className="h-14 w-32 md:h-22 md:w-48 opacity-90"
+                  style={{
+                    filter:
+                      "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg)",
+                  }}
                 />
-              </div>
-              <div
-                className="-mt-13 text-xs font-medium text-center tracking-wide leading-none"
-                style={{ color: COLORS.bg, opacity: 0.85 }}
-              >
-              Sustainability of Sustainability
+                <div
+                  className="mt-1 md:mt-1 text-xs font-medium text-center tracking-wide leading-none"
+                  style={{ color: COLORS.bg, opacity: 0.85 }}
+                >
+                  Sustainability of Sustainability
+                </div>
               </div>
               <div className="flex flex-col items-center text-center">
                 <h1
@@ -772,252 +772,20 @@ export default function SOSFoundationFramework() {
           <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
         </div>
 
-        {/* WORK (visual gallery) */}
-        <section id="work" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.35 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-            <div className="flex items-end justify-between gap-6 flex-wrap">
-              <div>
-                <Pill label="Work" color={COLORS.blue} />
-                <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
-                  What is taking shape?
-                </h2>
-                <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
-                  Selected works and signals emerging across Meaning, Pattern, and Mechanism.
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-            <div className="mt-10 grid md:grid-cols-3 gap-5">
-            <ImagePanel label="Featured exhibition / installation" tone="meaning" aspect="aspect-[4/5]">
-              <iframe
-                title="Poppish-Patrick Hughes"
-                src="https://www.kiriengine.app/share/3dgsEmbed/1992812111444574208?userId=923097&type=0&bg_theme=bright&auto_spin=0"
-                className="h-full w-full"
-                style={{ border: 0 }}
-                allow="autoplay; fullscreen"
-                allowFullScreen
-                loading="lazy"
-              />
-              {/* 3D interaction hint badge */}
-              <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
-                <div
-                  className="rounded-full px-3 py-1 text-[11px] tracking-wide"
-                  style={{
-                    background: "rgba(31,42,51,0.75)",
-                    color: "white",
-                    border: "1px solid rgba(255,255,255,0.14)",
-                    backdropFilter: "blur(6px)",
-                  }}
-                >
-                  3D Interactive   drag / zoom / explore
-                </div>
-              </div>
-
-              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-                <div
-                  className="rounded-2xl px-3 py-2 text-xs"
-                  style={{
-                    background: "rgba(31,42,51,0.85)",
-                    color: "white",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                  }}
-                >
-                  Patrick Hughes | Poppish (3D Dillustion)
-                </div>
-              </div>
-            </ImagePanel>
-            <ImagePanel label="Digitization demo / virtual museum preview" tone="pattern" aspect="aspect-[4/5]">
-              <iframe
-              title='Hippopotamus "William"'
-              src="https://www.kiriengine.app/share/3dgsEmbed/1994757825678540800?userId=923097&type=0&bg_theme=dark&auto_spin=0"
-              className="h-full w-full"
-              style={{ border: 0 }}
-              allow="autoplay; fullscreen"
-              allowFullScreen
-              loading="lazy"
-              />
-              {/* 3D interaction hint badge */}
-              <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
-                <div
-                  className="rounded-full px-3 py-1 text-[11px] tracking-wide"
-                  style={{
-                    background: "rgba(31,42,51,0.75)",
-                    color: "white",
-                    border: "1px solid rgba(255,255,255,0.14)",
-                    backdropFilter: "blur(6px)",
-                  }}
-                >
-                  3D Interactive   drag / zoom / explore
-                </div>
-              </div>
-
-              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-                <div
-                  className="rounded-2xl px-3 py-2 text-xs"
-                  style={{
-                    background: "rgba(31,42,51,0.85)",
-                    color: "white",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                  }}
-                >
-                  Met Museum | “William” the Hippopotamus (3D)
-                </div>
-              </div>
-            </ImagePanel>
-            <ImagePanel label="System prototype / incentive loop" tone="mechanism" aspect="aspect-[4/5]">
-              <img
-              src="/pics/talk.png"
-              alt="Featured exhibition"
-              className="h-full w-full object-cover"
-              />
-              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-              <div
-                className="rounded-2xl px-3 py-2 text-xs"
-                style={{
-                  background: "rgba(31,42,51,0.85)",
-                  color: "white",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                }}
-              >
-                Presenting a system prototype
-              </div>
-              </div>
-            </ImagePanel>
-            </div>
-
-            <div className="mt-6 grid md:grid-cols-2 gap-5">
-              <div
-                className="rounded-3xl border p-6 md:p-8"
-                style={{
-                borderColor: "rgba(31,42,51,0.10)",
-                background: "rgba(245,247,246,0.85)",
-                }}
-              >
-                <div className="flex items-start gap-4">
-                <div className="flex-1">
-                  <div className="text-xl font-semibold" style={{ color: COLORS.ink }}>
-                  Signals across the loop
-                  </div>
-                  <div className="mt-2 text-lg" style={{ color: COLORS.ink }}>
-                  A few concrete artifacts across Meaning, Pattern, and Mechanism. Less explanation here; more evidence. Each piece is a doorway into the loop.
-                  </div>
-                </div>
-                </div>
-              </div>
-            <ImagePanel label="Future slot: partner spotlight / upcoming event" tone="neutral" aspect="aspect-[16/10]" >
-              <img
-              src="/pics/Nature_Salon.png"
-              alt="Featured exhibition"
-              className="h-full w-full object-cover"
-              />
-              <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-              <div
-              className="rounded-2xl px-3 py-2 text-sm"
-              style={{
-              background: "rgba(31,42,51,0.85)",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.10)",
-              }}
-              >
-              Upcoming | Nature Salon-Art for the Dialog of Sustainability
-              </div>
-              </div>
-            </ImagePanel>
-            </div>
-        </section>
+        <WorkSection />
 
         {/* Spacer that reads as intentional breathing room */}
         <div className="mx-auto max-w-6xl px-5 mt-20 md:mt-28">
           <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
         </div>
 
-      {/* GET INVOLVED */}
-      <section id="involved" className="mx-auto max-w-6xl px-5 pb-24">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <Pill label="Get involved" color={COLORS.blue} />
-          <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
-            Want to turn the loop into continuity?
-          </h2>
-          <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
-            Join at the layer where you contribute most—Meaning, Pattern, Mechanism, or Continuity.
-          </p>
-        </motion.div>
-
-        {/* 4 RoleCards */}
-        <div className="mt-10 grid md:grid-cols-4 gap-5">
-          <RoleCard
-            title="Artists, Curators & Cultural Producers"
-            body="Meaning: translate sustainability into shared language: through art, culture, and lived experience (exhibitions, installations, storytelling, and more)."
-            color={COLORS.art}
-            bgImage="/pics/aritsts.jpg"
-          />
-          <RoleCard
-            title="Museums, Universities & Researchers"
-            body="Pattern: turn nature and collections into shared, computable representations: through digitization, virtual access, and open datasets."
-            color={COLORS.data}
-            bgImage="/pics/museums.JPG"
-          />
-          <RoleCard
-            title="Entrepreneurs & System Builders"
-            body="Mechanism: design incentive loops and closed-loop operations: so sustainable behavior is rewarded by default (pilots, prototypes, partnerships, and beyond)."
-            color={COLORS.mech}
-            bgImage="/pics/industry.JPG"
-          />
-          <RoleCard
-            title="Partners, Funders & Hosts"
-            body="Continuity: provide the support and infrastructure that lets projects persist and compound: funding, hosting, partnerships, and long-term stewardship."
-            color={COLORS.blue}
-            bgImage="/pics/partners.JPG"
-          />
-        </div>
-
-        {/* Contact */}
-        <div
-          className="mt-10 rounded-3xl p-6 md:p-8 border relative overflow-hidden"
-          style={{ borderColor: "rgba(31,42,51,0.10)" }}
-        >
-          {/* Background image */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0" style={{ background: "rgba(31,42,51,0.85)" }} />
-          </div>
-
-          {/* Content */}
-          <div className="relative z-10 flex items-start gap-4">
-              <div className="h-12 w-12 rounded-2xl overflow-hidden">
-                <img 
-                src="/logo/SOS-LOGO_v3-icon.svg" 
-                alt="SOS Foundation Logo" 
-                className="h-full w-full object-cover"
-                />
-              </div>
-            <div className="flex-1">
-              <p className="mt-2 text-lg" style={{ color: COLORS.gold }}>
-          Leave your email and tell us which layer you're coming from. We'll follow up with the most relevant next step.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-            <Button className="rounded-2xl border-2 border-white" style={{ background: COLORS.blue, color: "white" }}>
-            <a href={formUrl} target="_blank" rel="noopener noreferrer">
-            Leave your email
-            </a>
-          </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+        <ContactSection />
 
         {/* FOOTER */}
         <footer className="border-t" style={{ borderColor: "rgba(31,42,51,0.10)" }}>
           <div className="mx-auto max-w-6xl px-5 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
             <div>
-              <div className="text-sm font-semibold" style={{ color: COLORS.bg }}>Sustainability of Sustainability Initiative</div>
+              <div className="text-sm font-semibold" style={{ color: COLORS.bg }}>Sustainability of Sustainability</div>
               <div className="mt-1 text-xs" style={{ color: COLORS.bg }}>
                 Meaning + Pattern + Mechanism → Continuity
               </div>
@@ -1033,6 +801,7 @@ export default function SOSFoundationFramework() {
     </div>
   );
 }
+
 
 type MeaningConfig = {
   key: string;
@@ -1334,6 +1103,249 @@ function MechanismSection({ cfg, id }: { cfg: MechanismConfig; id: string }) {
   );
 }
 
+
+function WorkSection() {
+  return (
+    <section id="work" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <div className="flex items-end justify-between gap-6 flex-wrap">
+          <div>
+            <Pill label="Work" color={COLORS.blue} />
+            <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
+              What is taking shape?
+            </h2>
+            <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
+              Selected works and signals emerging across Meaning, Pattern, and Mechanism.
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="mt-10 grid md:grid-cols-3 gap-5">
+        <ImagePanel label="Featured exhibition / installation" tone="meaning" aspect="aspect-[4/5]">
+          <iframe
+            title="Poppish-Patrick Hughes"
+            src="https://www.kiriengine.app/share/3dgsEmbed/1992812111444574208?userId=923097&type=0&bg_theme=bright&auto_spin=0"
+            className="h-full w-full"
+            style={{ border: 0 }}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            loading="lazy"
+          />
+          <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
+            <div
+              className="rounded-full px-3 py-1 text-[11px] tracking-wide"
+              style={{
+                background: "rgba(31,42,51,0.75)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.14)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              3D Interactive   drag / zoom / explore
+            </div>
+          </div>
+
+          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+            <div
+              className="rounded-2xl px-3 py-2 text-xs"
+              style={{
+                background: "rgba(31,42,51,0.85)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.10)",
+              }}
+            >
+              Patrick Hughes | Poppish (3D Dillustion)
+            </div>
+          </div>
+        </ImagePanel>
+
+        <ImagePanel label="Digitization demo / virtual museum preview" tone="pattern" aspect="aspect-[4/5]">
+          <iframe
+            title={'Hippopotamus "William"'}
+            src="https://www.kiriengine.app/share/3dgsEmbed/1994757825678540800?userId=923097&type=0&bg_theme=dark&auto_spin=0"
+            className="h-full w-full"
+            style={{ border: 0 }}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            loading="lazy"
+          />
+          <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
+            <div
+              className="rounded-full px-3 py-1 text-[11px] tracking-wide"
+              style={{
+                background: "rgba(31,42,51,0.75)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.14)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              3D Interactive   drag / zoom / explore
+            </div>
+          </div>
+
+          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+            <div
+              className="rounded-2xl px-3 py-2 text-xs"
+              style={{
+                background: "rgba(31,42,51,0.85)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.10)",
+              }}
+            >
+              Met Museum | “William” the Hippopotamus (3D)
+            </div>
+          </div>
+        </ImagePanel>
+
+        <ImagePanel label="System prototype / incentive loop" tone="mechanism" aspect="aspect-[4/5]">
+          <img src="/pics/talk.png" alt="Featured exhibition" className="h-full w-full object-cover" />
+          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+            <div
+              className="rounded-2xl px-3 py-2 text-xs"
+              style={{
+                background: "rgba(31,42,51,0.85)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.10)",
+              }}
+            >
+              Presenting a system prototype
+            </div>
+          </div>
+        </ImagePanel>
+      </div>
+
+      <div className="mt-6 grid md:grid-cols-2 gap-5">
+        <div
+          className="rounded-3xl border p-6 md:p-8"
+          style={{
+            borderColor: "rgba(31,42,51,0.10)",
+            background: "rgba(245,247,246,0.85)",
+          }}
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex-1">
+              <div className="text-xl font-semibold" style={{ color: COLORS.ink }}>
+                Signals across the loop
+              </div>
+              <div className="mt-2 text-lg" style={{ color: COLORS.ink }}>
+                A few concrete artifacts across Meaning, Pattern, and Mechanism. Less explanation here; more evidence. Each piece is a doorway into the loop.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ImagePanel
+          label="Future slot: partner spotlight / upcoming event"
+          tone="neutral"
+          aspect="aspect-[16/10]"
+        >
+          <img src="/pics/Nature_Salon.png" alt="Featured exhibition" className="h-full w-full object-cover" />
+          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+            <div
+              className="rounded-2xl px-3 py-2 text-sm"
+              style={{
+                background: "rgba(31,42,51,0.85)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.10)",
+              }}
+            >
+              Upcoming | Nature Salon-Art for the Dialog of Sustainability
+            </div>
+          </div>
+        </ImagePanel>
+      </div>
+    </section>
+  );
+}
+
+function ContactSection() {
+  return (
+    <section id="involved" className="mx-auto max-w-6xl px-5 pb-24">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.35 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <Pill label="Get involved" color={COLORS.blue} />
+        <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
+          Want to turn the loop into continuity?
+        </h2>
+        <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
+          Join at the layer where you contribute most—Meaning, Pattern, Mechanism, or Continuity.
+        </p>
+      </motion.div>
+
+      <div className="mt-10 grid md:grid-cols-4 gap-5">
+        <RoleCard
+          title="Artists, Curators & Cultural Producers"
+          body="Meaning: translate sustainability into shared language: through art, culture, and lived experience (exhibitions, installations, storytelling, and more)."
+          color={COLORS.art}
+          bgImage="/pics/aritsts.jpg"
+        />
+        <RoleCard
+          title="Museums, Universities & Researchers"
+          body="Pattern: turn nature and collections into shared, computable representations: through digitization, virtual access, and open datasets."
+          color={COLORS.data}
+          bgImage="/pics/museums.JPG"
+        />
+        <RoleCard
+          title="Entrepreneurs & System Builders"
+          body="Mechanism: design incentive loops and closed-loop operations: so sustainable behavior is rewarded by default (pilots, prototypes, partnerships, and beyond)."
+          color={COLORS.mech}
+          bgImage="/pics/industry.JPG"
+        />
+        <RoleCard
+          title="Partners, Funders & Hosts"
+          body="Continuity: provide the support and infrastructure that lets projects persist and compound: funding, hosting, partnerships, and long-term stewardship."
+          color={COLORS.blue}
+          bgImage="/pics/partners.JPG"
+        />
+      </div>
+
+      <div
+        className="mt-10 rounded-3xl p-6 md:p-8 border relative overflow-hidden"
+        style={{ borderColor: "rgba(31,42,51,0.10)" }}
+      >
+        <div className="absolute inset-0">
+          <div className="absolute inset-0" style={{ background: "rgba(31,42,51,0.85)" }} />
+        </div>
+
+        <div className="relative z-10 flex items-start gap-4">
+          <div className="h-12 w-12 rounded-2xl overflow-hidden">
+            <img
+              src="/logo/SOS-LOGO_v3-icon.svg"
+              alt="SOS Foundation Logo"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="flex-1">
+            <p className="mt-2 text-lg" style={{ color: COLORS.gold }}>
+              Leave your email and tell us which layer you're coming from. We'll follow up with the most relevant next step.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button
+                className="rounded-2xl border-2 border-white"
+                style={{ background: COLORS.blue, color: "white" }}
+              >
+                <a href={formUrl} target="_blank" rel="noopener noreferrer">
+                  Leave your email
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const formUrl = "https://forms.gle/kzxSKDewYjhxLeyBA";
 function RoleCard({
   title,
@@ -1402,6 +1414,108 @@ function RoleCard({
         </CardContent>
       </div>
     </Card>
+  );
+}
+
+/** backup scripted for potential later use
+ * FullscreenVisual component
+ */
+
+function FullscreenVisual({ division, accent }: { division: any; accent: string }) {
+  /**
+   * Full-screen image section with an overlay “blank area” for text.
+   * Mobile: text panel becomes a bottom sheet; desktop: left panel.
+   */
+  return (
+    <div className="relative h-[92vh] min-h-[620px] w-full overflow-hidden">
+      {/* Background visual */}
+      <div className="absolute inset-0">
+        {/* Replace this panel with your real media */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              division.key === "meaning"
+                ? "radial-gradient(1200px 900px at 20% 10%, rgba(46,102,80,0.35), rgba(245,247,246,0.0)), linear-gradient(120deg, rgba(31,42,51,0.12), rgba(245,247,246,0.0))"
+                : division.key === "pattern"
+                ? "radial-gradient(1200px 900px at 20% 10%, rgba(47,93,138,0.33), rgba(245,247,246,0.0)), linear-gradient(120deg, rgba(31,42,51,0.10), rgba(245,247,246,0.0))"
+                : "radial-gradient(1200px 900px at 20% 10%, rgba(224,182,62,0.24), rgba(245,247,246,0.0)), linear-gradient(120deg, rgba(31,42,51,0.10), rgba(245,247,246,0.0))",
+          }}
+        />
+
+        {/* Subtle darkening for contrast */}
+        <div className="absolute inset-0" style={{ background: "rgba(31,42,51,0.20)" }} />
+      </div>
+
+      {/* Overlay typography panel — desktop */}
+      <div className="relative z-10 mx-auto h-full max-w-6xl px-5">
+        <div className="flex h-full items-end md:items-center">
+          <div className="w-full md:max-w-xl">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="rounded-3xl border p-5 md:p-7"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(245,247,246,0.92), rgba(245,247,246,0.78))",
+                borderColor: "rgba(245,247,246,0.35)",
+                boxShadow: "0 18px 60px rgba(0,0,0,0.18)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-2.5 w-2.5 rounded-full" style={{ background: accent }} />
+                <div className="text-xs" style={{ color: "rgba(31,42,51,0.62)" }}>
+                  {division.label} → {division.name}
+                </div>
+              </div>
+
+              <h2
+                className="mt-3 text-2xl md:text-4xl font-semibold leading-tight"
+                style={{ color: COLORS.ink }}
+              >
+                {division.question}
+              </h2>
+              <p className="mt-3 text-sm md:text-base" style={{ color: "rgba(31,42,51,0.72)" }}>
+                {division.thesis}
+              </p>
+
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                {division.anchors.slice(0, 3).map((a: string) => (
+                  <span
+                    key={a}
+                    className="rounded-2xl px-3 py-1 text-[12px]"
+                    style={{
+                      background: "rgba(31,42,51,0.06)",
+                      color: "rgba(31,42,51,0.70)",
+                    }}
+                  >
+                    {a}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 flex items-center gap-3">
+                <Button className="rounded-2xl" style={{ background: accent, color: "white" }}>
+                  Explore this division <ArrowRight className="ml-2" size={16} />
+                </Button>
+                <span className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
+                  Scroll to continue
+                </span>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom fade to separate the next section */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-28"
+        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0), rgba(245,247,246,1))" }}
+      />
+    </div>
   );
 }
 
