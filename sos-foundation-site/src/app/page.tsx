@@ -11,6 +11,9 @@ import {
   ArrowRight,
   Volume2,
   VolumeX,
+  Instagram,
+  Linkedin,
+  Facebook,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -718,6 +721,45 @@ export default function SOSFoundationFramework() {
             <button className="text-m hover:opacity-80" onClick={() => scrollToId("work")}>Work</button>
             <button className="text-m hover:opacity-80" onClick={() => scrollToId("involved")}>Get involved</button>
           </nav>
+
+          {/* Social icons */}
+          <div className="hidden md:flex items-center gap-3">
+          <a
+            href="https://www.linkedin.com/company/sos-commons/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="SOS Foundation on LinkedIn"
+            title="LinkedIn"
+            className="p-2 rounded-xl transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            style={{ color: "#0A66C2" }} // LinkedIn
+          >
+            <Linkedin size={18} />
+          </a>
+
+          <a
+            href="https://www.instagram.com/sustainability.dialogue/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="SOS Foundation on Instagram"
+            title="Instagram"
+            className="p-2 rounded-xl transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            style={{ color: "#E1306C" }} // Instagram (single brand color)
+          >
+            <Instagram size={18} />
+          </a>
+
+          <a
+            href="https://www.facebook.com/profile.php?id=61587085297510"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="SOS Foundation on Facebook"
+            title="Facebook"
+            className="p-2 rounded-xl transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            style={{ color: "#1877F2" }} // Facebook
+          >
+            <Facebook size={18} />
+          </a>
+        </div>
 
           <div className="flex items-center gap-2">
             <Button className="rounded-2xl" style={{ background: COLORS.blue, color: "white" }} onClick={() => scrollToId("work")}
