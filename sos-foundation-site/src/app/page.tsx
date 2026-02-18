@@ -723,7 +723,7 @@ export default function SOSFoundationFramework() {
           </nav>
 
           {/* Social icons */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* <div className="hidden md:flex items-center gap-3">
           <a
             href="https://www.linkedin.com/company/sos-commons/"
             target="_blank"
@@ -759,7 +759,7 @@ export default function SOSFoundationFramework() {
           >
             <Facebook size={18} />
           </a>
-        </div>
+          </div> */}
 
           <div className="flex items-center gap-2">
             <Button className="rounded-2xl" style={{ background: COLORS.blue, color: "white" }} onClick={() => scrollToId("work")}
