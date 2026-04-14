@@ -1328,7 +1328,7 @@ function WorkSection() {
           tone="neutral"
           aspect="aspect-[16/10]"
         >
-          <img src="/pics/Nature_Salon.png" alt="Featured exhibition" className="h-full w-full object-cover" />
+          <img src="/pics/Nature_Salon.jpg" alt="Featured exhibition" className="h-full w-full object-cover" />
           <div className="pointer-events-none absolute inset-0 flex items-end p-4">
             <div
               className="rounded-2xl px-3 py-2 text-sm"
@@ -1338,7 +1338,7 @@ function WorkSection() {
                 border: "1px solid rgba(255,255,255,0.10)",
               }}
             >
-              Upcoming | Nature Salon-Art for the Dialog of Sustainability
+              Nature Salon: The Sustainability Dialogue for Artists, Scientists & Entrepreneurs
             </div>
           </div>
         </ImagePanel>
