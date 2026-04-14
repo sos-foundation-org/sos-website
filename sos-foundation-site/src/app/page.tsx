@@ -1338,7 +1338,7 @@ function WorkSection() {
                 border: "1px solid rgba(255,255,255,0.10)",
               }}
             >
-              Nature Salon: The Sustainability Dialogue for Artists, Scientists & Entrepreneurs
+              Nature Salon | The Sustainability Dialogue for Artists, Scientists & Entrepreneurs
             </div>
           </div>
         </ImagePanel>
@@ -1365,7 +1365,7 @@ function ContactSection() {
         </p>
       </motion.div>
 
-      <div className="mt-10 grid md:grid-cols-4 gap-5">
+      <div className="mt-10 grid md:grid-cols-5 gap-5">
         <RoleCard
           title="Artists, Curators & Cultural Producers"
           body="Meaning: translate sustainability into shared language: through art, culture, and lived experience (exhibitions, installations, storytelling, and more)."
@@ -1389,6 +1389,12 @@ function ContactSection() {
           body="Continuity: provide the support and infrastructure that lets projects persist and compound: funding, hosting, partnerships, and long-term stewardship."
           color={COLORS.blue}
           bgImage="/pics/partners.JPG"
+        />
+        <RoleCard
+          title="Educators, Schools & Learning Institutions"
+          body="Foundation: embed sustainability into default thinking at every level of learning: through curricula, workshops, experiential programs, and youth engagement."
+          color={COLORS.green}
+          bgImage="/pics/education.jpg"
         />
       </div>
 
