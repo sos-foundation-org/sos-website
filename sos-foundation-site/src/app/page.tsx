@@ -424,6 +424,7 @@ function DivisionBackgroundCrossfade({
     active === "pattern" ||
     active === "mechanism" ||
     active === "work" ||
+    active === "research" ||
     active === "involved"
       ? active
       : "none";
@@ -472,7 +473,7 @@ function DivisionBackgroundCrossfade({
           overlay:
             "linear-gradient(180deg, rgba(245,247,246,0.3) 0%, rgba(245,247,246,0.3) 55%, rgba(245,247,246,0.3) 100%)",
         }
-      : k === "involved"
+      : k === "research" || k === "involved"
       ? {
           image: "/pics/involved.JPG",
           overlay:
@@ -644,7 +645,7 @@ function useAmbientAudio(activeId: string, enabled: boolean) {
 
 export default function SOSFoundationFramework() {
   const progress = useScrollProgress();
-  const sectionIds = useMemo(() => ["hero", "meaning", "pattern", "mechanism", "work", "involved"], []);
+  const sectionIds = useMemo(() => ["hero", "meaning", "pattern", "mechanism", "work", "research", "involved"], []);
   const active = useActiveSection(sectionIds);
 
   const [audioOn, setAudioOn] = useState(false);
@@ -715,11 +716,12 @@ export default function SOSFoundationFramework() {
           </div>
 
           <nav className="hidden md:flex items-center gap-5 text-sm" style={{ color: "rgba(31,42,51,0.75)" }}>
-            <button className="text-m hover:opacity-80" onClick={() => scrollToId("meaning")}>Meaning</button>
-            <button className="text-m hover:opacity-80" onClick={() => scrollToId("pattern")}>Pattern</button>
-            <button className="text-m hover:opacity-80" onClick={() => scrollToId("mechanism")}>Mechanism</button>
-            <button className="text-m hover:opacity-80" onClick={() => scrollToId("work")}>Work</button>
-            <button className="text-m hover:opacity-80" onClick={() => scrollToId("involved")}>Get involved</button>
+            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("meaning")}>Meaning</button>
+            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("pattern")}>Pattern</button>
+            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("mechanism")}>Mechanism</button>
+            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("work")}>Work</button>
+            <a href="/research" className="text-m hover:opacity-80">Research</a>
+            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("involved")}>Get involved</button>
           </nav>
 
           {/* Social icons */}
@@ -861,6 +863,8 @@ export default function SOSFoundationFramework() {
         <div className="mx-auto max-w-6xl px-5 mt-20 md:mt-28">
           <div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} />
         </div>
+
+        <ResearchUnitTeaser />
 
         <ContactSection />
 
@@ -1187,6 +1191,92 @@ function MechanismSection({ cfg, id }: { cfg: MechanismConfig; id: string }) {
 }
 
 
+function ResearchUnitTeaser() {
+  return (
+    <section id="research" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-5 flex-wrap">
+          <div>
+            <Pill label="Research Unit" color={COLORS.data} />
+            <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
+              SOS Research Unit
+            </h2>
+            <p className="mt-3 text-base md:text-lg" style={{ color: COLORS.ink }}>
+              Co-directed by Cong Liu &amp; Wei-Ping Chan — bridging natural history and computational innovation.
+            </p>
+          </div>
+          <a
+            href="/research"
+            className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0"
+            style={{ background: COLORS.blue }}
+          >
+            Explore the Research Unit <ArrowRight size={16} />
+          </a>
+        </div>
+      </motion.div>
+
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Image card */}
+        <div className="relative rounded-3xl overflow-hidden aspect-[16/10]">
+          {/* PLACEHOLDER: 期待放研究室野外工作照片，或兩位 Research Director 的合照 */}
+          <img
+            src="/pics/light_trap.JPG"
+            alt="SOS Research Unit"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.72) 100%)" }}
+          />
+          <div className="absolute inset-0 flex flex-col justify-end p-6">
+            <div
+              className="text-xs font-medium tracking-widest uppercase mb-1"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              SOS Foundation
+            </div>
+            <div className="text-xl font-semibold text-white">Turning Nature into Data, Knowledge, and Possibility</div>
+          </div>
+        </div>
+
+        {/* Text card */}
+        <div
+          className="rounded-3xl border p-6 md:p-8 flex flex-col justify-between gap-6"
+          style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(31,42,51,0.92)" }}
+        >
+          <div>
+            <div className="text-xl font-semibold" style={{ color: "white" }}>
+              Cong Liu &amp; Wei-Ping Chan
+            </div>
+            <div className="mt-1 text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+              Research Directors
+            </div>
+            <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>
+              Led by interdisciplinary scientists, SOS Research Unit builds data infrastructure that connects nature, computation, and real-world applications for adaptive sustainability.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {["Nature Digitization", "Biodiversity Informatics", "Climate Dynamics", "Bioinspiration", "Conservation Genomics"].map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border px-3 py-1 text-xs"
+                style={{ borderColor: "rgba(255,255,255,0.15)", color: COLORS.mech, background: "rgba(255,255,255,0.08)" }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function WorkSection() {
   return (
     <section id="work" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
@@ -1509,7 +1599,7 @@ function RoleCard({
 
   return (
     <Card
-      className="group rounded-3xl overflow-hidden h-90 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
+      className="group rounded-3xl overflow-hidden min-h-110 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
       style={{ borderColor: "rgba(31,42,51,0.10)" }}
       role="button"
       tabIndex={0}
@@ -1544,8 +1634,8 @@ function RoleCard({
               {title}
             </div>
             <div
-              className={`overflow-hidden transition-all duration-300 ease-out max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-focus-within:max-h-40 group-focus-within:opacity-100 ${
-                open ? "max-h-40 opacity-100" : ""
+              className={`overflow-hidden transition-all duration-300 ease-out max-h-0 opacity-0 group-hover:max-h-96 group-hover:opacity-100 group-focus-within:max-h-96 group-focus-within:opacity-100 ${
+                open ? "max-h-96 opacity-100" : ""
               }`}
             >
               <p
