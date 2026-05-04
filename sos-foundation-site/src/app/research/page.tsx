@@ -476,7 +476,7 @@ export default function ResearchPage() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true, amount: "some" }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               {/* Main text card — full width */}
