@@ -406,7 +406,7 @@ export default function ResearchPage() {
 
         <main>
           {/* ── Hero ─────────────────────────────────────────────────────── */}
-          <section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden">
+          <section className="relative w-full min-h-[100svh] md:min-h-[100vh] flex items-center justify-center overflow-hidden">
             <img
               src="/pics/mountains.jpg"
               alt=""
@@ -472,7 +472,7 @@ export default function ResearchPage() {
           </section>
 
           {/* ── Overview ─────────────────────────────────────────────────── */}
-          <section id="overview" className="mx-auto max-w-6xl px-5 pt-0 pb-20 md:py-28">
+          <section id="overview" className="mx-auto max-w-6xl px-5 pt-8 pb-20 md:py-28">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
