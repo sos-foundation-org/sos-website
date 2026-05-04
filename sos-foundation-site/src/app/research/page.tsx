@@ -489,16 +489,16 @@ export default function ResearchPage() {
                   Who we are
                 </h2>
                 <p className="mt-4 text-base md:text-lg leading-relaxed" style={{ color: "rgba(31,42,51,0.78)" }}>
-                  The Research Unit of the Sustainability of Sustainability Foundation (SOS) is co-directed by Cong Liu and Wei-Ping Chan, two interdisciplinary scientists working across ecology, evolutionary biology, data science, and artificial intelligence.
+                  The Research Unit of the Sustainability of Sustainability Foundation (SOS) is co-directed by Cong Liu and Wei-Ping Chan, two <strong className="font-semibold" style={{ color: COLORS.ink }}>interdisciplinary scientists</strong> working across <strong className="font-semibold" style={{ color: COLORS.ink }}>ecology, evolutionary biology, data science, and artificial intelligence</strong>.
                 </p>
                 <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(31,42,51,0.72)" }}>
-                  The unit focuses on translating biological, computational, and social systems to enable more adaptive and resilient approaches to sustainability. Rather than optimizing for fixed outcomes, its research explores how knowledge from natural systems can be structured, interpreted, and applied across domains under conditions of uncertainty.
+                  The unit focuses on translating biological, computational, and social systems to enable more <strong className="font-semibold" style={{ color: COLORS.ink }}>adaptive and resilient approaches to sustainability</strong>. Rather than optimizing for fixed outcomes, its research explores how knowledge from natural systems can be structured, interpreted, and <strong className="font-semibold" style={{ color: COLORS.ink }}>applied across domains under conditions of uncertainty</strong>.
                 </p>
                 <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(31,42,51,0.72)" }}>
-                  To support this, the unit develops integrated pipelines that combine diverse hardware systems, data acquisition processes, and machine learning methods to capture and analyze natural systems at scale. These workflows span data collection through automated analysis, forming the foundation for high-throughput phenomics and large-scale biodiversity digitization.
+                  To support this, the unit develops <strong className="font-semibold" style={{ color: COLORS.ink }}>integrated pipelines</strong> that combine diverse hardware systems, data acquisition processes, and machine learning methods to capture and analyze nature at scale. These workflows span data collection through automated analysis, forming the foundation for <strong className="font-semibold" style={{ color: COLORS.ink }}>phenomics and large-scale nature digitization</strong>.
                 </p>
                 <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(31,42,51,0.72)" }}>
-                  By linking physical environments, data infrastructure, and analytical models, the unit works to transform natural history collections and field observations into structured, accessible knowledge. This enables new forms of cross-domain application — biodiversity, conservation, bioinspired design, and beyond.
+                  By linking physical environments, data infrastructure, and analytical models, the unit works to transform nature collections and field observations into <strong className="font-semibold" style={{ color: COLORS.ink }}>structured, accessible knowledge</strong>. This enables new forms of cross-domain application: <strong className="font-semibold" style={{ color: COLORS.ink }}>conservation, bioinspired design</strong>, and beyond.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2">
                   {["Internet of Bioinspiration (IoBI)", "Mountain Digital Twins (MDT)"].map((proj) => (
