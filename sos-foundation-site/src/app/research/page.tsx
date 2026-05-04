@@ -472,7 +472,7 @@ export default function ResearchPage() {
           </section>
 
           {/* ── Overview ─────────────────────────────────────────────────── */}
-          <section id="overview" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+          <section id="overview" className="mx-auto max-w-6xl px-5 pt-8 pb-20 md:py-28">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -863,121 +863,120 @@ export default function ResearchPage() {
               const total = allPubs.length;
 
               return (
-                <>
-                  {/* Always-visible: highlighted journals only */}
-                  <div
-                    className="mt-10 rounded-3xl border p-6 md:p-8"
-                    style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.92)" }}
-                  >
-                    <ol className="space-y-3">
-                      {highlighted.map((pub) => {
-                        const jColor = JOURNAL_COLOR[pub.journal] ?? COLORS.blue;
-                        return (
-                          <li key={pub.id} className="flex items-start gap-3">
-                            <span
-                              className="shrink-0 mt-0.5 rounded-full px-2.5 py-0.5 text-xs font-bold whitespace-nowrap"
-                              style={{ background: `${jColor}18`, color: jColor }}
-                            >
-                              {pub.journal}
-                            </span>
-                            <div
-                              className="text-sm leading-relaxed"
-                              style={{ color: "rgba(31,42,51,0.78)" }}
-                              dangerouslySetInnerHTML={{
-                                __html:
-                                  pub.authors.replace(
-                                    new RegExp(pub.bold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-                                    `<strong style="color:${COLORS.ink};font-weight:600">${pub.bold}</strong>`
-                                  ) + ` (${pub.year}). ${pub.title}.`,
-                              }}
-                            />
-                          </li>
-                        );
-                      })}
-                    </ol>
-
-                    <div
-                      className="mt-5 pt-4 border-t flex items-center justify-between gap-3 flex-wrap"
-                      style={{ borderColor: "rgba(31,42,51,0.08)" }}
-                    >
-                      <span className="text-xs" style={{ color: "rgba(31,42,51,0.40)" }}>
-                        {total} publications total · all journals
-                      </span>
-                      <button
-                        onClick={() => setPubsExpanded((prev) => !prev)}
-                        className="inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition-opacity hover:opacity-80"
-                        style={{ background: `${COLORS.blue}14`, color: COLORS.blue }}
-                      >
-                        {pubsExpanded ? "Collapse" : "Show full list"}
-                        <motion.span
-                          animate={{ rotate: pubsExpanded ? 180 : 0 }}
-                          transition={{ duration: 0.25 }}
-                          className="inline-block leading-none text-xs"
-                        >
-                          ↓
-                        </motion.span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Collapsible full list */}
-                  <AnimatePresence initial={false}>
-                    {pubsExpanded && (
+                <div
+                  className="mt-10 rounded-3xl border p-6 md:p-8"
+                  style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.92)" }}
+                >
+                  <AnimatePresence mode="wait" initial={false}>
+                    {pubsExpanded ? (
                       <motion.div
-                        key="publist"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        style={{ overflow: "hidden" }}
+                        key="full"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
                       >
-                        <div
-                          className="mt-4 rounded-3xl border p-6 md:p-10"
-                          style={{ borderColor: "rgba(31,42,51,0.10)", background: "rgba(245,247,246,0.92)" }}
-                        >
-                          {PUBLICATIONS.map((group, gi) => (
+                        {PUBLICATIONS.map((group, gi) => (
+                          <div
+                            key={group.year}
+                            className={gi > 0 ? "mt-8 pt-8 border-t" : ""}
+                            style={{ borderColor: "rgba(31,42,51,0.08)" }}
+                          >
                             <div
-                              key={group.year}
-                              className={gi > 0 ? "mt-8 pt-8 border-t" : ""}
-                              style={{ borderColor: "rgba(31,42,51,0.08)" }}
+                              className="inline-block rounded-full px-3 py-1 text-xs font-semibold mb-4"
+                              style={{ background: `${COLORS.blue}14`, color: COLORS.blue }}
                             >
-                              <div
-                                className="inline-block rounded-full px-3 py-1 text-xs font-semibold mb-4"
-                                style={{ background: `${COLORS.blue}14`, color: COLORS.blue }}
-                              >
-                                {group.year}
-                              </div>
-                              <ol className="space-y-4">
-                                {group.entries.map((pub) => (
-                                  <li key={pub.id} className="flex gap-4 items-start">
-                                    <span
-                                      className="text-xs font-medium shrink-0 mt-0.5 w-5 text-right tabular-nums"
-                                      style={{ color: "rgba(31,42,51,0.30)" }}
-                                    >
-                                      {pub.id}.
-                                    </span>
-                                    <div
-                                      className="text-sm leading-relaxed"
-                                      style={{ color: "rgba(31,42,51,0.78)" }}
-                                      dangerouslySetInnerHTML={{
-                                        __html:
-                                          pub.authors.replace(
-                                            new RegExp(pub.bold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-                                            `<strong style="color:${COLORS.ink};font-weight:600">${pub.bold}</strong>`
-                                          ) +
-                                          ` (${group.year}). ${pub.title}. <em style="color:${COLORS.blue}">${pub.journal}</em>.`,
-                                      }}
-                                    />
-                                  </li>
-                                ))}
-                              </ol>
+                              {group.year}
                             </div>
-                          ))}
-                        </div>
+                            <ol className="space-y-4">
+                              {group.entries.map((pub) => (
+                                <li key={pub.id} className="flex gap-4 items-start">
+                                  <span
+                                    className="text-xs font-medium shrink-0 mt-0.5 w-5 text-right tabular-nums"
+                                    style={{ color: "rgba(31,42,51,0.30)" }}
+                                  >
+                                    {pub.id}.
+                                  </span>
+                                  <div
+                                    className="text-sm leading-relaxed"
+                                    style={{ color: "rgba(31,42,51,0.78)" }}
+                                    dangerouslySetInnerHTML={{
+                                      __html:
+                                        pub.authors.replace(
+                                          new RegExp(pub.bold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+                                          `<strong style="color:${COLORS.ink};font-weight:600">${pub.bold}</strong>`
+                                        ) +
+                                        ` (${group.year}). ${pub.title}. <em style="color:${COLORS.blue}">${pub.journal}</em>.`,
+                                    }}
+                                  />
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        ))}
                       </motion.div>
+                    ) : (
+                      <motion.ol
+                        key="highlighted"
+                        className="space-y-3"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
+                      >
+                        {highlighted.map((pub) => {
+                          const jColor = JOURNAL_COLOR[pub.journal] ?? COLORS.blue;
+                          return (
+                            <li key={pub.id} className="flex items-start gap-3">
+                              <span
+                                className="shrink-0 mt-0.5 rounded-full px-2.5 py-0.5 text-xs font-bold whitespace-nowrap text-center"
+                                style={{ background: `${jColor}18`, color: jColor, minWidth: "9.5rem" }}
+                              >
+                                {pub.journal}
+                              </span>
+                              <div
+                                className="text-sm leading-relaxed"
+                                style={{ color: "rgba(31,42,51,0.78)" }}
+                                dangerouslySetInnerHTML={{
+                                  __html:
+                                    pub.authors.replace(
+                                      new RegExp(pub.bold.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+                                      `<strong style="color:${COLORS.ink};font-weight:600">${pub.bold}</strong>`
+                                    ) + ` (${pub.year}). ${pub.title}.`,
+                                }}
+                              />
+                            </li>
+                          );
+                        })}
+                      </motion.ol>
                     )}
                   </AnimatePresence>
-                </>
+
+                  <div
+                    className="mt-5 pt-4 border-t flex items-center justify-between gap-3 flex-wrap"
+                    style={{ borderColor: "rgba(31,42,51,0.08)" }}
+                  >
+                    <span className="text-xs" style={{ color: "rgba(31,42,51,0.40)" }}>
+                      {pubsExpanded
+                        ? `${total} publications total · all journals`
+                        : `Showing ${highlighted.length} of ${total} · highlighted journals only`}
+                    </span>
+                    <button
+                      onClick={() => setPubsExpanded((prev) => !prev)}
+                      className="inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition-opacity hover:opacity-80"
+                      style={{ background: `${COLORS.blue}14`, color: COLORS.blue }}
+                    >
+                      {pubsExpanded ? "Collapse" : "Show full list"}
+                      <motion.span
+                        animate={{ rotate: pubsExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="inline-block leading-none text-xs"
+                      >
+                        ↓
+                      </motion.span>
+                    </button>
+                  </div>
+                </div>
               );
             })()}
           </section>
