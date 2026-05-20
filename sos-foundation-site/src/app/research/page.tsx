@@ -382,13 +382,17 @@ export default function ResearchPage() {
               </div>
             </div>
 
-            {/* Internal scroll nav */}
-            <nav className="hidden md:flex items-center gap-5 text-sm" style={{ color: "rgba(31,42,51,0.75)" }}>
-              <button className="text-m cursor-pointer transition-all hover:opacity-80 hover:scale-105 active:scale-95" onClick={() => scrollToId("overview")}>Overview</button>
-              <button className="text-m cursor-pointer transition-all hover:opacity-80 hover:scale-105 active:scale-95" onClick={() => scrollToId("directors")}>Directors</button>
-              <button className="text-m cursor-pointer transition-all hover:opacity-80 hover:scale-105 active:scale-95" onClick={() => scrollToId("themes")}>Research</button>
-              <button className="text-m cursor-pointer transition-all hover:opacity-80 hover:scale-105 active:scale-95" onClick={() => scrollToId("publications")}>Publications</button>
-              <button className="text-m cursor-pointer transition-all hover:opacity-80 hover:scale-105 active:scale-95" onClick={() => scrollToId("contact")}>Contact</button>
+            {/* Site-wide nav — same items as the home page & blog. The
+                Research item is highlighted because this is the current page;
+                section links jump back to the home page sections via /#…. */}
+            <nav className="hidden md:flex items-center gap-3 text-sm tracking-tight" style={{ color: "rgba(31,42,51,0.75)" }}>
+              <a href="/#meaning" className="text-m hover:opacity-80">Meaning</a>
+              <a href="/#pattern" className="text-m hover:opacity-80">Pattern</a>
+              <a href="/#mechanism" className="text-m hover:opacity-80">Mechanism</a>
+              <a href="/#work" className="text-m hover:opacity-80">Work</a>
+              <a href="/research" className="text-m font-semibold" style={{ color: COLORS.blue }}>Research</a>
+              <a href="/blog" className="text-m hover:opacity-80">Blog</a>
+              <a href="/#involved" className="text-m hover:opacity-80">Join</a>
             </nav>
 
             {/* Back link */}

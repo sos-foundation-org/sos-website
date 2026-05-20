@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { WORK, type WorkCard } from "@/content/home/work";
 
 /**
  * SOS Foundation — Visual-first, scroll-choreographed framework
@@ -715,13 +716,14 @@ export default function SOSFoundationFramework() {
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-5 text-sm" style={{ color: "rgba(31,42,51,0.75)" }}>
+          <nav className="hidden md:flex items-center gap-3 text-sm tracking-tight" style={{ color: "rgba(31,42,51,0.75)" }}>
             <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("meaning")}>Meaning</button>
             <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("pattern")}>Pattern</button>
             <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("mechanism")}>Mechanism</button>
             <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("work")}>Work</button>
             <a href="/research" className="text-m hover:opacity-80">Research</a>
-            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("involved")}>Get involved</button>
+            <a href="/blog" className="text-m hover:opacity-80">Blog</a>
+            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("involved")}>Join</button>
           </nav>
 
           {/* Social icons */}
@@ -1277,6 +1279,66 @@ function ResearchUnitTeaser() {
   );
 }
 
+// ─── "What is taking shape?" — content lives in src/content/home/work.ts ────
+// To swap cards, photos, captions, or copy: edit WORK in that file. This
+// section just renders whatever it finds there.
+
+function WorkCardView({ card }: { card: WorkCard }) {
+  const m = card.media;
+  return (
+    <ImagePanel label={card.label ?? ""} tone={card.tone} aspect={card.aspect}>
+      {m.kind === "iframe" ? (
+        <iframe
+          title={m.title}
+          src={m.src}
+          className="h-full w-full"
+          style={{ border: 0 }}
+          allow={m.allow ?? "autoplay; fullscreen"}
+          allowFullScreen
+          loading="lazy"
+        />
+      ) : (
+        <img
+          src={m.src}
+          alt={m.alt ?? card.caption ?? ""}
+          className="h-full w-full object-cover"
+        />
+      )}
+
+      {card.topBadge && (
+        <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
+          <div
+            className="rounded-full px-3 py-1 text-[11px] tracking-wide"
+            style={{
+              background: "rgba(31,42,51,0.75)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.14)",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            {card.topBadge}
+          </div>
+        </div>
+      )}
+
+      {card.caption && (
+        <div className="pointer-events-none absolute inset-0 flex items-end p-4">
+          <div
+            className="rounded-2xl px-3 py-2 text-xs"
+            style={{
+              background: "rgba(31,42,51,0.85)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.10)",
+            }}
+          >
+            {card.caption}
+          </div>
+        </div>
+      )}
+    </ImagePanel>
+  );
+}
+
 function WorkSection() {
   return (
     <section id="work" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
@@ -1288,109 +1350,21 @@ function WorkSection() {
       >
         <div className="flex items-end justify-between gap-6 flex-wrap">
           <div>
-            <Pill label="Work" color={COLORS.blue} />
+            <Pill label={WORK.pillLabel} color={WORK.pillColor} />
             <h2 className="mt-4 text-2xl md:text-4xl font-semibold" style={{ color: COLORS.ink }}>
-              What is taking shape?
+              {WORK.title}
             </h2>
             <p className="mt-3 text-base md:text-lg" style={{ color: "rgba(31,42,51,0.78)" }}>
-              Selected works and signals emerging across Meaning, Pattern, and Mechanism.
+              {WORK.subtitle}
             </p>
           </div>
         </div>
       </motion.div>
 
       <div className="mt-10 grid md:grid-cols-3 gap-5">
-        <ImagePanel label="Featured exhibition / installation" tone="meaning" aspect="aspect-[4/5]">
-          <iframe
-            title="Poppish-Patrick Hughes"
-            src="https://www.kiriengine.app/share/3dgsEmbed/1992812111444574208?userId=923097&type=0&bg_theme=bright&auto_spin=0"
-            className="h-full w-full"
-            style={{ border: 0 }}
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            loading="lazy"
-          />
-          <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
-            <div
-              className="rounded-full px-3 py-1 text-[11px] tracking-wide"
-              style={{
-                background: "rgba(31,42,51,0.75)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.14)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              3D Interactive   drag / zoom / explore
-            </div>
-          </div>
-
-          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-            <div
-              className="rounded-2xl px-3 py-2 text-xs"
-              style={{
-                background: "rgba(31,42,51,0.85)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.10)",
-              }}
-            >
-              Patrick Hughes | Poppish (3D Dillustion)
-            </div>
-          </div>
-        </ImagePanel>
-
-        <ImagePanel label="Digitization demo / virtual museum preview" tone="pattern" aspect="aspect-[4/5]">
-          <iframe
-            title={'Hippopotamus "William"'}
-            src="https://www.kiriengine.app/share/3dgsEmbed/1994757825678540800?userId=923097&type=0&bg_theme=dark&auto_spin=0"
-            className="h-full w-full"
-            style={{ border: 0 }}
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            loading="lazy"
-          />
-          <div className="pointer-events-none absolute inset-0 p-4 flex items-start justify-start">
-            <div
-              className="rounded-full px-3 py-1 text-[11px] tracking-wide"
-              style={{
-                background: "rgba(31,42,51,0.75)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.14)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              3D Interactive   drag / zoom / explore
-            </div>
-          </div>
-
-          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-            <div
-              className="rounded-2xl px-3 py-2 text-xs"
-              style={{
-                background: "rgba(31,42,51,0.85)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.10)",
-              }}
-            >
-              Met Museum | “William” the Hippopotamus (3D)
-            </div>
-          </div>
-        </ImagePanel>
-
-        <ImagePanel label="System prototype / incentive loop" tone="mechanism" aspect="aspect-[4/5]">
-          <img src="/pics/talk.png" alt="Featured exhibition" className="h-full w-full object-cover" />
-          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-            <div
-              className="rounded-2xl px-3 py-2 text-xs"
-              style={{
-                background: "rgba(31,42,51,0.85)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.10)",
-              }}
-            >
-              Presenting a system prototype
-            </div>
-          </div>
-        </ImagePanel>
+        {WORK.cards.map((card) => (
+          <WorkCardView key={card.id} card={card} />
+        ))}
       </div>
 
       <div className="mt-6 grid md:grid-cols-2 gap-5">
@@ -1404,34 +1378,16 @@ function WorkSection() {
           <div className="flex items-start gap-4">
             <div className="flex-1">
               <div className="text-xl font-semibold" style={{ color: COLORS.ink }}>
-                Signals across the loop
+                {WORK.signal.heading}
               </div>
               <div className="mt-2 text-lg" style={{ color: COLORS.ink }}>
-                A few concrete artifacts across Meaning, Pattern, and Mechanism. Less explanation here; more evidence. Each piece is a doorway into the loop.
+                {WORK.signal.body}
               </div>
             </div>
           </div>
         </div>
 
-        <ImagePanel
-          label="Future slot: partner spotlight / upcoming event"
-          tone="neutral"
-          aspect="aspect-[16/10]"
-        >
-          <img src="/pics/Nature_Salon.jpg" alt="Featured exhibition" className="h-full w-full object-cover" />
-          <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-            <div
-              className="rounded-2xl px-3 py-2 text-sm"
-              style={{
-                background: "rgba(31,42,51,0.85)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.10)",
-              }}
-            >
-              Nature Salon | The Sustainability Dialogue for Artists, Scientists & Entrepreneurs
-            </div>
-          </div>
-        </ImagePanel>
+        <WorkCardView card={WORK.spotlight} />
       </div>
     </section>
   );
