@@ -39,6 +39,9 @@ function Pill({ label, color }: { label: string; color: string }) {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
+// Portrait convention for DIRECTORS and SCIENTISTS: the card crops to 3:4 with
+// object-top, so supply a portrait (or square) image at ≥1200px wide. The house
+// style is an environmental / fieldwork portrait rather than a studio headshot.
 const DIRECTORS = [
   {
     name: "Cong Liu",
@@ -74,20 +77,79 @@ const DIRECTORS = [
     ],
     themes: ["Nature Digitization & AI", "Climate Change Biology", "Morphological quantification", "Bioinspirations"],
     website: "https://wpchanwork.github.io/wei-ping_chan/home.html",
-    // PLACEHOLDER: 期待放 Wei-Ping Chan 的個人照或實驗室工作照（建議：影像系統或蝴蝶標本場景）
     photo: "/pics/Wei-Ping.jpg",
     photoAlt: "Wei-Ping Chan",
     accentColor: COLORS.art,
   },
 ];
 
+// ─── Research Scientists ──────────────────────────────────────────────────────
+// To add a member, push one more object onto the array below — the layout stacks automatically.
+// Fields:
+//   name / title / affiliation / role   — card header (keep title as "Research Scientist, SOS Research Unit")
+//   bio                                  — 2–4 sentence introduction
+//   themes                               — Research focus tags; 3–5 recommended
+//   education                            — newest first; may be an empty array
+//   links                                — external link buttons; the first renders solid, the rest outlined
+//   photo / photoAlt                     — portrait under /public/pics/ (portrait orientation, or croppable to 3:4)
+//   accentColor                          — pick one from COLORS to give each member an identity color on the card
+const SCIENTISTS: Array<{
+  name: string;
+  title: string;
+  affiliation: string;
+  role: string;
+  bio: string;
+  themes: string[];
+  education: Array<{ degree: string; institution: string; years: string }>;
+  links: Array<{ label: string; url: string }>;
+  photo: string;
+  photoAlt: string;
+  accentColor: string;
+}> = [
+  {
+    name: "Wen-Chien Lee",
+    title: "Research Scientist, SOS Research Unit",
+    affiliation: "Postdoctoral Research Fellow, National Taiwan University",
+    role: "Atmospheric Chemist · Aerosol Scientist",
+    bio: "Wen-Chien Lee is an atmospheric chemist tracing the emission, formation, and evolution of aerosol particles, together with their physicochemical properties. The work combines laboratory experiments, field measurements, and data analysis to resolve how these particles form and transform in the atmosphere — linking molecular-scale chemistry to the air quality and climate signals observed at regional scales.",
+    themes: [
+      "Atmospheric Chemistry",
+      "Aerosol Formation & Evolution",
+      "Emission Source Tracing",
+      "Physicochemical Characterization",
+      "Field & Laboratory Measurement",
+    ],
+    education: [
+      {
+        degree: "Ph.D. in Chemistry and Biological Chemistry",
+        institution: "Nanyang Technological University, Singapore",
+        years: "Aug 2015 – Oct 2019",
+      },
+      {
+        degree: "B.S. in Atmospheric Sciences",
+        institution: "National Taiwan University, Taipei, Taiwan",
+        years: "Sep 2011 – Jun 2015",
+      },
+    ],
+    links: [
+      { label: "Google Scholar", url: "https://scholar.google.com/citations?user=7_NEHAgAAAAJ&hl=en" },
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/wen-chien-lee/" },
+    ],
+    photo: "/pics/Wen-Chien.webp",
+    photoAlt: "Wen-Chien Lee",
+    accentColor: COLORS.green,
+  },
+];
+
+// Theme card images crop to aspect-[16/7] (≈2.29:1), so supply landscape images
+// at ≥1600px wide. A portrait source loses most of its height to the crop —
+// see the TODO(image) notes below for the two that currently do.
 const THEMES = [
   {
     number: "01",
     title: "Nature Digitization & Bioinspired Translation",
     type: "Overlap" as const,
     color: COLORS.data,
-    // PLACEHOLDER: 期待放標本掃描、高通量影像設備，或螞蟻/蝴蝶標本的微距照片
     photo: "/pics/IoBI.png",
     description:
       "Developing integrated pipelines that translate natural systems into structured, computationally accessible data and extend them into real-world applications. This includes large-scale digitization workflows, imaging and spectral acquisition, and the use of machine learning to enable the Internet of Bioinspiration (IoBI). These pipelines further support the discovery and prototyping of bioinspired materials and structures by connecting biological patterns with engineering and design contexts.",
@@ -99,7 +161,9 @@ const THEMES = [
     title: "Knowledge Infrastructure & Digital Ecosystems",
     type: "Overlap" as const,
     color: COLORS.data,
-    // PLACEHOLDER: 期待放自然史標本館、標本排列，或資料視覺化截圖
+    // TODO(image): digital_moths.png is portrait (941×1672), so the 16:7 crop keeps
+    // only ~25% of its height. Replace with a landscape version of the same subject,
+    // or a collection / specimen-drawer / data-visualization shot at ≥1600px wide.
     photo: "/pics/digital_moths.png",
     description:
       "Building data infrastructures that connect biological observations, environmental context, and computational models across scales. This includes standardized data collection pipelines and curated biodiversity databases — alongside Mountain Digital Twins (MDT), one of our flagship projects that creates integrated, multi-layer representations of mountain ecosystems by linking biotic and abiotic data. Together, these digital ecosystems enable repeatable analyses, interoperable datasets, and long-term monitoring frameworks supporting both fundamental research and conservation.",
@@ -111,7 +175,6 @@ const THEMES = [
     title: "Conservation & Species Decline",
     type: "Overlap" as const,
     color: COLORS.art,
-    // PLACEHOLDER: 期待放物種保育、野外族群調查，或受威脅昆蟲的照片
     photo: "/pics/light_trap.JPG",
     description:
       "Insects are declining globally, yet causes and trajectories remain poorly resolved. This theme takes a multi-evidence approach — combining population genomics with long-term behavioral and light-trap time series to track changes in abundance and community composition, integrating molecular, observational, and ecological data to disentangle the roles of habitat loss, climate change, and chemical pollution.",
@@ -123,7 +186,6 @@ const THEMES = [
     title: "Evolutionary Biology & Functional Morphology",
     type: "Overlap" as const,
     color: COLORS.art,
-    // PLACEHOLDER: 期待放蝴蝶翅膀微距、昆蟲形態特寫，或演化形態學研究的影像
     photo: "/pics/20250506_150401.JPG",
     description:
       "Eco-evolutionary perspectives on mutualism and dispersal combined with deep morphological expertise — converging on bioinspiration and understanding how evolved structures inform sustainable design.",
@@ -135,7 +197,10 @@ const THEMES = [
     title: "Climate Change & Mountain Ecosystems",
     type: "Complementary" as const,
     color: COLORS.blue,
-    // PLACEHOLDER: 期待放山地景觀、氣候調查野外場景，或物種分布地圖
+    // TODO(image): drought-1.jpg is portrait and only 540px wide, so it is both
+    // heavily cropped by the 16:7 frame and soft on high-DPI screens. Replace with a
+    // landscape mountain vista, elevational gradient, or climate fieldwork shot at
+    // ≥1600px wide. Highest-priority image swap on this page.
     photo: "/pics/drought-1.jpg",
     description:
       "Climate velocity frameworks and environmental variability models applied to biodiversity datasets to predict community turnover under future climate scenarios and mountain ecosystem shifts.",
@@ -147,7 +212,6 @@ const THEMES = [
     title: "Biosecurity & Invasion Biology",
     type: "Complementary" as const,
     color: COLORS.mech,
-    // PLACEHOLDER: 期待放入侵種昆蟲、電商平台截圖，或邊境入侵風險相關的野外照片
     photo: "/pics/ants.JPG",
     description:
       "Monitoring online wildlife trade platforms to quantify the movement of non-native species and assess invasion risk pathways. This work develops surveillance frameworks for detecting high-risk organisms in e-commerce networks before they establish in new environments — combining large-scale data scraping, species identification, and risk modelling.",
@@ -156,7 +220,7 @@ const THEMES = [
 ];
 
 // Six flagship publications shown as visual cards in the Overview section.
-// TODO: Replace url "#" with the actual DOI link for each paper.
+// Card images crop to aspect-[16/9]; every entry links to its published DOI.
 const FEATURED_PUBS = [
   {
     id: "fp1",
@@ -693,6 +757,179 @@ export default function ResearchPage() {
                     >
                       Personal Website <ExternalLink size={13} />
                     </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+
+          {/* Divider */}
+          <div className="mx-auto max-w-6xl px-5">
+            <div className="h-px w-full" style={{ background: "rgba(255,255,255,0.06)" }} />
+          </div>
+
+          {/* ── Research Scientists ──────────────────────────────────────── */}
+          {/* Deliberately laid out as one horizontal card per row, so it scales evenly
+              whether there is 1 member or 10; adding a member only means editing the
+              SCIENTISTS array above — this JSX stays untouched. */}
+          <section id="scientists" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <Pill label="Research Scientists" color={COLORS.green} />
+              <h2 className="mt-4 text-2xl md:text-4xl font-semibold text-white">
+                Meet the Research Scientists
+              </h2>
+              <p className="mt-3 text-base" style={{ color: "rgba(255,255,255,0.55)" }}>
+                Specialists who extend the unit into new domains — from atmospheric chemistry to
+                the environmental signals that shape ecological systems.
+              </p>
+            </motion.div>
+
+            <div className="mt-10 space-y-6">
+              {SCIENTISTS.map((s, i) => (
+                <motion.div
+                  key={s.name}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.6, ease: "easeOut", delay: (i % 3) * 0.1 }}
+                  className="rounded-3xl overflow-hidden border flex flex-col sm:flex-row"
+                  style={{ borderColor: "rgba(255,255,255,0.06)" }}
+                >
+                  {/* Portrait photo — a banner on top for mobile, a vertical left column on desktop */}
+                  <div className="relative shrink-0 aspect-[3/4] sm:aspect-auto sm:w-56 md:w-64 overflow-hidden">
+                    <img
+                      src={s.photo}
+                      alt={s.photoAlt}
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                    <div
+                      className="absolute inset-0 sm:hidden"
+                      style={{
+                        background:
+                          "linear-gradient(180deg, rgba(8,24,36,0.0) 45%, rgba(8,24,36,0.92) 100%)",
+                      }}
+                    />
+                    <div
+                      className="absolute inset-y-0 right-0 w-16 hidden sm:block"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, rgba(31,42,51,0.0) 0%, rgba(31,42,51,0.92) 100%)",
+                      }}
+                    />
+                    {/* Mobile overlays the name on the photo; desktop leaves it to the content column */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:hidden">
+                      <div className="text-2xl font-semibold text-white">{s.name}</div>
+                      <div className="text-sm mt-1 font-medium" style={{ color: COLORS.gold }}>
+                        {s.title}
+                      </div>
+                      <div className="text-xs mt-0.5 text-white/55">{s.affiliation}</div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div
+                    className="p-5 md:p-7 flex flex-col gap-5 flex-1"
+                    style={{ background: "rgba(31,42,51,0.92)" }}
+                  >
+                    <div className="hidden sm:block">
+                      <div className="text-2xl font-semibold text-white">{s.name}</div>
+                      <div className="text-sm mt-1 font-medium" style={{ color: COLORS.gold }}>
+                        {s.title}
+                      </div>
+                      <div className="text-xs mt-0.5 text-white/55">{s.affiliation}</div>
+                    </div>
+
+                    <div
+                      className="text-[11px] font-medium tracking-wide uppercase"
+                      style={{ color: s.accentColor }}
+                    >
+                      {s.role}
+                    </div>
+
+                    <p className="text-sm leading-relaxed text-white/65">{s.bio}</p>
+
+                    {/* Research focus tags */}
+                    {s.themes.length > 0 && (
+                      <div>
+                        <div className="text-[10px] font-medium tracking-wide text-white/40 uppercase mb-2">
+                          Research focus
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {s.themes.map((t) => (
+                            <span
+                              key={t}
+                              className="rounded-full border px-2.5 py-1 text-[11px] text-white/70"
+                              style={{
+                                borderColor: "rgba(255,255,255,0.10)",
+                                background: "rgba(255,255,255,0.04)",
+                              }}
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Education */}
+                    {s.education.length > 0 && (
+                      <div
+                        className="pt-4 border-t"
+                        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+                      >
+                        <div className="text-[10px] font-medium tracking-wide text-white/40 uppercase mb-3">
+                          Education
+                        </div>
+                        <div className="space-y-2.5">
+                          {s.education.map((e) => (
+                            <div key={e.degree} className="flex items-start gap-3">
+                              <span
+                                className="mt-1.5 h-1.5 w-1.5 rounded-full shrink-0"
+                                style={{ background: s.accentColor }}
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-medium text-white/80 leading-snug">
+                                  {e.degree}
+                                </div>
+                                <div className="text-[11px] text-white/50 leading-snug">
+                                  {e.institution}
+                                </div>
+                              </div>
+                              <span className="text-[11px] text-white/40 shrink-0 tabular-nums">
+                                {e.years}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* External links — first one solid, the rest outlined */}
+                    {s.links.length > 0 && (
+                      <div className="flex flex-wrap gap-3">
+                        {s.links.map((link, li) => (
+                          <a
+                            key={link.url}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={
+                              li === 0
+                                ? "inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-80"
+                                : "inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-80"
+                            }
+                            style={li === 0 ? { background: COLORS.blue } : undefined}
+                          >
+                            {link.label} <ExternalLink size={13} />
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}

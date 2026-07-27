@@ -1225,7 +1225,7 @@ function ResearchUnitTeaser() {
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Image card */}
         <div className="relative rounded-3xl overflow-hidden aspect-[16/10]">
-          {/* PLACEHOLDER: 期待放研究室野外工作照片，或兩位 Research Director 的合照 */}
+          {/* Also used by Research theme 03 — swap here if the two should differ */}
           <img
             src="/pics/light_trap.JPG"
             alt="SOS Research Unit"
