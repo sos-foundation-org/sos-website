@@ -4,6 +4,10 @@ This is the only document you need to publish, edit, or maintain the blog.
 The blog is **content-driven**: every article is a typed data object, so you
 never have to touch React/JSX to publish.
 
+> **Working with an AI assistant?** Point it at
+> [`AI-GUIDE.md`](./AI-GUIDE.md) instead — same procedure, compressed into a
+> checklist with the valid ids, verification commands, and known failure modes.
+
 ---
 
 ## Table of contents
@@ -16,10 +20,11 @@ never have to touch React/JSX to publish.
 6. [Layout patterns — how to compose a post](#layout-patterns)
 7. [Categories (tags)](#categories-tags)
 8. [Authors](#authors)
-9. [Highlights (the rotating hero slider)](#highlights-the-rotating-hero-slider)
-10. [Drafts](#drafts)
-11. [Sharing & link previews (SEO / Open Graph)](#sharing--link-previews)
-12. [Troubleshooting](#troubleshooting)
+9. [Languages & translations](#languages--translations)
+10. [Highlights (the rotating hero slider)](#highlights-the-rotating-hero-slider)
+11. [Drafts](#drafts)
+12. [Sharing & link previews (SEO / Open Graph)](#sharing--link-previews)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -34,6 +39,10 @@ never have to touch React/JSX to publish.
 
 That's it. The post appears at `/blog` and `/blog/<slug>`. Run `npm run dev`
 and refresh.
+
+Publishing in more than one language? Start from the template pair instead —
+`posts/_template-bilingual.ts` and `posts/_template-bilingual.zh.ts` — and see
+[Languages & translations](#languages--translations).
 
 ---
 
@@ -57,9 +66,12 @@ src/
     ├── index.ts                  ← post registry + helpers
     ├── categories.ts             ← classification tags
     ├── authors.ts                ← contributors
+    ├── languages.ts              ← languages the blog can be read in
     ├── highlights.ts             ← which posts appear in the hero slider
-    ├── posts/                    ← one file per post
-    │   └── welcome-to-the-sos-blog.ts
+    ├── posts/                    ← one file per post (one per LANGUAGE)
+    │   ├── welcome-to-the-sos-blog.ts
+    │   ├── _template-bilingual.ts       ← copy me for a multi-language post
+    │   └── _template-bilingual.zh.ts    ← …and me, for its translation
     └── README.md                 ← this file
 
 public/                           ← static assets (referenced by /pics/..., /video/...)
@@ -124,11 +136,14 @@ const ALL_POSTS: Post[] = [
 | `excerpt`  | yes      | 1–2 sentences. Shown on cards, slider, and as SEO description.        |
 | `cover`    | yes      | Path under `/public`, e.g. `/pics/foo.jpg`. Used as hero + OG image.  |
 | `coverAlt` | no       | Alt text for the cover (accessibility, screen readers).               |
+| `coverCredit` | no    | Visible credit line under the cover — use for photos you didn't take. |
 | `date`     | yes      | ISO `YYYY-MM-DD`. Drives sort order and the year/month filter.        |
 | `authorId` | yes      | Must match a key in `authors.ts`.                                     |
 | `tags`     | no       | Array of category ids (see `categories.ts`). Drives the topic filter. |
 | `draft`    | no       | `true` hides from the index but `/blog/<slug>` still works for preview.|
 | `accent`   | no       | A hex color that overrides the default accent on this post.           |
+| `lang`     | no       | Language code from `languages.ts`. Omitted = the original language.   |
+| `translationOf` | no  | On a translation only: the slug of the original it translates.        |
 | `body`     | yes      | Ordered list of content blocks.                                       |
 
 ---
@@ -382,6 +397,142 @@ Authors are defined once in [`authors.ts`](./authors.ts):
 Then set `authorId: "your-id"` on your posts. The avatar appears on the post
 card, in the article byline, and as the big end-of-post bio.
 
+### Bylines in other languages
+
+An author who publishes in more than one language can add a `localized` block.
+The byline and bio on a translation then read in that language:
+
+```ts
+"cong-liu": {
+  name: "Cong Liu",
+  role: "Research Director, SOS Research Unit",
+  bio:  "…",
+  localized: {
+    "zh-Hans": {
+      name: "刘聪",
+      role: "SOS 基金会研究组组长",
+      bio:  "…",          // optional — omit and the English bio is kept
+    },
+  },
+},
+```
+
+Keys are language codes from [`languages.ts`](./languages.ts). Anything you
+leave out falls back to the main fields, so localizing just the name is fine.
+
+### Third-party photos
+
+If a post uses a photo you didn't take, credit it with `coverCredit` — it
+renders as a small line directly under the hero image:
+
+```ts
+cover:       "/pics/ant-trade-customs.jpg",
+coverCredit: "Photo: CCTV",
+```
+
+For in-body images, put the credit in the block's `caption` instead.
+
+---
+
+## Languages & translations
+
+A post can be published in any number of languages. Each language version is a
+**separate post file with its own slug and its own URL** — so every translation
+is independently shareable, indexable, and can even use different images.
+
+### The model: one original, many translations
+
+```
+original          posts/digitizing-the-mountains.ts      (no lang, no translationOf)
+  ├─ 简体中文      posts/digitizing-the-mountains.zh.ts   translationOf: "digitizing-the-mountains"
+  ├─ 繁體中文      posts/digitizing-the-mountains.tw.ts   translationOf: "digitizing-the-mountains"
+  └─ 日本語        posts/digitizing-the-mountains.ja.ts   translationOf: "digitizing-the-mountains"
+```
+
+The **original** declares nothing — it inherits `DEFAULT_LANG` from
+[`languages.ts`](./languages.ts). Every **translation** names its own `lang`
+and points back at the original with `translationOf`. Together they form a
+*translation group*.
+
+What the group buys you:
+
+- **One card on `/blog`**, not one per language.
+- **A language toggle** on the article page that links between the versions.
+- **`hreflang` metadata**, so search engines serve the right language instead
+  of flagging duplicate content.
+- **A correct `lang` attribute** on the prose, for screen readers and browser
+  translation.
+
+### Publishing a translation
+
+Start from the template pair in `posts/` — it is a working example:
+
+```bash
+cp posts/_template-bilingual.ts     posts/my-post.ts
+cp posts/_template-bilingual.zh.ts  posts/my-post.zh.ts
+```
+
+Then in the translation file, set two fields:
+
+```ts
+export const post: Post = {
+  slug:          "my-post-zh",     // its own unique slug → /blog/my-post-zh
+  lang:          "zh-Hans",        // a code from languages.ts
+  translationOf: "my-post",        // the ORIGINAL's slug
+  title:         "……",             // translated
+  excerpt:       "……",             // translated
+  date:          "2026-08-27",     // keep the same as the original
+  // …everything else is an ordinary post
+};
+```
+
+Register **both** files in `index.ts`, exactly like any other post.
+
+**Conventions worth keeping:**
+
+- Slug suffix matches the language (`-zh`, `-tw`, `-ja`). Not enforced, just tidy.
+- Same `date` on every version, so they sort together.
+- Same `tags` and `authorId`, unless there's a real reason to differ.
+- Images are **not** shared automatically — each file lists its own. That's a
+  feature: a translation can swap in a more relevant image for its readers.
+
+### Adding a new language
+
+Append one entry to `LANGUAGES` in [`languages.ts`](./languages.ts):
+
+```ts
+export const LANGUAGES: Language[] = [
+  { code: "en",      label: "EN",   name: "English" },
+  { code: "zh-Hans", label: "简体", name: "简体中文 (Simplified Chinese)" },
+  { code: "zh-Hant", label: "繁體", name: "繁體中文 (Traditional Chinese)" },  // ← new
+];
+```
+
+That's the entire change. No types, no components. `code` is any BCP-47 tag,
+`label` is the 2–4 character toggle button, `name` is the tooltip.
+
+A language only appears in the toggle once at least one post is written in it,
+so registering a language early costs nothing.
+
+### What readers see
+
+| Situation | Behaviour |
+|---|---|
+| Post has translations | Toggle appears top-right of the article; each button is a link. |
+| Post has no translations | No toggle renders at all. |
+| Reader picks 简体 on `/blog` | Every group shows its Chinese version. |
+| …but a post has no Chinese version | The original still shows, badged with its language. |
+| A translation is still a draft | Only visible while previewing the other draft. |
+
+The fallback is the important one: switching language never empties the blog.
+
+### Changing the original language
+
+`DEFAULT_LANG` in `languages.ts` defines what a post with no `lang` is assumed
+to be written in. If the Foundation ever switches its primary language, tag the
+existing posts with an explicit `lang` **before** changing it — otherwise they
+all silently re-label.
+
 ---
 
 ## Highlights (the rotating hero slider)
@@ -459,6 +610,22 @@ Production: set the same variable in your host (Vercel, etc.).
 - Self-hosted: check the file is in `public/video/` and the MIME type is mp4
   or webm. Try `loop: true` only on muted/looping clips.
 - Embed: confirm the `id` is just the id, not the full URL.
+
+**The language toggle doesn't appear on my post.**
+- A toggle needs at least two versions. Check the translation has
+  `translationOf: "<original-slug>"` spelled exactly like the original's `slug`.
+- Both files must be registered in `ALL_POSTS` in `index.ts`.
+- If one of the two is `draft: true` and the other isn't, the published one
+  won't link to it. Publish both, or keep both as drafts while you preview.
+
+**I switched to 简体 but a post is still in English.**
+- That post has no Chinese version yet — the original is shown as a fallback,
+  badged with its language. Add a translation to replace it.
+
+**My new language isn't in the toggle.**
+- A language only shows once a post actually uses it. Check the post's `lang`
+  matches the `code` in `languages.ts` character-for-character (`zh-Hans`,
+  not `zh-hans` or `zh_CN`).
 
 **Build fails with a TypeScript error about my post.**
 - Check that `tags` are valid category ids (lowercase, hyphenated).

@@ -9,7 +9,10 @@
 // Recommended: 2 to 4 highlights at a time. Reorder, swap, or clear out at
 // any time — no other files need to change.
 
+// Name the ORIGINAL post's slug — the slider shows whichever translation
+// matches the reader's chosen language.
 export const HIGHLIGHT_SLUGS: string[] = [
+  "should-buying-and-selling-ants-be-banned",
   "welcome-to-the-sos-blog",
 ];
 

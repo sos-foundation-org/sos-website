@@ -3,6 +3,16 @@
 // article means creating one typed `Post` object — no JSX required.
 // See ./README.md for a step-by-step publishing guide.
 
+/**
+ * A BCP-47 language code — "en", "zh-Hans", "zh-Hant", "ja", "es", …
+ *
+ * Deliberately a plain string rather than a fixed union: the set of languages
+ * the blog supports lives in ./languages.ts, so adding one is a data change,
+ * never a type change. Register the code there and every UI surface (toggle,
+ * filter, lang attribute) picks it up automatically.
+ */
+export type LangCode = string;
+
 /** A person who can author posts (shown in the byline + end-of-post bio). */
 export type Author = {
   /** Stable id referenced by Post.authorId. */
@@ -17,6 +27,14 @@ export type Author = {
   bio: string;
   /** Optional external links (personal site, social, etc.). */
   links?: { label: string; href: string }[];
+  /**
+   * Per-language overrides for the byline and bio, keyed by a language code
+   * from ./languages.ts. Anything omitted falls back to the fields above, so a
+   * translation can localize just the name and leave the bio in English.
+   *
+   *   localized: { "zh-Hans": { name: "刘聪", role: "SOS 基金会研究组组长" } }
+   */
+  localized?: Record<LangCode, Partial<Pick<Author, "name" | "role" | "bio">>>;
 };
 
 /**
@@ -60,6 +78,11 @@ export type Post = {
   /** Hero / cover image path in /public. */
   cover: string;
   coverAlt?: string;
+  /**
+   * Visible credit line under the cover — for photos you did not take.
+   * Plain text or inline HTML (e.g. a link to the source).
+   */
+  coverCredit?: string;
   /** Publish date as an ISO string: "YYYY-MM-DD". */
   date: string;
   /** Author id — must match a key in AUTHORS (see ./authors.ts). */
@@ -70,6 +93,21 @@ export type Post = {
   draft?: boolean;
   /** Optional accent color (defaults to the SOS data teal). */
   accent?: string;
+  /**
+   * Language this post is written in — a code registered in ./languages.ts.
+   * Omitted means DEFAULT_LANG (the site's original language).
+   */
+  lang?: LangCode;
+  /**
+   * Set on a TRANSLATION only: the slug of the ORIGINAL post it translates.
+   * The original itself leaves this blank — it is what every translation
+   * points at, whatever language it happens to be written in.
+   *
+   * An original plus its translations form one "translation group": they share
+   * a single card on the index and cross-link from the article page. A group
+   * can hold any number of languages.
+   */
+  translationOf?: string;
   /** Ordered article content. */
   body: Block[];
 };

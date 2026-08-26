@@ -5,16 +5,24 @@ import { motion } from "framer-motion";
 import { DARK_BG } from "@/lib/theme";
 import { CATEGORIES, getAuthor } from "@/content/blog";
 import { HIGHLIGHT_SLUGS } from "@/content/blog/highlights";
-import type { Post } from "@/content/blog/types";
+import { DEFAULT_LANG } from "@/content/blog/languages";
+import type { Language } from "@/content/blog/languages";
+import type { LangCode, Post } from "@/content/blog/types";
 import BlogHeader from "./BlogHeader";
 import BlogFooter from "./BlogFooter";
 import HighlightSlider from "./HighlightSlider";
 import PostCard from "./PostCard";
 import BlogFilters, { type FilterState } from "./BlogFilters";
+import LanguageToggle from "./LanguageToggle";
 
 // ─── Blog index ──────────────────────────────────────────────────────────────
 // Client component: rotating highlight hero, a filter bar (by category /
 // author / year+month), then the post grid.
+//
+// Language handling: the server hands us EVERY published post, translations
+// included, and we collapse each translation group down to the one version
+// matching the selected language. Language is deliberately kept out of
+// FilterState so that "Clear filters" doesn't yank the reader back to English.
 
 const EMPTY: FilterState = {
   category: null,
@@ -23,50 +31,81 @@ const EMPTY: FilterState = {
   month: null,
 };
 
-export default function BlogIndexView({ posts }: { posts: Post[] }) {
+export default function BlogIndexView({
+  posts,
+  languages,
+}: {
+  /** One post per translation group, already resolved for `lang`. */
+  posts: Post[];
+  /** Languages with at least one published post — drives the toggle. */
+  languages: Language[];
+}) {
   const [filter, setFilter] = useState<FilterState>(EMPTY);
+  const [lang, setLang] = useState<LangCode>(DEFAULT_LANG);
   const isFiltering =
     !!filter.category || !!filter.authorId || !!filter.year || !!filter.month;
 
+  // ── Collapse translation groups to the selected language ─────────────────
+  // Falls back to the original when a post has no version in `lang`, so an
+  // untranslated article still appears rather than silently vanishing.
+  const inLang = useMemo(() => {
+    const groups = new Map<string, Post[]>();
+    for (const post of posts) {
+      const id = post.translationOf ?? post.slug;
+      groups.set(id, [...(groups.get(id) ?? []), post]);
+    }
+    const picked: Post[] = [];
+    for (const members of groups.values()) {
+      const match =
+        members.find((p) => (p.lang ?? DEFAULT_LANG) === lang) ??
+        members.find((p) => (p.lang ?? DEFAULT_LANG) === DEFAULT_LANG) ??
+        members[0];
+      if (match) picked.push(match);
+    }
+    return picked.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+  }, [posts, lang]);
+
   // ── Curated highlights for the hero slider (falls back to latest) ─────────
+  // Highlight slugs name the ORIGINAL post; we show whichever version of that
+  // group matches the reader's language.
   const highlights = useMemo(() => {
-    const bySlug = new Map(posts.map((p) => [p.slug, p]));
+    const byGroup = new Map(inLang.map((p) => [p.translationOf ?? p.slug, p]));
     const picked = HIGHLIGHT_SLUGS
-      .map((slug) => bySlug.get(slug))
+      .map((slug) => byGroup.get(slug))
       .filter((p): p is Post => Boolean(p));
     if (picked.length > 0) return picked;
-    return posts[0] ? [posts[0]] : [];
-  }, [posts]);
+    return inLang[0] ? [inLang[0]] : [];
+  }, [inLang]);
 
   // ── Filter facets derived from the posts ──────────────────────────────────
   const categories = useMemo(() => {
-    const used = new Set(posts.flatMap((p) => p.tags ?? []));
+    const used = new Set(inLang.flatMap((p) => p.tags ?? []));
     return CATEGORIES.filter((c) => used.has(c.id));
-  }, [posts]);
+  }, [inLang]);
 
   const authors = useMemo(() => {
-    const ids = Array.from(new Set(posts.map((p) => p.authorId)));
+    const ids = Array.from(new Set(inLang.map((p) => p.authorId)));
     return ids.map(getAuthor);
-  }, [posts]);
+  }, [inLang]);
 
   const years = useMemo(
     () =>
-      Array.from(new Set(posts.map((p) => p.date.slice(0, 4))))
+      Array.from(new Set(inLang.map((p) => p.date.slice(0, 4))))
         .sort()
         .reverse(),
-    [posts],
+    [inLang],
   );
 
   // ── Apply filters ─────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
-    return posts.filter((p) => {
+    return inLang.filter((p) => {
       if (filter.category && !(p.tags ?? []).includes(filter.category)) return false;
       if (filter.authorId && p.authorId !== filter.authorId) return false;
       if (filter.year && p.date.slice(0, 4) !== filter.year) return false;
       if (filter.month && p.date.slice(5, 7) !== filter.month) return false;
       return true;
     });
-  }, [posts, filter]);
+  }, [inLang, filter]);
 
   return (
     <div className="min-h-screen" style={{ background: DARK_BG }}>
@@ -104,21 +143,30 @@ export default function BlogIndexView({ posts }: { posts: Post[] }) {
                 state={filter}
                 onChange={setFilter}
                 resultCount={filtered.length}
-                totalCount={posts.length}
+                totalCount={inLang.length}
               />
             </motion.div>
           </section>
 
-          {/* ── Section heading ─────────────────────────────────────────── */}
+          {/* ── Section heading + language toggle ───────────────────────── */}
           <section className="mx-auto max-w-6xl px-5 pt-10">
-            <h2 className="text-xl md:text-2xl font-semibold text-white">
-              {isFiltering ? "Matching posts" : "All posts"}
-            </h2>
-            <p className="mt-1 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-              {isFiltering
-                ? `${filtered.length} of ${posts.length} posts.`
-                : `${posts.length} ${posts.length === 1 ? "post" : "posts"} so far.`}
-            </p>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="text-xl md:text-2xl font-semibold text-white">
+                  {isFiltering ? "Matching posts" : "All posts"}
+                </h2>
+                <p className="mt-1 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {isFiltering
+                    ? `${filtered.length} of ${inLang.length} posts.`
+                    : `${inLang.length} ${inLang.length === 1 ? "post" : "posts"} so far.`}
+                </p>
+              </div>
+              <LanguageToggle
+                languages={languages}
+                active={lang}
+                onSelect={setLang}
+              />
+            </div>
           </section>
 
           {/* ── Results ─────────────────────────────────────────────────── */}
@@ -132,7 +180,7 @@ export default function BlogIndexView({ posts }: { posts: Post[] }) {
                   color: "rgba(255,255,255,0.55)",
                 }}
               >
-                {posts.length === 0
+                {inLang.length === 0
                   ? "No posts yet — the first story is on its way."
                   : "No posts match these filters. Try clearing one."}
               </div>
@@ -152,7 +200,7 @@ export default function BlogIndexView({ posts }: { posts: Post[] }) {
                       delay: (i % 3) * 0.06,
                     }}
                   >
-                    <PostCard post={post} />
+                    <PostCard post={post} requestedLang={lang} />
                   </motion.div>
                 ))}
               </div>

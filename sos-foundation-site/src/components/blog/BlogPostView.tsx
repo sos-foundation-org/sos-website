@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { COLORS, DARK_BG } from "@/lib/theme";
 import { SITE_URL } from "@/lib/site";
 import { formatDate, readingTime, getCategory } from "@/content/blog";
+import { DEFAULT_LANG, getLanguage } from "@/content/blog/languages";
 import type { Author, Post } from "@/content/blog/types";
 import BlogHeader from "./BlogHeader";
 import BlogFooter from "./BlogFooter";
@@ -12,6 +13,7 @@ import PostBody from "./PostBody";
 import AuthorBio from "./AuthorBio";
 import ShareBar from "./ShareBar";
 import PostCard from "./PostCard";
+import LanguageToggle from "./LanguageToggle";
 
 // ─── Single article page ─────────────────────────────────────────────────────
 // Dark site shell + a centered light "reading card" for the prose, so the
@@ -21,13 +23,27 @@ export default function BlogPostView({
   post,
   author,
   related,
+  translations = [],
 }: {
   post: Post;
   author: Author;
   related: Post[];
+  /**
+   * Every published version of this article — the original plus translations,
+   * in language-registry order. One entry (or none) means no toggle renders.
+   */
+  translations?: Post[];
 }) {
   const accent = post.accent ?? COLORS.data;
   const shareUrl = `${SITE_URL}/blog/${post.slug}`;
+  const postLang = post.lang ?? DEFAULT_LANG;
+
+  // Each translation is its own URL, so the toggle navigates rather than
+  // swapping content in place — translations stay shareable and indexable.
+  const languages = translations.map((t) => getLanguage(t.lang ?? DEFAULT_LANG));
+  const hrefByLang = new Map(
+    translations.map((t) => [t.lang ?? DEFAULT_LANG, `/blog/${t.slug}`]),
+  );
 
   return (
     <div className="min-h-screen" style={{ background: DARK_BG }}>
@@ -54,13 +70,23 @@ export default function BlogPostView({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <a
-                href="/blog"
-                className="inline-flex items-center gap-1.5 text-sm transition-opacity hover:opacity-80"
-                style={{ color: accent }}
-              >
-                <ArrowLeft size={14} /> All posts
-              </a>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <a
+                  href="/blog"
+                  className="inline-flex items-center gap-1.5 text-sm transition-opacity hover:opacity-80"
+                  style={{ color: accent }}
+                >
+                  <ArrowLeft size={14} /> All posts
+                </a>
+
+                <LanguageToggle
+                  languages={languages}
+                  active={postLang}
+                  hrefFor={(code) => hrefByLang.get(code)}
+                  accent={accent}
+                  size="sm"
+                />
+              </div>
 
               {post.tags && post.tags.length > 0 && (
                 <div className="mt-6 flex flex-wrap gap-2">
@@ -79,10 +105,13 @@ export default function BlogPostView({
                 </div>
               )}
 
-              <h1 className="mt-4 text-3xl md:text-5xl font-semibold leading-tight tracking-tight text-white">
+              <h1
+                lang={postLang}
+                className="mt-4 text-3xl md:text-5xl font-semibold leading-tight tracking-tight text-white"
+              >
                 {post.title}
               </h1>
-              <p className="mt-4 text-lg leading-relaxed text-white/55">
+              <p lang={postLang} className="mt-4 text-lg leading-relaxed text-white/55">
                 {post.excerpt}
               </p>
 
@@ -119,6 +148,15 @@ export default function BlogPostView({
                 className="w-full max-h-[60vh] object-cover"
               />
             </motion.div>
+
+            {/* Photo credit — only when the post declares one. */}
+            {post.coverCredit && (
+              <p
+                lang={postLang}
+                className="mt-3 text-xs text-white/40"
+                dangerouslySetInnerHTML={{ __html: post.coverCredit }}
+              />
+            )}
           </section>
 
           {/* ── Reading card: article body + author bio ─────────────────── */}
@@ -128,6 +166,7 @@ export default function BlogPostView({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.05 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
+              lang={postLang}
               className="rounded-3xl border p-6 md:p-10"
               style={{
                 borderColor: "rgba(31,42,51,0.10)",
@@ -158,7 +197,7 @@ export default function BlogPostView({
               <h2 className="text-xl font-semibold text-white">More posts</h2>
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {related.map((p) => (
-                  <PostCard key={p.slug} post={p} />
+                  <PostCard key={p.slug} post={p} requestedLang={postLang} />
                 ))}
               </div>
             </section>

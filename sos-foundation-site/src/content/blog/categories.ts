@@ -48,6 +48,12 @@ export const CATEGORIES: Category[] = [
     description: "Economic mechanisms and self-sustaining systems.",
   },
   {
+    id: "policy",
+    label: "Policy",
+    color: COLORS.mech,
+    description: "Regulation, governance, and the rules that shape nature and trade.",
+  },
+  {
     id: "research",
     label: "Research",
     color: COLORS.blue,

@@ -1,12 +1,27 @@
 import { ArrowRight } from "lucide-react";
 import { COLORS } from "@/lib/theme";
-import { formatDate, readingTime, getAuthor, getCategory } from "@/content/blog";
-import type { Post } from "@/content/blog/types";
+import { formatDate, readingTime, getAuthor, getCategory, localizeAuthor } from "@/content/blog";
+import { DEFAULT_LANG, getLanguage } from "@/content/blog/languages";
+import type { LangCode, Post } from "@/content/blog/types";
 
 // A single post preview used on the blog index and the "More posts" strip.
-export default function PostCard({ post }: { post: Post }) {
-  const author = getAuthor(post.authorId);
+export default function PostCard({
+  post,
+  requestedLang,
+}: {
+  post: Post;
+  /**
+   * The language the reader asked for. When this post isn't available in it,
+   * the card is badged with the language it IS in — so a card that stays in
+   * English while the toggle says 简体 explains itself instead of looking broken.
+   */
+  requestedLang?: LangCode;
+}) {
   const accent = post.accent ?? COLORS.data;
+  const postLang = post.lang ?? DEFAULT_LANG;
+  const author = localizeAuthor(getAuthor(post.authorId), postLang);
+  const langBadge =
+    requestedLang && requestedLang !== postLang ? getLanguage(postLang) : null;
 
   return (
     <a
@@ -30,6 +45,19 @@ export default function PostCard({ post }: { post: Post }) {
               "linear-gradient(180deg, rgba(8,24,36,0.05) 0%, rgba(8,24,36,0.70) 100%)",
           }}
         />
+        {langBadge && (
+          <span
+            className="absolute top-3 right-3 rounded-full px-2.5 py-1 text-[10px] font-semibold"
+            style={{
+              background: "rgba(8,24,36,0.80)",
+              color: "rgba(255,255,255,0.70)",
+              backdropFilter: "blur(4px)",
+            }}
+            title={`Only available in ${langBadge.name}`}
+          >
+            {langBadge.label}
+          </span>
+        )}
         {post.tags && post.tags.length > 0 && (
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
             {post.tags.slice(0, 2).map((tag) => {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getAllPosts } from "@/content/blog";
+import { getAllPosts, getLanguagesInUse } from "@/content/blog";
 import BlogIndexView from "@/components/blog/BlogIndexView";
 
 // Server component: owns metadata + data loading, delegates rendering to the
@@ -28,5 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  return <BlogIndexView posts={getAllPosts()} />;
+  // Hand over every published post — translations included. The client view
+  // collapses each translation group down to the reader's chosen language.
+  return <BlogIndexView posts={getAllPosts()} languages={getLanguagesInUse()} />;
 }
