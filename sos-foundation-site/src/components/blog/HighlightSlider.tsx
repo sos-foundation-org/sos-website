@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
@@ -34,22 +35,27 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
   if (!current) {
     return (
       <section className="relative w-full min-h-[66vh] flex items-center justify-center overflow-hidden">
-        <img
+        <Image
           src="/pics/Nature_Salon.jpg"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-          decoding="async"
+          alt="SOS Blog background — nature and art exhibition"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
         />
         <div className="absolute inset-0" style={{ background: "rgba(8,24,36,0.82)" }} />
         <div className="relative z-10 text-center px-5">
-          <img
+          <Image
             src="/logo/SOS-LOGO_v2-for_SVG.svg"
-            alt="SOS Foundation"
-            className="mx-auto h-12 w-28"
+            alt="SOS Foundation logo"
+            width={112}
+            height={48}
+            className="mx-auto"
             style={{
               filter:
                 "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg)",
             }}
+            unoptimized
           />
           <h1 className="mt-8 text-5xl md:text-6xl font-semibold tracking-tight text-white">
             Ideas, in public
@@ -84,10 +90,12 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
           transition={{ duration: 0.9, ease: "easeOut" }}
           className="absolute inset-0"
         >
-          <img
+          <Image
             src={current.cover}
             alt={current.coverAlt ?? current.title}
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            className="object-cover"
+            sizes="100vw"
           />
           <div
             className="absolute inset-0"
@@ -101,14 +109,17 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
 
       {/* ── Persistent brand strip — visible across every slide ─────────── */}
       <div className="relative z-10 mx-auto max-w-6xl px-5 pt-12 md:pt-16 text-center">
-        <img
+        <Image
           src="/logo/SOS-LOGO_v2-for_SVG.svg"
-          alt="SOS Foundation"
-          className="mx-auto h-10 w-24 opacity-90"
+          alt="SOS Foundation logo"
+          width={96}
+          height={40}
+          className="mx-auto opacity-90"
           style={{
             filter:
               "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg)",
           }}
+          unoptimized
         />
         <div className="mt-2 text-xs font-medium tracking-wide" style={{ color: "rgba(255,255,255,0.55)" }}>
           SOS Blog · Ideas, in public
@@ -164,7 +175,7 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
             {/* Byline */}
             <div className="mt-6 flex items-center justify-center gap-2.5">
               <div className="h-7 w-7 rounded-full overflow-hidden bg-white/10">
-                <img src={author.avatar} alt={author.name} className="h-full w-full object-cover" />
+                <Image src={author.avatar} alt={author.name} width={28} height={28} className="h-full w-full object-cover" />
               </div>
               <div className="text-xs text-white/65">
                 {author.name} · {formatDate(current.date)}

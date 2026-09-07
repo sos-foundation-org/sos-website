@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { COLORS } from "@/lib/theme";
 import type { Author } from "@/content/blog/types";
@@ -23,9 +24,11 @@ export default function AuthorBio({
         className="h-16 w-16 rounded-full overflow-hidden shrink-0 ring-2"
         style={{ background: "rgba(255,255,255,0.06)" }}
       >
-        <img
+        <Image
           src={author.avatar}
           alt={author.name}
+          width={64}
+          height={64}
           className="h-full w-full object-cover"
         />
       </div>

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     url: "/blog",
-    images: [{ url: "/pics/Nature_Salon.jpg" }],
+    images: [{ url: "/pics/Nature_Salon.jpg", alt: "SOS Blog — Ideas, in public" }],
   },
   twitter: {
     card: "summary_large_image",

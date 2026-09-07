@@ -9,6 +9,7 @@ import {
   getTranslations,
   localizeAuthor,
 } from "@/content/blog";
+import { SITE_URL } from "@/lib/site";
 import BlogPostView from "@/components/blog/BlogPostView";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -61,12 +62,43 @@ export default async function BlogPostPage({ params }: Params) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
+  const author = getAuthor(post.authorId);
+
+  const jsonLdArticle = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    author: { "@type": "Person", name: author.name },
+    datePublished: post.date,
+    dateModified: post.date,
+    image: `${SITE_URL}${post.cover}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${post.slug}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "SOS Foundation",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/logo/SOS-LOGO_v3-icon.svg`,
+      },
+    },
+  };
+
   return (
-    <BlogPostView
-      post={post}
-      author={localizeAuthor(getAuthor(post.authorId), getPostLang(post))}
-      related={getRelatedPosts(slug, 3, getPostLang(post))}
-      translations={getTranslations(post)}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }}
+      />
+      <BlogPostView
+        post={post}
+        author={localizeAuthor(author, getPostLang(post))}
+        related={getRelatedPosts(slug, 3, getPostLang(post))}
+        translations={getTranslations(post)}
+      />
+    </>
   );
 }

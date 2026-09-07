@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { COLORS } from "@/lib/theme";
@@ -21,10 +22,13 @@ export default function BlogHeader() {
             href="/"
             className="h-9 w-9 rounded-2xl overflow-hidden hover:opacity-80 transition-opacity"
           >
-            <img
+            <Image
               src="/logo/SOS-LOGO_v3-icon.svg"
               alt="SOS Foundation Logo"
+              width={36}
+              height={36}
               className="h-full w-full object-cover"
+              unoptimized
             />
           </a>
           <div className="leading-tight">

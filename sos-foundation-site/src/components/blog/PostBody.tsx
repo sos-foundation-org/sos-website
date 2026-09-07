@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { COLORS } from "@/lib/theme";
 import type { Block } from "@/content/blog/types";
 
@@ -49,12 +50,14 @@ function BlockView({ block, accent }: { block: Block; accent: string }) {
     case "image":
       return (
         <figure className="mt-8">
-          <img
+          <Image
             src={block.src}
             alt={block.alt ?? ""}
-            className={`w-full ${block.rounded === false ? "" : "rounded-2xl"}`}
+            width={1200}
+            height={800}
+            className={`w-full h-auto ${block.rounded === false ? "" : "rounded-2xl"}`}
             loading="lazy"
-            decoding="async"
+            sizes="(max-width: 768px) 100vw, 720px"
           />
           <Caption text={block.caption} />
         </figure>
@@ -69,14 +72,16 @@ function BlockView({ block, accent }: { block: Block; accent: string }) {
             }`}
           >
             {block.images.map((img, i) => (
-              <img
-                key={i}
-                src={img.src}
-                alt={img.alt ?? ""}
-                className="w-full rounded-xl aspect-[4/3] object-cover"
-                loading="lazy"
-                decoding="async"
-              />
+              <div key={i} className="relative aspect-[4/3]">
+                <Image
+                  src={img.src}
+                  alt={img.alt ?? ""}
+                  fill
+                  className="rounded-xl object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                />
+              </div>
             ))}
           </div>
           <Caption text={block.caption} />

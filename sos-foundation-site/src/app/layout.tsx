@@ -25,6 +25,27 @@ export const metadata: Metadata = {
 };
 
 
+const jsonLdOrganization = {
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  name: "Sustainability of Sustainability Foundation",
+  alternateName: "SOS Foundation",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo/SOS-LOGO_v3-icon.svg`,
+  sameAs: [
+    "https://www.linkedin.com/company/sos-commons/",
+    "https://www.instagram.com/sustainability.dialogue/",
+    "https://www.facebook.com/profile.php?id=61587085297510",
+  ],
+};
+
+const jsonLdWebSite = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "SOS Foundation",
+  url: SITE_URL,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,6 +53,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrganization) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

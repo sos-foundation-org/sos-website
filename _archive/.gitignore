@@ -1,0 +1,4 @@
+# Archive — old reports and working documents.
+# Keep locally for reference; exclude from git.
+*
+!.gitignore

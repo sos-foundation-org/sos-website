@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { COLORS } from "@/lib/theme";
 import { formatDate, readingTime, getAuthor, getCategory, localizeAuthor } from "@/content/blog";
@@ -31,12 +32,12 @@ export default function PostCard({
     >
       {/* Cover */}
       <div className="relative aspect-[16/9] overflow-hidden shrink-0">
-        <img
+        <Image
           src={post.cover}
           alt={post.coverAlt ?? post.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-          decoding="async"
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         <div
           className="absolute inset-0"
@@ -105,9 +106,11 @@ export default function PostCard({
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="h-7 w-7 rounded-full overflow-hidden shrink-0 bg-white/5">
-              <img
+              <Image
                 src={author.avatar}
                 alt={author.name}
+                width={28}
+                height={28}
                 className="h-full w-full object-cover"
               />
             </div>

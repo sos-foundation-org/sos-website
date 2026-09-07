@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { COLORS, DARK_BG } from "@/lib/theme";
@@ -118,9 +119,11 @@ export default function BlogPostView({
               {/* Byline */}
               <div className="mt-6 flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full overflow-hidden shrink-0 bg-white/5">
-                  <img
+                  <Image
                     src={author.avatar}
                     alt={author.name}
+                    width={40}
+                    height={40}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -142,10 +145,14 @@ export default function BlogPostView({
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
               className="rounded-3xl overflow-hidden"
             >
-              <img
+              <Image
                 src={post.cover}
                 alt={post.coverAlt ?? post.title}
+                width={1200}
+                height={630}
                 className="w-full max-h-[60vh] object-cover"
+                sizes="(max-width: 768px) 100vw, 960px"
+                style={{ width: '100%', height: 'auto' }}
               />
             </motion.div>
 

@@ -44,8 +44,8 @@ export const post: Post = {
     {
       type: "gallery",
       images: [
-        { src: "/pics/digital_moths.png", alt: "第一张图" },
-        { src: "/pics/talk.png", alt: "第二张图" },
+        { src: "/pics/digital_moths.jpg", alt: "第一张图" },
+        { src: "/pics/talk.jpg", alt: "第二张图" },
       ],
       caption: "两到三张属于同一组的图片。",
     },

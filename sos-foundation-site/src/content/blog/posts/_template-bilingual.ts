@@ -47,8 +47,8 @@ export const post: Post = {
     {
       type: "gallery",
       images: [
-        { src: "/pics/digital_moths.png", alt: "First image" },
-        { src: "/pics/talk.png", alt: "Second image" },
+        { src: "/pics/digital_moths.jpg", alt: "First image" },
+        { src: "/pics/talk.jpg", alt: "Second image" },
       ],
       caption: "Two or three images that belong together.",
     },

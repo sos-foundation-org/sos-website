@@ -102,7 +102,7 @@ export const WORK: WorkContent = {
       aspect: "aspect-[4/5]",
       media: {
         kind: "image",
-        src: "/pics/talk.png",
+        src: "/pics/talk.jpg",
         alt: "Presenting a system prototype",
       },
       caption: "Presenting a system prototype",

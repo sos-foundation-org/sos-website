@@ -48,8 +48,8 @@ export const post: Post = {
     {
       type: "gallery",
       images: [
-        { src: "/pics/digital_moths.png", alt: "Digitized moth specimens" },
-        { src: "/pics/talk.png", alt: "A public talk" },
+        { src: "/pics/digital_moths.jpg", alt: "Digitized moth specimens" },
+        { src: "/pics/talk.jpg", alt: "A public talk" },
         { src: "/pics/education.jpg", alt: "Education and outreach" },
       ],
       caption: "A gallery block — drop in two or three images and they lay out automatically.",

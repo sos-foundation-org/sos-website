@@ -1,0 +1,4 @@
+# Archive — unused boilerplate, outdated images, old logo versions.
+# Keep locally for reference; exclude from git and deployment.
+*
+!.gitignore
