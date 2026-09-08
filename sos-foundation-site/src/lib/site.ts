@@ -11,5 +11,5 @@
  *     settings). The fallback below is only a placeholder for local dev.
  */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://sos-foundation.org"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sos-network.org"
 ).replace(/\/+$/, "");
