@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import MobileNav from "@/components/ui/MobileNav";
 import { WORK, type WorkCard } from "@/content/home/work";
 
 /**
@@ -96,18 +97,18 @@ const DIVISIONS: Record<DivKey, any> = {
   mechanism: {
     key: "mechanism",
     label: "Mechanism",
-    name: "Economic Mechanisms & Sustainable Systems",
+    name: "Knowledge Systems & Open Infrastructure",
     color: COLORS.mech,
     icon: Network,
     mechanismImage: "/pics/mechanism.JPG",
-    question: "What if sustainability happened by default—because the system rewards it?",
+    question: "What if nature's knowledge were open, searchable, and accessible to everyone?",
     thesis:
-      "Distributed, closed-loop incentive systems align shared value with economic behavior—allowing sustainability to scale through economics rather than slogans.",
-    anchors: ["Incentive loops", "Ecosystem partnerships", "System prototypes"],
+      "Open knowledge infrastructure makes nature's design intelligence findable and usable — connecting researchers, educators, and innovators through shared data and tools.",
+    anchors: ["Discovery Commons", "Internet of Bioinspiration (IoBI)", "Open datasets & tools"],
 
     explainTitle: "Mechanism layer",
     explainBody:
-      "Mechanism is where sustainability becomes automatic—when incentive structures and closed-loop systems align default behavior with long-term outcomes.",
+      "Mechanism is where knowledge becomes accessible — when open infrastructure, shared datasets, and contributor networks make nature's design intelligence available to those who need it.",
   },
 };
 
@@ -721,20 +722,22 @@ export default function HomeView() {
               <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
                 Sustainability of Sustainability
               </div>
-              <div className="text-s" style={{ color: "rgba(31,42,51,0.55)" }}>
-                Meaning + Pattern + Mechanism → Continuity
+              <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
+                Meaning + Pattern + Mechanism &rarr; Continuity
               </div>
             </div>
           </div>
 
           <nav className="hidden md:flex items-center gap-3 text-sm tracking-tight" style={{ color: "rgba(31,42,51,0.75)" }}>
-            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("meaning")}>Meaning</button>
-            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("pattern")}>Pattern</button>
-            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("mechanism")}>Mechanism</button>
-            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("work")}>Work</button>
+            <a href="/about" className="text-m hover:opacity-80">About</a>
+            <a href="/about#about-meaning" className="text-m hover:opacity-80">Meaning</a>
+            <a href="/about#about-pattern" className="text-m hover:opacity-80">Pattern</a>
+            <a href="/about#about-mechanism" className="text-m hover:opacity-80">Mechanism</a>
+            <a href="/about#about-work" className="text-m hover:opacity-80">Work</a>
             <a href="/research" className="text-m hover:opacity-80">Research</a>
+            <a href="/education" className="text-m hover:opacity-80">Education</a>
             <a href="/blog" className="text-m hover:opacity-80">Blog</a>
-            <button className="text-m hover:opacity-80 cursor-pointer" onClick={() => scrollToId("involved")}>Join</button>
+            <a href="/about#about-involved" className="text-m hover:opacity-80">Join</a>
           </nav>
 
           {/* Social icons */}
@@ -782,6 +785,8 @@ export default function HomeView() {
               See work <ArrowRight className="ml-2" size={16} />
             </Button>
           </div>
+
+          <MobileNav currentPage="/" />
         </div>
       </header>
 
@@ -829,16 +834,16 @@ export default function HomeView() {
               </div>
               <div className="flex flex-col items-center text-center">
                 <h1
-                className="mt-10 text-6xl md:text-6xl font-semibold tracking-tight max-w-6xl"
+                className="mt-10 text-3xl md:text-6xl font-semibold tracking-tight max-w-6xl"
                 style={{ color: COLORS.bg }}
                 >
                 Sustainability isn't self-sustaining
                 </h1>
-              <p
-                className="mt-5 text-4xl md:text-4xl leading-relaxed max-w-2xl"
-                style={{ color: COLORS.mech }}
-              >
-                Sustainability scales when Meaning, Pattern, and Mechanism form a loop —enabling Continuity to emerge
+              <p className="mt-5 text-2xl md:text-3xl leading-relaxed max-w-2xl" style={{ color: "rgba(245,247,246,0.85)" }}>
+                We sustain humanity&apos;s ability to learn from nature — through research, education, and open knowledge infrastructure.
+              </p>
+              <p className="mt-3 text-sm tracking-wide" style={{ color: "rgba(245,247,246,0.5)" }}>
+                501(c)(3) nonprofit &middot; est. 2025
               </p>
               {/* Anchored whitespace: looks intentional */}
               </div>
@@ -890,11 +895,11 @@ export default function HomeView() {
             <div>
               <div className="text-sm font-semibold" style={{ color: COLORS.bg }}>Sustainability of Sustainability</div>
               <div className="mt-1 text-xs" style={{ color: COLORS.bg }}>
-                Meaning + Pattern + Mechanism → Continuity
+                Meaning + Pattern + Mechanism &rarr; Continuity
               </div>
             </div>
             <div className="text-xs" style={{ color: COLORS.bg }}>
-              © {new Date().getFullYear()} SOS Initiative. All rights reserved.
+              © {new Date().getFullYear()} Sustainability of Sustainability
             </div>
           </div>
         </footer>

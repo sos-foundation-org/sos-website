@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     default: "Sustainability of Sustainability",
     template: "%s — SOS",
   },
-  description: "Building continuity where sustainability sustains itself.",
+  description: "Sustaining humanity's ability to learn from nature — through research, education, and open knowledge infrastructure. A 501(c)(3) nonprofit.",
 };
 
 

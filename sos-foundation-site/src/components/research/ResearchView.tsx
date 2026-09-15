@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Linkedin, Instagram, Facebook } from "lucide-react";
+import MobileNav from "@/components/ui/MobileNav";
 
 // ─── Design tokens — identical to main site ──────────────────────────────────
 const COLORS = {
@@ -441,8 +442,8 @@ export default function ResearchView() {
                 <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
                   Sustainability of Sustainability
                 </div>
-                <div className="text-s" style={{ color: "rgba(31,42,51,0.55)" }}>
-                  Research Unit
+                <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
+                  Meaning + Pattern + Mechanism &rarr; Continuity
                 </div>
               </div>
             </div>
@@ -451,25 +452,32 @@ export default function ResearchView() {
                 Research item is highlighted because this is the current page;
                 section links jump back to the home page sections via /#…. */}
             <nav className="hidden md:flex items-center gap-3 text-sm tracking-tight" style={{ color: "rgba(31,42,51,0.75)" }}>
-              <a href="/#meaning" className="text-m hover:opacity-80">Meaning</a>
-              <a href="/#pattern" className="text-m hover:opacity-80">Pattern</a>
-              <a href="/#mechanism" className="text-m hover:opacity-80">Mechanism</a>
-              <a href="/#work" className="text-m hover:opacity-80">Work</a>
+              <a href="/about" className="text-m hover:opacity-80">About</a>
+              <a href="/about#about-meaning" className="text-m hover:opacity-80">Meaning</a>
+              <a href="/about#about-pattern" className="text-m hover:opacity-80">Pattern</a>
+              <a href="/about#about-mechanism" className="text-m hover:opacity-80">Mechanism</a>
+              <a href="/about#about-work" className="text-m hover:opacity-80">Work</a>
               <a href="/research" className="text-m font-semibold" style={{ color: COLORS.blue }}>Research</a>
+              <a href="/education" className="text-m hover:opacity-80">Education</a>
               <a href="/blog" className="text-m hover:opacity-80">Blog</a>
-              <a href="/#involved" className="text-m hover:opacity-80">Join</a>
+              <a href="/about#about-involved" className="text-m hover:opacity-80">Join</a>
             </nav>
 
-            {/* Back link */}
+            {/* Social icons */}
+            <div className="hidden md:flex items-center gap-3">
+              <a href="https://www.linkedin.com/company/sos-commons/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="p-2 rounded-xl transition-opacity hover:opacity-80" style={{ color: "#0A66C2" }}><Linkedin size={18} /></a>
+              <a href="https://www.instagram.com/sustainability.dialogue/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-2 rounded-xl transition-opacity hover:opacity-80" style={{ color: "#E1306C" }}><Instagram size={18} /></a>
+              <a href="https://www.facebook.com/profile.php?id=61587085297510" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 rounded-xl transition-opacity hover:opacity-80" style={{ color: "#1877F2" }}><Facebook size={18} /></a>
+            </div>
+
+            {/* Home link */}
             <div className="flex items-center gap-2 shrink-0">
-              <a
-                href="/"
-                className="hidden md:inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0"
-                style={{ background: COLORS.blue }}
-              >
-                <ArrowLeft size={14} /> SOS Foundation
+              <a href="/" className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0" style={{ background: COLORS.blue }}>
+                <ArrowLeft size={14} /> Home
               </a>
             </div>
+
+            <MobileNav currentPage="/research" />
           </div>
         </header>
 
@@ -1400,21 +1408,21 @@ export default function ResearchView() {
           <div className="mx-auto max-w-6xl px-5 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
             <div>
               <div className="text-sm font-semibold" style={{ color: COLORS.bg }}>
-                SOS Research Unit
+                Sustainability of Sustainability
               </div>
-              <div className="mt-1 text-xs" style={{ color: "rgba(245,247,246,0.50)" }}>
-                Sustainability of Sustainability Foundation · Harvard University
+              <div className="mt-1 text-xs" style={{ color: COLORS.bg }}>
+                Meaning + Pattern + Mechanism &rarr; Continuity
               </div>
             </div>
             <a
               href="/"
               className="text-xs hover:opacity-80 transition-opacity self-start md:self-auto"
-              style={{ color: "rgba(245,247,246,0.50)" }}
+              style={{ color: COLORS.bg }}
             >
               ← Back to SOS Foundation
             </a>
-            <div className="text-xs" style={{ color: "rgba(245,247,246,0.40)" }}>
-              © {new Date().getFullYear()} SOS Initiative. All rights reserved.
+            <div className="text-xs" style={{ color: COLORS.bg }}>
+              © {new Date().getFullYear()} Sustainability of Sustainability
             </div>
           </div>
         </footer>
