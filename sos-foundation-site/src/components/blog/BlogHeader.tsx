@@ -47,17 +47,17 @@ export default function BlogHeader() {
           className="hidden md:flex items-center gap-3 text-sm tracking-tight"
           style={{ color: "rgba(31,42,51,0.75)" }}
         >
-          <a href="/about" className="text-m hover:opacity-80">About</a>
-          <a href="/about#about-meaning" className="text-m hover:opacity-80">Meaning</a>
-          <a href="/about#about-pattern" className="text-m hover:opacity-80">Pattern</a>
-          <a href="/about#about-mechanism" className="text-m hover:opacity-80">Mechanism</a>
-          <a href="/about#about-work" className="text-m hover:opacity-80">Work</a>
+          <a href="/" className="text-m hover:opacity-80">About</a>
+          <a href="/#about-meaning" className="text-m hover:opacity-80">Meaning</a>
+          <a href="/#about-pattern" className="text-m hover:opacity-80">Pattern</a>
+          <a href="/#about-mechanism" className="text-m hover:opacity-80">Mechanism</a>
+          <a href="/#about-work" className="text-m hover:opacity-80">Work</a>
           <a href="/research" className="text-m hover:opacity-80">Research</a>
           <a href="/education" className="text-m hover:opacity-80">Education</a>
           <a href="/blog" className="text-m font-semibold" style={{ color: COLORS.blue }}>
             Blog
           </a>
-          <a href="/about#about-involved" className="text-m hover:opacity-80">Join</a>
+          <a href="/#about-involved" className="text-m hover:opacity-80">Join</a>
         </nav>
 
         {/* Social icons */}
@@ -100,7 +100,7 @@ export default function BlogHeader() {
         {/* CTA — mirrors home page "See work" button */}
         <div className="flex items-center gap-2">
           <a
-            href="/about#about-work"
+            href="/#about-work"
             className="inline-flex items-center rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85"
             style={{ background: COLORS.blue }}
           >

@@ -16,15 +16,15 @@ const COLORS = {
 };
 
 const NAV_LINKS = [
-  { label: "About", href: "/about" },
-  { label: "Meaning", href: "/about#about-meaning" },
-  { label: "Pattern", href: "/about#about-pattern" },
-  { label: "Mechanism", href: "/about#about-mechanism" },
-  { label: "Work", href: "/about#about-work" },
+  { label: "About", href: "/" },
+  { label: "Meaning", href: "/#about-meaning" },
+  { label: "Pattern", href: "/#about-pattern" },
+  { label: "Mechanism", href: "/#about-mechanism" },
+  { label: "Work", href: "/#about-work" },
   { label: "Research", href: "/research" },
   { label: "Education", href: "/education" },
   { label: "Blog", href: "/blog" },
-  { label: "Join", href: "/about#about-involved" },
+  { label: "Join", href: "/#about-involved" },
   { label: "Support", href: "/donate" },
 ];
 

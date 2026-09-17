@@ -205,15 +205,15 @@ export default function EducationView() {
             </div>
 
             <nav className="hidden md:flex items-center gap-3 text-sm tracking-tight" style={{ color: "rgba(31,42,51,0.75)" }}>
-              <a href="/about" className="text-m hover:opacity-80">About</a>
-              <a href="/about#about-meaning" className="text-m hover:opacity-80">Meaning</a>
-              <a href="/about#about-pattern" className="text-m hover:opacity-80">Pattern</a>
-              <a href="/about#about-mechanism" className="text-m hover:opacity-80">Mechanism</a>
-              <a href="/about#about-work" className="text-m hover:opacity-80">Work</a>
+              <a href="/" className="text-m hover:opacity-80">About</a>
+              <a href="/#about-meaning" className="text-m hover:opacity-80">Meaning</a>
+              <a href="/#about-pattern" className="text-m hover:opacity-80">Pattern</a>
+              <a href="/#about-mechanism" className="text-m hover:opacity-80">Mechanism</a>
+              <a href="/#about-work" className="text-m hover:opacity-80">Work</a>
               <a href="/research" className="text-m hover:opacity-80">Research</a>
               <a href="/education" className="text-m font-semibold" style={{ color: COLORS.blue }}>Education</a>
               <a href="/blog" className="text-m hover:opacity-80">Blog</a>
-              <a href="/about#about-involved" className="text-m hover:opacity-80">Join</a>
+              <a href="/#about-involved" className="text-m hover:opacity-80">Join</a>
             </nav>
 
             <div className="hidden md:flex items-center gap-3">
