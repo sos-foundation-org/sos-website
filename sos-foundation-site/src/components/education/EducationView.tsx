@@ -194,13 +194,13 @@ export default function EducationView() {
         {/* ── Header ── */}
         <header className="sticky top-0 z-50 backdrop-blur-xl" style={{ background: "rgba(245,247,246,0.72)", borderBottom: "1px solid rgba(31,42,51,0.08)" }}>
           <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 shrink-0">
-              <a href="/" className="h-9 w-9 rounded-2xl overflow-hidden hover:opacity-80 transition-opacity">
+            <div className="flex items-center gap-3 min-w-0">
+              <a href="/" className="h-9 w-9 rounded-2xl overflow-hidden shrink-0 hover:opacity-80 transition-opacity">
                 <Image src="/logo/SOS-LOGO_v3-icon.svg" alt="SOS Foundation Logo" width={36} height={36} className="h-full w-full object-cover" unoptimized />
               </a>
               <div className="leading-tight">
                 <div className="text-m font-semibold" style={{ color: COLORS.ink }}>Sustainability of Sustainability</div>
-                <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>Meaning + Pattern + Mechanism &rarr; Continuity</div>
+                <div className="hidden sm:block text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>Meaning + Pattern + Mechanism &rarr; Continuity</div>
               </div>
             </div>
 
@@ -222,7 +222,7 @@ export default function EducationView() {
               <a href="https://www.facebook.com/profile.php?id=61587085297510" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 rounded-xl transition-opacity hover:opacity-80" style={{ color: "#1877F2" }}><Facebook size={18} /></a>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="hidden md:flex items-center gap-2 shrink-0">
               <a href="/" className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0" style={{ background: COLORS.blue }}>
                 <ArrowLeft size={14} /> Home
               </a>

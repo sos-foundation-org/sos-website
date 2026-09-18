@@ -434,15 +434,15 @@ export default function ResearchView() {
         >
           <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between gap-4">
             {/* Logo + title */}
-            <div className="flex items-center gap-3 shrink-0">
-              <a href="/" className="h-9 w-9 rounded-2xl overflow-hidden hover:opacity-80 transition-opacity">
+            <div className="flex items-center gap-3 min-w-0">
+              <a href="/" className="h-9 w-9 rounded-2xl overflow-hidden shrink-0 hover:opacity-80 transition-opacity">
                 <Image src="/logo/SOS-LOGO_v3-icon.svg" alt="SOS Foundation Logo" width={36} height={36} className="h-full w-full object-cover" unoptimized />
               </a>
               <div className="leading-tight">
                 <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
                   Sustainability of Sustainability
                 </div>
-                <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
+                <div className="hidden sm:block text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
                   Meaning + Pattern + Mechanism &rarr; Continuity
                 </div>
               </div>
@@ -471,7 +471,7 @@ export default function ResearchView() {
             </div>
 
             {/* Home link */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="hidden md:flex items-center gap-2 shrink-0">
               <a href="/" className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0" style={{ background: COLORS.blue }}>
                 <ArrowLeft size={14} /> Home
               </a>

@@ -703,11 +703,11 @@ export default function HomeView() {
         className="sticky top-0 z-50 backdrop-blur-xl"
         style={{ background: "rgba(245,247,246,0.72)", borderBottom: "1px solid rgba(31,42,51,0.08)" }}
       >
-        <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
             <button 
               onClick={() => scrollToId("hero")} 
-              className="h-9 w-9 rounded-2xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+              className="h-9 w-9 rounded-2xl overflow-hidden shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
             >
               <NextImage
                 src="/logo/SOS-LOGO_v3-icon.svg"
@@ -722,7 +722,7 @@ export default function HomeView() {
               <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
                 Sustainability of Sustainability
               </div>
-              <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
+              <div className="hidden sm:block text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
                 Meaning + Pattern + Mechanism &rarr; Continuity
               </div>
             </div>
@@ -779,7 +779,7 @@ export default function HomeView() {
           </a>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             <Button className="rounded-2xl" style={{ background: COLORS.blue, color: "white" }} onClick={() => scrollToId("work")}
             >
               See work <ArrowRight className="ml-2" size={16} />

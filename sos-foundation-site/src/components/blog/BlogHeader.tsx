@@ -16,12 +16,12 @@ export default function BlogHeader() {
         borderBottom: "1px solid rgba(31,42,51,0.08)",
       }}
     >
-      <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between">
+      <div className="mx-auto max-w-6xl px-5 py-3 flex items-center justify-between gap-4">
         {/* Logo + title */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <a
             href="/"
-            className="h-9 w-9 rounded-2xl overflow-hidden hover:opacity-80 transition-opacity"
+            className="h-9 w-9 rounded-2xl overflow-hidden shrink-0 hover:opacity-80 transition-opacity"
           >
             <Image
               src="/logo/SOS-LOGO_v3-icon.svg"
@@ -36,7 +36,7 @@ export default function BlogHeader() {
             <div className="text-m font-semibold" style={{ color: COLORS.ink }}>
               Sustainability of Sustainability
             </div>
-            <div className="text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
+            <div className="hidden sm:block text-xs" style={{ color: "rgba(31,42,51,0.55)" }}>
               Meaning + Pattern + Mechanism &rarr; Continuity
             </div>
           </div>
@@ -98,7 +98,7 @@ export default function BlogHeader() {
         </div>
 
         {/* CTA — mirrors home page "See work" button */}
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2 shrink-0">
           <a
             href="/#about-work"
             className="inline-flex items-center rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85"
