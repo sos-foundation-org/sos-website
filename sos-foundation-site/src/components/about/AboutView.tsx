@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motio
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
   Mail,
   Linkedin,
@@ -801,10 +802,13 @@ export default function AboutView() {
               <a href="https://discovery-commons.vercel.app/" target="_blank" rel="noopener noreferrer" className="group relative rounded-3xl overflow-hidden aspect-[16/10] cursor-pointer transition-transform duration-200 hover:scale-[1.01]">
                 <Image src="/pics/discovery_commons.png" alt="Discovery Commons" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.0) 0%, rgba(8,24,36,0.55) 100%)" }} />
-                <div className="pointer-events-none absolute inset-0 flex items-end p-4">
-                  <div className="rounded-2xl px-3 py-2 text-xs" style={{ background: "rgba(31,42,51,0.85)", color: "white", border: "1px solid rgba(255,255,255,0.10)" }}>
+                <div className="pointer-events-none absolute inset-0 flex items-end justify-between gap-3 p-4">
+                  <div className="min-w-0 rounded-2xl px-3 py-2 text-xs" style={{ background: "rgba(31,42,51,0.85)", color: "white", border: "1px solid rgba(255,255,255,0.10)" }}>
                     Discovery Commons | Open knowledge infrastructure for nature
                   </div>
+                  <span className="shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                    View <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
                 </div>
               </a>
               <AboutWorkCard card={WORK.spotlight} />
