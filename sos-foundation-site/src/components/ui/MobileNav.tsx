@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Linkedin, Instagram, Facebook } from "lucide-react";
 
@@ -45,6 +46,11 @@ const SOCIAL_LINKS = [
  */
 export default function MobileNav({ currentPage }: { currentPage?: string }) {
   const [open, setOpen] = useState(false);
+  // The drawer is portaled to <body>: the headers use backdrop-filter, which
+  // makes them the containing block for `position: fixed` children and would
+  // clip the full-screen drawer to the header's ~64px height.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Lock body scroll when open
   useEffect(() => {
@@ -75,6 +81,7 @@ export default function MobileNav({ currentPage }: { currentPage?: string }) {
       </button>
 
       {/* Overlay + drawer */}
+      {mounted && createPortal(
       <AnimatePresence>
         {open && (
           <>
@@ -159,7 +166,9 @@ export default function MobileNav({ currentPage }: { currentPage?: string }) {
             </motion.nav>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </div>
   );
 }
