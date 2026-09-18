@@ -222,7 +222,7 @@ export default function EducationView() {
               <a href="https://www.facebook.com/profile.php?id=61587085297510" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 rounded-xl transition-opacity hover:opacity-80" style={{ color: "#1877F2" }}><Facebook size={18} /></a>
             </div>
 
-            <div className="hidden md:flex items-center gap-2 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 shrink-0">
               <a href="/" className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0" style={{ background: COLORS.blue }}>
                 <ArrowLeft size={14} /> Home
               </a>

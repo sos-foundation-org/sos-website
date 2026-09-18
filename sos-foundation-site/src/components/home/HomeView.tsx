@@ -779,7 +779,7 @@ export default function HomeView() {
           </a>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 shrink-0">
+          <div className="hidden lg:flex items-center gap-2 shrink-0">
             <Button className="rounded-2xl" style={{ background: COLORS.blue, color: "white" }} onClick={() => scrollToId("work")}
             >
               See work <ArrowRight className="ml-2" size={16} />

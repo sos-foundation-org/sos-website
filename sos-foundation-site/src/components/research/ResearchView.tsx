@@ -471,7 +471,7 @@ export default function ResearchView() {
             </div>
 
             {/* Home link */}
-            <div className="hidden md:flex items-center gap-2 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 shrink-0">
               <a href="/" className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0" style={{ background: COLORS.blue }}>
                 <ArrowLeft size={14} /> Home
               </a>

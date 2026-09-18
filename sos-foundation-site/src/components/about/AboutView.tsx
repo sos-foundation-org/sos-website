@@ -501,7 +501,7 @@ export default function AboutView() {
               <a href="https://www.facebook.com/profile.php?id=61587085297510" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 rounded-xl transition-opacity hover:opacity-80" style={{ color: "#1877F2" }}><Facebook size={18} /></a>
             </div>
 
-            <div className="hidden md:flex items-center gap-2 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 shrink-0">
               <a href="/" className="inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 shrink-0" style={{ background: COLORS.blue }}>
                 <ArrowLeft size={14} /> Home
               </a>
@@ -722,11 +722,14 @@ export default function AboutView() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Research card — clickable */}
-                <a href="/research" className="group relative rounded-3xl overflow-hidden aspect-[16/10] cursor-pointer transition-transform duration-200 hover:scale-[1.01]">
-                  <Image src="/pics/light_trap.JPG" alt="SOS Research Unit" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.72) 100%)" }} />
-                  <div className="absolute inset-0 flex flex-col justify-end p-6">
+                {/* Research card — clickable. 16:10 is a minimum: the content sits
+                    in normal flow so the card grows instead of clipping on phones. */}
+                <a href="/research" className="group relative flex flex-col justify-end rounded-3xl aspect-[16/10] cursor-pointer transition-transform duration-200 hover:scale-[1.01]">
+                  <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                    <Image src="/pics/light_trap.JPG" alt="SOS Research Unit" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.72) 100%)" }} />
+                  </div>
+                  <div className="relative p-5 sm:p-6">
                     <div className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: "rgba(255,255,255,0.55)" }}>Pattern</div>
                     <div className="text-xl font-semibold text-white">SOS Research Unit</div>
                     <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
@@ -739,14 +742,21 @@ export default function AboutView() {
                         </span>
                       ))}
                     </div>
+                    <div className="mt-4 flex justify-end">
+                      <span className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                        View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
                   </div>
                 </a>
 
-                {/* Education card — clickable */}
-                <a href="/education" className="group relative rounded-3xl overflow-hidden aspect-[16/10] cursor-pointer transition-transform duration-200 hover:scale-[1.01]">
-                  <Image src="/pics/edu_01.jpg" alt="SOS Education" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.75) 100%)" }} />
-                  <div className="absolute inset-0 flex flex-col justify-end p-6">
+                {/* Education card — clickable (same flow layout as the Research card) */}
+                <a href="/education" className="group relative flex flex-col justify-end rounded-3xl aspect-[16/10] cursor-pointer transition-transform duration-200 hover:scale-[1.01]">
+                  <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                    <Image src="/pics/edu_01.jpg" alt="SOS Education" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.75) 100%)" }} />
+                  </div>
+                  <div className="relative p-4 sm:p-6">
                     <div className="rounded-2xl p-4" style={{ background: "rgba(8,24,36,0.70)", backdropFilter: "blur(8px)" }}>
                       <div className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: COLORS.green }}>Cross-cutting layer</div>
                       <div className="text-xl font-semibold text-white">SOS Education</div>
@@ -759,6 +769,11 @@ export default function AboutView() {
                             {t.label}
                           </span>
                         ))}
+                      </div>
+                      <div className="mt-4 flex justify-end">
+                        <span className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                          View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                        </span>
                       </div>
                     </div>
                   </div>

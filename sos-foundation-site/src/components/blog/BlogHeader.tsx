@@ -98,7 +98,7 @@ export default function BlogHeader() {
         </div>
 
         {/* CTA — mirrors home page "See work" button */}
-        <div className="hidden md:flex items-center gap-2 shrink-0">
+        <div className="hidden lg:flex items-center gap-2 shrink-0">
           <a
             href="/#about-work"
             className="inline-flex items-center rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85"
