@@ -10,7 +10,7 @@ export const post: Post = {
   slug: "should-buying-and-selling-ants-be-banned",
   title: "Should Buying and Selling Ants Be Banned?",
   excerpt:
-    "In March, a traveler was stopped in Nairobi with more than 2,000 live ants in his luggage. Notes from my RFI interview on what the online ant trade actually looks like — and why neither a ban nor a free-for-all is the right answer.",
+    "A traveler was stopped in Nairobi with 2,000 live ants in his luggage. What the online ant trade really looks like — and why neither a ban nor a free-for-all is the answer.",
   cover: "/pics/ant-trade-customs.jpg",
   coverAlt:
     "Rows of test tubes holding live ants, seized and displayed in front of a China Customs sign",

@@ -10,7 +10,7 @@ export const post: Post = {
   slug: "when-ai-can-answer-questions-what-do-we-still-need-to-learn",
   title: "When AI Can Answer Questions, What Do We Still Need to Learn?",
   excerpt:
-    "A new school from a16z grades students on proof of work, not degrees. It raises a deeper question for the age of AI: if machines can take us into the depth of any field, the human skill that matters may be connecting those depths — the breadth of the naturalist.",
+    "If AI can take us into the depth of any field, what is left to learn? Perhaps the skill that matters most is connecting those depths — and exploring.",
   cover: "/pics/ai-naturalist-learning.jpg",
   coverAlt:
     "Watercolor panorama: a Renaissance naturalist sketching plants and machines, a mosaic of scientific disciplines, and a group of people exploring a glowing globe together",
