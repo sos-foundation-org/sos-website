@@ -37,7 +37,7 @@ export const DEFAULT_LANG: LangCode = "en";
 export const LANGUAGES: Language[] = [
   { code: "en", label: "EN", name: "English" },
   { code: "zh-Hans", label: "简体", name: "简体中文 (Simplified Chinese)" },
-  // { code: "zh-Hant", label: "繁體", name: "繁體中文 (Traditional Chinese)" },
+  { code: "zh-Hant", label: "繁體", name: "繁體中文 (Traditional Chinese)" },
   // { code: "ja",      label: "日本語", name: "日本語 (Japanese)" },
   // ↑ uncomment / append as the blog grows into more languages
 ];

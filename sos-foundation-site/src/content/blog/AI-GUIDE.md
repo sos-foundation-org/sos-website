@@ -29,7 +29,7 @@ are renderers, not content.
 |---|---|---|
 | `authorId` | `sos-foundation`, `wei-ping-chan`, `cong-liu` | `authors.ts` |
 | `tags` | `announcements`, `field-notes`, `meaning`, `pattern`, `mechanism`, `policy`, `research`, `education` | `categories.ts` |
-| `lang` | `en` (default), `zh-Hans` | `languages.ts` |
+| `lang` | `en` (default), `zh-Hans`, `zh-Hant` | `languages.ts` |
 
 An id that is not in these lists does **not** crash the build — it silently
 renders a fallback chip or the SOS Foundation author. Verify, don't assume.

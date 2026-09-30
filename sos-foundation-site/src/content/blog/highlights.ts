@@ -12,6 +12,7 @@
 // Name the ORIGINAL post's slug — the slider shows whichever translation
 // matches the reader's chosen language.
 export const HIGHLIGHT_SLUGS: string[] = [
+  "when-ai-can-answer-questions-what-do-we-still-need-to-learn",
   "should-buying-and-selling-ants-be-banned",
   "welcome-to-the-sos-blog",
 ];

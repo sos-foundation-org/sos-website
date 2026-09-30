@@ -15,6 +15,8 @@ import { post as templateBilingual } from "./posts/_template-bilingual";
 import { post as templateBilingualZh } from "./posts/_template-bilingual.zh";
 import { post as antsBanned } from "./posts/should-buying-and-selling-ants-be-banned";
 import { post as antsBannedZh } from "./posts/should-buying-and-selling-ants-be-banned.zh";
+import { post as aiLearn } from "./posts/when-ai-can-answer-questions-what-do-we-still-need-to-learn";
+import { post as aiLearnZh } from "./posts/when-ai-can-answer-questions-what-do-we-still-need-to-learn.zh";
 
 const ALL_POSTS: Post[] = [
   welcomeToTheSosBlog,
@@ -25,6 +27,8 @@ const ALL_POSTS: Post[] = [
   templateBilingualZh,
   antsBanned,
   antsBannedZh,
+  aiLearn,
+  aiLearnZh,
   // ↑ add new posts here
 ];
 
