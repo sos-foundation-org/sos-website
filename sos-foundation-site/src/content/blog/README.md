@@ -133,7 +133,7 @@ const ALL_POSTS: Post[] = [
 |------------|----------|-----------------------------------------------------------------------|
 | `slug`     | yes      | kebab-case, unique. Becomes the URL.                                  |
 | `title`    | yes      | Plain text. Shows in nav title, hero, share previews.                 |
-| `excerpt`  | yes      | 1–2 sentences. Shown on cards, slider, and as SEO description.        |
+| `excerpt`  | yes      | 1–2 sentences. Shown on cards, slider, and as SEO description. **Max: English ≤ 35 words / 180 chars; Chinese ≤ 65 chars.** The sliders size to the longest excerpt, so one long excerpt makes every slide taller. See `AI-GUIDE.md` §3. |
 | `cover`    | yes      | Path under `/public`, e.g. `/pics/foo.jpg`. Used as hero + OG image.  |
 | `coverAlt` | no       | Alt text for the cover (accessibility, screen readers).               |
 | `coverCredit` | no    | Visible credit line under the cover — use for photos you didn't take. |

@@ -47,7 +47,7 @@ import type { Post } from "../types";
 export const post: Post = {
   slug:     "my-post",                    // = filename, kebab-case, unique
   title:    "My Post",
-  excerpt:  "One or two sentences.",      // index card + SEO description
+  excerpt:  "One or two sentences.",      // index card + slider + SEO — see length limits below
   cover:    "/pics/my-cover.jpg",         // hero + social share image
   coverAlt: "Description for screen readers",
   date:     "2026-08-27",                 // YYYY-MM-DD, drives sort order
@@ -75,6 +75,25 @@ const ALL_POSTS: Post[] = [
   myPost,          // order irrelevant, sorted by date
 ];
 ```
+
+### Excerpt and title length limits (hard rule)
+
+The carousels (`/blog` hero and the homepage) never truncate text; they grow
+to fit the **longest** featured post. One long excerpt therefore makes every
+slide taller, on phones especially. Keep it short:
+
+| Field | English | Chinese (zh-Hans / zh-Hant) |
+|---|---|---|
+| `excerpt` | **≤ 35 words and ≤ 180 characters**, 1–2 sentences | **≤ 65 characters**, punctuation included |
+| `title` | aim for ≤ 70 characters | aim for ≤ 30 characters |
+
+- Manuscripts rarely include an excerpt. Write one yourself from the post: the
+  core question or hook, not a summary of every section. Don't add claims the
+  post does not make.
+- Translations get their own excerpt within the Chinese limit. Don't just
+  translate the English word for word.
+- Check lengths before finishing, e.g. `len(excerpt.split())` / `len(excerpt)`
+  in Python.
 
 ---
 
@@ -190,7 +209,9 @@ export const HIGHLIGHT_SLUGS: string[] = [
 ```
 
 2-4 entries is the sweet spot. Needs a strong cover image — it is shown
-full-bleed.
+full-bleed and cropped (`object-cover`) to whatever shape the slider is, so
+keep the subject near the center. The text is never cropped, so featured posts
+must respect the excerpt limits in section 3.
 
 ---
 
