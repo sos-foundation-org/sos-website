@@ -15,7 +15,7 @@ export const post: Post = {
   coverAlt:
     "Watercolor panorama: a Renaissance naturalist sketching plants and machines, a mosaic of scientific disciplines, and a group of people exploring a glowing globe together",
   date: "2026-09-30",
-  authorId: "sos-foundation",
+  authorId: "wei-ping-chan",
   tags: ["education"],
   body: [
     {

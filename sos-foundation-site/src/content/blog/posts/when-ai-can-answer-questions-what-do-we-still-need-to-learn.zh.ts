@@ -17,7 +17,7 @@ export const post: Post = {
   coverAlt:
     "水彩長卷：文藝復興時期的博物學家描繪植物與機械、各學科拼貼而成的圖塊，以及一群人圍著發光的地球儀一起探索",
   date: "2026-09-30",
-  authorId: "sos-foundation",
+  authorId: "wei-ping-chan",
   tags: ["education"],
   body: [
     {
