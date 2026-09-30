@@ -344,6 +344,42 @@ function AboutRoleCard({ title, body, color, bgImage }: { title: string; body: s
   );
 }
 
+/**
+ * One slide's text. `sizer` renders an inert copy (no heading, no link) used
+ * only to reserve height, so it adds nothing to the outline or tab order.
+ */
+function BlogSlideContent({ post, sizer = false }: { post: (typeof POSTS)[number]; sizer?: boolean }) {
+  const author = getAuthor(post.authorId);
+  const accent = post.accent ?? COLORS.data;
+  const Title = sizer ? "div" : "h3";
+  const Cta = sizer ? "span" : "a";
+
+  return (
+    <>
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <span className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide" style={{ background: `${accent}1F`, color: accent }}>Featured</span>
+        {(post.tags ?? []).slice(0, 2).map((tag) => {
+          const cat = getCategory(tag);
+          return <span key={tag} className="rounded-full px-3 py-1 text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.08)", color: cat.color, border: `1px solid ${cat.color}55` }}>{cat.label}</span>;
+        })}
+      </div>
+      <Title className="text-2xl md:text-3xl font-semibold tracking-tight text-white">{post.title}</Title>
+      <p className="mt-2 max-w-xl text-sm md:text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>{post.excerpt}</p>
+      <div className="mt-4 flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <div className="h-6 w-6 rounded-full overflow-hidden bg-white/10">
+            {!sizer && <Image src={author.avatar} alt={author.name} width={24} height={24} className="h-full w-full object-cover" />}
+          </div>
+          <span className="text-xs text-white/60">{author.name} · {formatDate(post.date)}</span>
+        </div>
+        <Cta {...(sizer ? {} : { href: `/blog/${post.slug}` })} className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85" style={{ background: COLORS.blue }}>
+          Read <ArrowRight size={14} />
+        </Cta>
+      </div>
+    </>
+  );
+}
+
 // ─── Blog mini slider — same rotating pattern as Blog page hero ──────────────
 function AboutBlogSlider() {
   const highlightPosts = useMemo(() => {
@@ -364,15 +400,14 @@ function AboutBlogSlider() {
 
   if (!current) return null;
 
-  const author = getAuthor(current.authorId);
-  const accent = current.accent ?? COLORS.data;
   const hasMultiple = highlightPosts.length > 1;
 
   return (
-    // Fixed height (not min-height) so slides with longer text don't resize the
-    // card and shift the page on rotation — same rule as the /blog hero.
+    // The text is the point, so it is never clipped. The card is as tall as its
+    // LONGEST slide (invisible sizer copies below), so the height stays constant
+    // across rotations; covers are cropped to fit — same rule as the /blog hero.
     <div
-      className="relative rounded-3xl overflow-hidden h-[420px]"
+      className="relative rounded-3xl overflow-hidden min-h-[420px] flex"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -386,43 +421,33 @@ function AboutBlogSlider() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="absolute inset-0"
         >
-          <Image src={current.cover} alt={current.coverAlt ?? current.title} fill className="object-cover" sizes="100vw" />
+          <Image src={current.cover} alt={current.coverAlt ?? current.title} fill className="object-cover object-center" sizes="100vw" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.50) 0%, rgba(8,24,36,0.82) 60%, rgba(8,24,36,0.92) 100%)" }} />
         </motion.div>
       </AnimatePresence>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col justify-end h-full p-6 pb-14 md:p-10">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.slug + "-c"}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.45, ease: "easeOut" }}
-          >
-            <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide" style={{ background: `${accent}1F`, color: accent }}>Featured</span>
-              {(current.tags ?? []).slice(0, 2).map((tag) => {
-                const cat = getCategory(tag);
-                return <span key={tag} className="rounded-full px-3 py-1 text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.08)", color: cat.color, border: `1px solid ${cat.color}55` }}>{cat.label}</span>;
-              })}
+      {/* Content — every slide stacked in one grid cell; the invisible copies
+          size the cell to the tallest slide, the visible one animates on top. */}
+      <div className="relative z-10 grid w-full items-end p-6 pt-24 pb-14 md:p-10 md:pt-28">
+        {hasMultiple &&
+          highlightPosts.map((p) => (
+            <div key={p.slug} aria-hidden className="invisible [grid-area:1/1]">
+              <BlogSlideContent post={p} sizer />
             </div>
-            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-white line-clamp-3">{current.title}</h3>
-            <p className="mt-2 max-w-xl text-sm md:text-base leading-relaxed line-clamp-3" style={{ color: "rgba(255,255,255,0.70)" }}>{current.excerpt}</p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <div className="h-6 w-6 rounded-full overflow-hidden bg-white/10">
-                  <Image src={author.avatar} alt={author.name} width={24} height={24} className="h-full w-full object-cover" />
-                </div>
-                <span className="text-xs text-white/60">{author.name} · {formatDate(current.date)}</span>
-              </div>
-              <a href={`/blog/${current.slug}`} className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85" style={{ background: COLORS.blue }}>
-                Read <ArrowRight size={14} />
-              </a>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+          ))}
+        <div className="[grid-area:1/1]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.slug + "-c"}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+            >
+              <BlogSlideContent post={current} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* Dots */}
         {hasMultiple && (
