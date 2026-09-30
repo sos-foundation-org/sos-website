@@ -73,8 +73,11 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
   const next = () => setIndex((i) => (i + 1) % posts.length);
 
   return (
+    // Fixed height (not min-height): slides with longer titles or excerpts must
+    // not resize the hero, or the page below jumps on every rotation. Covers
+    // are cropped to fit via object-cover; text is line-clamped to fit.
     <section
-      className="relative w-full min-h-[68vh] md:min-h-[72vh] overflow-hidden"
+      className="relative w-full h-[600px] md:h-[640px] flex flex-col overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -127,7 +130,7 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
       </div>
 
       {/* ── Per-slide content — title, excerpt, byline, CTA ─────────────── */}
-      <div className="relative z-10 mx-auto max-w-4xl px-5 pt-10 md:pt-14 pb-24 text-center">
+      <div className="relative z-10 mx-auto w-full max-w-4xl flex-1 flex items-center justify-center px-14 md:px-5 pb-16 text-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.slug + "-content"}
@@ -162,11 +165,11 @@ export default function HighlightSlider({ posts }: { posts: Post[] }) {
               })}
             </div>
 
-            <h1 className="mt-5 text-3xl md:text-5xl font-semibold tracking-tight leading-tight text-white">
+            <h1 className="mt-5 text-3xl md:text-5xl font-semibold tracking-tight leading-tight text-white line-clamp-3">
               {current.title}
             </h1>
             <p
-              className="mt-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed"
+              className="mt-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed line-clamp-3"
               style={{ color: "rgba(255,255,255,0.72)" }}
             >
               {current.excerpt}
