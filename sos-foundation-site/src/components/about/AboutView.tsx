@@ -369,8 +369,10 @@ function AboutBlogSlider() {
   const hasMultiple = highlightPosts.length > 1;
 
   return (
+    // Fixed height (not min-height) so slides with longer text don't resize the
+    // card and shift the page on rotation — same rule as the /blog hero.
     <div
-      className="relative rounded-3xl overflow-hidden min-h-[340px] md:min-h-[400px]"
+      className="relative rounded-3xl overflow-hidden h-[420px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -390,7 +392,7 @@ function AboutBlogSlider() {
       </AnimatePresence>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col justify-end h-full p-6 md:p-10 min-h-[340px] md:min-h-[400px]">
+      <div className="relative z-10 flex flex-col justify-end h-full p-6 pb-14 md:p-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.slug + "-c"}
@@ -406,8 +408,8 @@ function AboutBlogSlider() {
                 return <span key={tag} className="rounded-full px-3 py-1 text-[11px] font-medium" style={{ background: "rgba(255,255,255,0.08)", color: cat.color, border: `1px solid ${cat.color}55` }}>{cat.label}</span>;
               })}
             </div>
-            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-white">{current.title}</h3>
-            <p className="mt-2 max-w-xl text-sm md:text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>{current.excerpt}</p>
+            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight text-white line-clamp-3">{current.title}</h3>
+            <p className="mt-2 max-w-xl text-sm md:text-base leading-relaxed line-clamp-3" style={{ color: "rgba(255,255,255,0.70)" }}>{current.excerpt}</p>
             <div className="mt-4 flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className="h-6 w-6 rounded-full overflow-hidden bg-white/10">
