@@ -417,47 +417,62 @@ export default function EducationView() {
           <Spacer />
 
           {/* ── Featured program — Digital Naturalism ── */}
-          <section id="edu-digital-naturalism" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-            <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-              <div className="text-center mb-12 md:mb-14">
-                <div className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: COLORS.gold }}>Featured Program</div>
-                <h2 className="text-4xl md:text-6xl font-semibold tracking-tight text-white">Digital Naturalism</h2>
-              </div>
-
-              {/* Image — reads left to right: the great voyages → the tools of today.
-                  Cinematic crop on desktop, closer to native 3:2 on phones. */}
-              <a
-                href={DIGITAL_NATURALISM.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit Digital Naturalism (opens in a new tab)"
-                className="group relative block overflow-hidden rounded-3xl border aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
-                style={{ borderColor: "rgba(255,255,255,0.08)" }}
+          <section id="edu-digital-naturalism" className="relative mt-16 md:mt-24 scroll-mt-16">
+            {/* Full-bleed image — reads left to right: the great voyages → the tools of today.
+                Desktop shows close to the whole 3:2 frame (capped at one screen) with the title
+                overlaid; phones get a square crop with the title tucked under it. */}
+            <div className="relative">
+            <div className="relative w-full overflow-hidden aspect-square md:aspect-auto md:h-[min(100vh,66.667vw)] md:min-h-[560px]">
+              <motion.div
+                className="absolute inset-0"
+                initial={{ scale: 1.08 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 2.4, ease: [0.16, 1, 0.3, 1] }}
               >
                 <Image
                   src={DIGITAL_NATURALISM.image}
                   alt="A naturalist's desk at golden hour: an antique voyage map and field journal on the left, a framed blue morpho in the centre, a camera rig and tablet digitizing butterfly wing scales on the right"
                   fill
-                  className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
+                  className="object-cover"
                   style={{ objectPosition: "center 58%" }}
-                  sizes="(max-width: 1152px) 100vw, 1152px"
+                  sizes="100vw"
+                  quality={85}
                 />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 55%, rgba(8,24,36,0.70) 100%)" }} />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 md:p-7">
-                  <div>
-                    <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase" style={{ color: "rgba(245,247,246,0.55)" }}>Then</div>
-                    <div className="text-xs md:text-sm font-medium text-white">The great voyages</div>
-                  </div>
-                  <div className="hidden sm:block flex-1 h-px mb-2 mx-2" style={{ background: "linear-gradient(90deg, rgba(245,247,246,0.35), rgba(224,182,62,0.6))" }} />
-                  <div className="text-right">
-                    <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase" style={{ color: COLORS.gold }}>Now</div>
-                    <div className="text-xs md:text-sm font-medium text-white">The tools of today</div>
-                  </div>
-                </div>
-              </a>
+              </motion.div>
+              {/* Fade into the page at both edges, darker at the foot for the title */}
+              <div className="absolute inset-0 hidden md:block" style={{ background: `linear-gradient(180deg, ${DARK_BG} 0%, rgba(8,24,36,0) 14%, rgba(8,24,36,0) 48%, rgba(8,24,36,0.55) 78%, ${DARK_BG} 100%)` }} />
+              <div className="absolute inset-0 md:hidden" style={{ background: `linear-gradient(180deg, ${DARK_BG} 0%, rgba(8,24,36,0) 10%, rgba(8,24,36,0) 75%, ${DARK_BG} 100%)` }} />
+            </div>
 
+              <div className="relative -mt-6 md:mt-0 md:absolute md:inset-x-0 md:bottom-0">
+                <motion.div
+                  className="mx-auto max-w-6xl px-5 pb-6 md:pb-14"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                >
+                  <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase mb-2 md:mb-4" style={{ color: COLORS.gold }}>Featured Program</div>
+                  <h2 className="text-4xl md:text-7xl font-semibold tracking-tight text-white" style={{ textShadow: "0 2px 24px rgba(8,24,36,0.45)" }}>Digital Naturalism</h2>
+                  <div className="mt-4 md:mt-8 flex items-end justify-between gap-4">
+                    <div>
+                      <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase" style={{ color: "rgba(245,247,246,0.55)" }}>Then</div>
+                      <div className="text-xs md:text-sm font-medium text-white">The great voyages</div>
+                    </div>
+                    <div className="hidden sm:block flex-1 h-px mb-2 mx-2" style={{ background: "linear-gradient(90deg, rgba(245,247,246,0.35), rgba(224,182,62,0.6))" }} />
+                    <div className="text-right">
+                      <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase" style={{ color: COLORS.gold }}>Now</div>
+                      <div className="text-xs md:text-sm font-medium text-white">The tools of today</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            <motion.div className="mx-auto max-w-6xl px-5 pt-10 pb-20 md:pt-16 md:pb-28" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.6, ease: "easeOut" }}>
               {/* Copy */}
-              <div className="mt-10 md:mt-14 grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+              <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
                 <div className="md:col-span-5">
                   <p className="text-2xl md:text-3xl font-medium leading-snug tracking-tight">
                     {DIGITAL_NATURALISM.subtitle.map((line, i) => (

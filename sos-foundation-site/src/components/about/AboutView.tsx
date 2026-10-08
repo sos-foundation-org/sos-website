@@ -270,11 +270,11 @@ const EDU_SLIDES: EduSlide[] = [
     chips: EDUCATION_TRACKS.map((t) => t.label), cta: "View Details",
   },
   {
-    id: "digital-naturalism", href: "https://www.digital-naturalism.com/", external: true,
+    id: "digital-naturalism", href: "/education#edu-digital-naturalism", external: false,
     image: "/pics/digital_naturalism.jpg", alt: "Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings", position: "center 60%",
     eyebrow: "Featured program", eyebrowColor: COLORS.gold, title: "Digital Naturalism",
     line: "Learn from the great voyages. Learn the tools of today. Keep learning from nature.",
-    chips: ["Darwin", "Wallace", "Wilson", "Digitize Nature"], cta: "Explore",
+    chips: ["Darwin", "Wallace", "Wilson", "Digitize Nature"], cta: "Discover",
   },
 ];
 
