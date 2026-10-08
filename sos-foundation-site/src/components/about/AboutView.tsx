@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -253,114 +253,6 @@ const EDUCATION_TRACKS = [
   { label: "Mentored Research", desc: "Interdisciplinary projects with top-institution mentors" },
   { label: "Real Contributions", desc: "Discovery Commons, datasets, publications" },
 ];
-
-// The Education card alternates between SOS Education and its featured
-// program, Digital Naturalism.
-type EduSlide = {
-  id: string; href: string; external: boolean; image: string; alt: string; position: string;
-  eyebrow: string; eyebrowColor: string; title: string; line: string; chips: string[]; cta: string;
-};
-
-const EDU_SLIDES: EduSlide[] = [
-  {
-    id: "sos-education", href: "/education", external: false,
-    image: "/pics/edu_01.jpg", alt: "SOS Education", position: "center",
-    eyebrow: "Cross-cutting layer", eyebrowColor: COLORS.green, title: "SOS Education",
-    line: "Education should not end with learning. It should lead to real contributions.",
-    chips: EDUCATION_TRACKS.map((t) => t.label), cta: "View Details",
-  },
-  {
-    id: "digital-naturalism", href: "/education#edu-digital-naturalism", external: false,
-    image: "/pics/digital_naturalism.jpg", alt: "Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings", position: "center 60%",
-    eyebrow: "Featured program", eyebrowColor: COLORS.gold, title: "Digital Naturalism",
-    line: "Learn from the great voyages. Learn the tools of today. Keep learning from nature.",
-    chips: ["Darwin", "Wallace", "Wilson", "Digitize Nature"], cta: "View Details",
-  },
-];
-
-const EDU_ROTATION_MS = 7000;
-
-function EduSlideContent({ slide, sizer = false }: { slide: EduSlide; sizer?: boolean }) {
-  const Cta = sizer ? "span" : "a";
-  const ctaProps = sizer ? {} : { href: slide.href, ...(slide.external ? { target: "_blank", rel: "noopener noreferrer" } : {}) };
-  return (
-    <div className="rounded-2xl p-4" style={{ background: "rgba(8,24,36,0.70)", backdropFilter: "blur(8px)" }}>
-      <div className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: slide.eyebrowColor }}>{slide.eyebrow}</div>
-      <div className="text-xl font-semibold text-white">{slide.title}</div>
-      <p className="mt-2 text-sm font-medium" style={{ color: COLORS.gold }}>{slide.line}</p>
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {slide.chips.map((c) => (
-          <span key={c} className="rounded-full border px-2 py-0.5 text-[10px]" style={{ borderColor: "rgba(255,255,255,0.15)", color: slide.eyebrowColor, background: "rgba(0,0,0,0.3)" }}>{c}</span>
-        ))}
-      </div>
-      <div className="mt-4 flex justify-end">
-        <Cta {...ctaProps} className="pointer-events-auto inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-85" style={{ background: COLORS.blue }}>
-          {slide.cta}
-          {slide.external ? <ArrowUpRight size={14} /> : <ArrowRight size={14} />}
-        </Cta>
-      </div>
-    </div>
-  );
-}
-
-function AboutEducationCard() {
-  const reduceMotion = useReducedMotion();
-  const [idx, setIdx] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const current = EDU_SLIDES[idx];
-
-  useEffect(() => {
-    if (paused || reduceMotion) return;
-    const id = window.setInterval(() => setIdx((i) => (i + 1) % EDU_SLIDES.length), EDU_ROTATION_MS);
-    return () => window.clearInterval(id);
-  }, [paused, reduceMotion]);
-
-  return (
-    <div
-      className="group relative flex flex-col justify-end rounded-3xl aspect-[16/10] transition-transform duration-200 hover:scale-[1.01]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-    >
-      {/* Both photos stay mounted and crossfade, so there is no load flash. */}
-      <div className="absolute inset-0 rounded-3xl overflow-hidden">
-        {EDU_SLIDES.map((s, i) => (
-          <motion.div key={s.id} className="absolute inset-0" initial={false} animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.04 : 1 }} transition={{ opacity: { duration: 1.1, ease: "easeInOut" }, scale: { duration: reduceMotion ? 0 : EDU_ROTATION_MS / 1000, ease: "linear" } }}>
-            <Image src={s.image} alt={s.alt} fill className="object-cover" style={{ objectPosition: s.position }} sizes="(max-width: 768px) 100vw, 50vw" />
-          </motion.div>
-        ))}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.75) 100%)" }} />
-      </div>
-
-      {/* Whole card follows the current slide; the CTA is the keyboard-reachable link. */}
-      <a href={current.href} {...(current.external ? { target: "_blank", rel: "noopener noreferrer" } : {})} tabIndex={-1} aria-hidden className="absolute inset-0 rounded-3xl" />
-
-      {/* Dots */}
-      <div className="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full px-1.5" style={{ background: "rgba(8,24,36,0.45)", backdropFilter: "blur(6px)" }}>
-        {EDU_SLIDES.map((s, i) => (
-          <button key={s.id} type="button" onClick={() => setIdx(i)} aria-label={`Show ${s.title}`} aria-current={i === idx} className="flex items-center justify-center min-w-[28px] min-h-[28px]">
-            <span className="rounded-full transition-all block" style={{ width: i === idx ? 20 : 6, height: 6, background: i === idx ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)" }} />
-          </button>
-        ))}
-      </div>
-
-      {/* Content — invisible copies reserve the taller slide's height so the card never jumps. */}
-      <div className="pointer-events-none relative grid p-4 sm:p-6">
-        {EDU_SLIDES.map((s) => (
-          <div key={s.id} aria-hidden className="invisible [grid-area:1/1]"><EduSlideContent slide={s} sizer /></div>
-        ))}
-        <div className="[grid-area:1/1] self-end">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div key={current.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.4, ease: "easeOut" }}>
-              <EduSlideContent slide={current} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Spacer ──────────────────────────────────────────────────────────────────
 function Spacer() {
@@ -886,8 +778,34 @@ export default function AboutView() {
                   </div>
                 </a>
 
-                {/* Education card — alternates with the Digital Naturalism program */}
-                <AboutEducationCard />
+                {/* Education card — clickable (same flow layout as the Research card) */}
+                <a href="/education" className="group relative flex flex-col justify-end rounded-3xl aspect-[16/10] cursor-pointer transition-transform duration-200 hover:scale-[1.01]">
+                  <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                    <Image src="/pics/edu_01.jpg" alt="SOS Education" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0.20) 0%, rgba(8,24,36,0.75) 100%)" }} />
+                  </div>
+                  <div className="relative p-4 sm:p-6">
+                    <div className="rounded-2xl p-4" style={{ background: "rgba(8,24,36,0.70)", backdropFilter: "blur(8px)" }}>
+                      <div className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: COLORS.green }}>Cross-cutting layer</div>
+                      <div className="text-xl font-semibold text-white">SOS Education</div>
+                      <p className="mt-2 text-sm font-medium" style={{ color: COLORS.gold }}>
+                        Education should not end with learning. It should lead to real contributions.
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {EDUCATION_TRACKS.map((t) => (
+                          <span key={t.label} className="rounded-full border px-2 py-0.5 text-[10px]" style={{ borderColor: "rgba(255,255,255,0.15)", color: COLORS.green, background: "rgba(0,0,0,0.3)" }}>
+                            {t.label}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-4 flex justify-end">
+                        <span className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                          View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
               </div>
             </motion.div>
           </section>
@@ -922,6 +840,27 @@ export default function AboutView() {
               </a>
               <AboutWorkCard card={WORK.spotlight} />
             </div>
+
+            {/* Digital Naturalism — full-width feature, leads to its section on /education.
+                The aspect ratio is a minimum: content sits in flow so phones grow instead of clipping. */}
+            <a href="/education#edu-digital-naturalism" className="group relative mt-6 flex flex-col justify-end rounded-3xl aspect-square sm:aspect-[16/9] lg:aspect-[21/9] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
+              <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                <Image src="/pics/digital_naturalism.jpg" alt="Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings" fill className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" style={{ objectPosition: "center 58%" }} sizes="(max-width: 1152px) 100vw, 1152px" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 40%, rgba(8,24,36,0.82) 100%)" }} />
+              </div>
+              <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 p-5 sm:p-8">
+                <div className="min-w-0">
+                  <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Education · Featured program</div>
+                  <div className="text-2xl md:text-4xl font-semibold tracking-tight text-white">Digital Naturalism</div>
+                  <p className="mt-2 max-w-xl text-sm md:text-base" style={{ color: "rgba(255,255,255,0.75)" }}>
+                    Learn from the great voyages. Learn the tools of today. Keep learning from nature.
+                  </p>
+                </div>
+                <span className="self-end sm:self-auto shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                  View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </a>
           </section>
 
           <Spacer />
