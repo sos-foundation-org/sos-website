@@ -1150,7 +1150,7 @@ export default function ResearchView() {
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <p className="text-base md:text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.80)" }}>
-                  Map of the Unknown is an open, non-commercial research platform where a thoughtful question earns the same credit as a published result.
+                  Map of the Unknown is an open research platform where a thoughtful question earns the same credit as a published result.
                 </p>
                 <p className="mt-4 text-sm md:text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
                   It welcomes contributors across all backgrounds and education levels, from field naturalists and amateur astronomers to theoretical physicists and humanities scholars. Unlike platforms that only collect data, here insights carry independent value and can lead to academic collaboration.
@@ -1203,7 +1203,7 @@ export default function ResearchView() {
                   >
                     Explore Map of the Unknown <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
-                  <span className="text-xs text-white/40">Operated by SOS Foundation · open &amp; non-commercial</span>
+                  <span className="text-xs text-white/40">Operated by SOS Foundation</span>
                 </div>
               </div>
             </div>
