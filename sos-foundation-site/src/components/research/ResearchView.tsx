@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink, Linkedin, Instagram, Facebook } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Linkedin, Instagram, Facebook } from "lucide-react";
 import MobileNav from "@/components/ui/MobileNav";
 
 // ─── Design tokens — identical to main site ──────────────────────────────────
@@ -40,6 +40,26 @@ function Pill({ label, color }: { label: string; color: string }) {
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
+
+// Map of the Unknown — the SOS open research platform (formerly Discovery Commons).
+const MAP_OF_THE_UNKNOWN = {
+  url: "https://discovery-commons.vercel.app/",
+  stages: ["Question", "Hypothesis", "Data / Simulation", "Statistics", "Interpretation", "Insight"],
+  features: [
+    {
+      title: "A question earns credit",
+      body: "Unanswered questions, half-formed hypotheses, and early observations are first-class contributions. Each marks a place on the frontier of discovery.",
+    },
+    {
+      title: "Seal, then reveal",
+      body: "Every contribution is SHA-256 hashed and timestamped. Sealed work publishes only its hash, so priority is protected before the content is shared.",
+    },
+    {
+      title: "You control visibility",
+      body: "Private, shared with collaborators, public, or sealed, chosen per contribution. Credit is tracked across idea, data, method, analysis, and validation.",
+    },
+  ],
+};
 
 // Portrait convention for DIRECTORS and SCIENTISTS: the card crops to 3:4 with
 // object-top, so supply a portrait (or square) image at ≥1200px wide. The house
@@ -1086,6 +1106,106 @@ export default function ResearchView() {
                   </div>
                 </motion.div>
               ))}
+            </div>
+          </section>
+
+          {/* Divider */}
+          <div className="mx-auto max-w-6xl px-5">
+            <div className="h-px w-full" style={{ background: "rgba(255,255,255,0.06)" }} />
+          </div>
+
+          {/* ── Map of the Unknown ───────────────────────────────────────── */}
+          <section id="map-of-the-unknown" className="mx-auto max-w-6xl px-5 py-20 md:py-28 scroll-mt-16">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <Pill label="Open Research Platform" color={COLORS.mech} />
+              <h2 className="mt-4 text-3xl md:text-5xl font-semibold tracking-tight text-white">Map of the Unknown</h2>
+              <p className="mt-4 max-w-3xl text-lg md:text-xl leading-relaxed" style={{ color: COLORS.mech }}>
+                A shared map of what we do not yet understand, and where discovery can begin.
+              </p>
+
+              <div className="relative mt-10 overflow-hidden rounded-3xl border aspect-[16/10] md:aspect-[21/9]" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                <Image
+                  src="/pics/discovery_commons.png"
+                  alt="Contributors from many backgrounds, from field naturalists and students to lab scientists and artisans, working on shared questions"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: "center 40%" }}
+                  sizes="(max-width: 1152px) 100vw, 1152px"
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 60%, rgba(8,24,36,0.55) 100%)" }} />
+              </div>
+            </motion.div>
+
+            <div className="mt-10 md:mt-14 grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+              <motion.div
+                className="md:col-span-5"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <p className="text-base md:text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.80)" }}>
+                  Map of the Unknown is an open, non-commercial research platform where a thoughtful question earns the same credit as a published result.
+                </p>
+                <p className="mt-4 text-sm md:text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  It welcomes contributors across all backgrounds and education levels, from field naturalists and amateur astronomers to theoretical physicists and humanities scholars. Unlike platforms that only collect data, here insights carry independent value and can lead to academic collaboration.
+                </p>
+
+                {/* How a thread grows */}
+                <div className="mt-8 rounded-3xl border p-5 md:p-6" style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(31,42,51,0.92)" }}>
+                  <div className="text-[10px] font-medium tracking-wide uppercase text-white/40 mb-3">How a thread grows</div>
+                  <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
+                    {MAP_OF_THE_UNKNOWN.stages.map((stage, i) => (
+                      <li key={stage} className="flex items-center gap-1.5">
+                        <span className="rounded-full border px-2.5 py-1 text-xs text-white/80" style={{ borderColor: i === MAP_OF_THE_UNKNOWN.stages.length - 1 ? `${COLORS.mech}80` : "rgba(255,255,255,0.12)", color: i === MAP_OF_THE_UNKNOWN.stages.length - 1 ? COLORS.mech : undefined }}>
+                          {stage}
+                        </span>
+                        {i < MAP_OF_THE_UNKNOWN.stages.length - 1 && <ArrowRight size={12} className="text-white/30" aria-hidden />}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </motion.div>
+
+              <div className="md:col-span-7">
+                <div className="space-y-4">
+                  {MAP_OF_THE_UNKNOWN.features.map((f, i) => (
+                    <motion.div
+                      key={f.title}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.08 }}
+                      className="rounded-3xl border p-5 md:p-6 flex gap-4"
+                      style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.03)" }}
+                    >
+                      <div className="text-2xl font-semibold leading-none shrink-0 w-8" style={{ color: COLORS.mech, opacity: 0.6 }}>0{i + 1}</div>
+                      <div>
+                        <h3 className="text-base font-semibold text-white">{f.title}</h3>
+                        <p className="mt-1.5 text-sm leading-relaxed text-white/60">{f.body}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <a
+                    href={MAP_OF_THE_UNKNOWN.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-85"
+                    style={{ background: COLORS.blue }}
+                  >
+                    Explore Map of the Unknown <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                  <span className="text-xs text-white/40">Operated by SOS Foundation · open &amp; non-commercial</span>
+                </div>
+              </div>
             </div>
           </section>
 
