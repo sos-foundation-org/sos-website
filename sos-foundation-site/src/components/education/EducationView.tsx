@@ -505,10 +505,8 @@ export default function EducationView() {
                       className="group inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-85"
                       style={{ background: COLORS.blue }}
                     >
-                      Explore Digital Naturalism <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </a>
-                    <span className="text-xs" style={{ color: "rgba(245,247,246,0.40)" }}>digital-naturalism.com</span>
-                  </div>
+                      Discover with Digital Naturalism <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>                  </div>
                 </div>
               </div>
             </motion.div>
