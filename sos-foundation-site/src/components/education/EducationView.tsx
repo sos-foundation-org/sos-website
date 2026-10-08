@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import {
   ArrowLeft,
+  ArrowUpRight,
   Linkedin,
   Instagram,
   Facebook,
@@ -109,6 +110,7 @@ const BG_MAP: Record<string, BgConfig> = {
   "edu-pathway": null,
   "edu-interdisciplinary": { image: "/pics/edu_03.jpg", overlay: "rgba(8, 24, 36, 0.78)" },
   "edu-tracks": null,
+  "edu-digital-naturalism": null,
 };
 
 function BackgroundCrossfade({ active, bgTint }: { active: string; bgTint: string }) {
@@ -159,6 +161,17 @@ const TRACKS = [
   },
 ];
 
+const DIGITAL_NATURALISM = {
+  url: "https://www.digital-naturalism.com/",
+  image: "/pics/digital_naturalism.jpg",
+  subtitle: ["Learn from the great voyages.", "Learn the tools of today.", "Keep learning from nature."],
+  naturalists: [
+    { name: "Charles Darwin", years: "1809–1882" },
+    { name: "Alfred Russel Wallace", years: "1823–1913" },
+    { name: "Edward O. Wilson", years: "1929–2021" },
+  ],
+};
+
 // ─── Spacer ──────────────────────────────────────────────────────────────────
 function Spacer() {
   return <div className="mx-auto max-w-6xl px-5 mt-16 md:mt-24"><div className="h-px w-full" style={{ background: "rgba(31,42,51,0.10)" }} /></div>;
@@ -167,7 +180,7 @@ function Spacer() {
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function EducationView() {
-  const sectionIds = useMemo(() => ["edu-hero", "edu-philosophy", "edu-pathway", "edu-interdisciplinary", "edu-tracks"], []);
+  const sectionIds = useMemo(() => ["edu-hero", "edu-philosophy", "edu-pathway", "edu-interdisciplinary", "edu-tracks", "edu-digital-naturalism"], []);
   const active = useActiveSection(sectionIds);
   const bgTint = useMemo(() => {
     if (active === "edu-hero" || active === "edu-philosophy") return mixHex(DARK_BG, COLORS.green, 0.25);
@@ -399,6 +412,91 @@ export default function EducationView() {
                 </motion.div>
               ))}
             </div>
+          </section>
+
+          <Spacer />
+
+          {/* ── Featured program — Digital Naturalism ── */}
+          <section id="edu-digital-naturalism" className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+            <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+              <div className="text-center mb-12 md:mb-14">
+                <div className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: COLORS.gold }}>Featured Program</div>
+                <h2 className="text-4xl md:text-6xl font-semibold tracking-tight text-white">Digital Naturalism</h2>
+              </div>
+
+              {/* Image — reads left to right: the great voyages → the tools of today.
+                  Cinematic crop on desktop, closer to native 3:2 on phones. */}
+              <a
+                href={DIGITAL_NATURALISM.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Digital Naturalism (opens in a new tab)"
+                className="group relative block overflow-hidden rounded-3xl border aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]"
+                style={{ borderColor: "rgba(255,255,255,0.08)" }}
+              >
+                <Image
+                  src={DIGITAL_NATURALISM.image}
+                  alt="A naturalist's desk at golden hour: an antique voyage map and field journal on the left, a framed blue morpho in the centre, a camera rig and tablet digitizing butterfly wing scales on the right"
+                  fill
+                  className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
+                  style={{ objectPosition: "center 58%" }}
+                  sizes="(max-width: 1152px) 100vw, 1152px"
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 55%, rgba(8,24,36,0.70) 100%)" }} />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 md:p-7">
+                  <div>
+                    <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase" style={{ color: "rgba(245,247,246,0.55)" }}>Then</div>
+                    <div className="text-xs md:text-sm font-medium text-white">The great voyages</div>
+                  </div>
+                  <div className="hidden sm:block flex-1 h-px mb-2 mx-2" style={{ background: "linear-gradient(90deg, rgba(245,247,246,0.35), rgba(224,182,62,0.6))" }} />
+                  <div className="text-right">
+                    <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase" style={{ color: COLORS.gold }}>Now</div>
+                    <div className="text-xs md:text-sm font-medium text-white">The tools of today</div>
+                  </div>
+                </div>
+              </a>
+
+              {/* Copy */}
+              <div className="mt-10 md:mt-14 grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+                <div className="md:col-span-5">
+                  <p className="text-2xl md:text-3xl font-medium leading-snug tracking-tight">
+                    {DIGITAL_NATURALISM.subtitle.map((line, i) => (
+                      <span key={line} className="block" style={{ color: i === 2 ? COLORS.gold : `rgba(245,247,246,${i === 0 ? 0.6 : 0.85})` }}>{line}</span>
+                    ))}
+                  </p>
+                </div>
+                <div className="md:col-span-7">
+                  <p className="text-lg leading-relaxed" style={{ color: "rgba(245,247,246,0.80)" }}>
+                    Digital Naturalism brings the age of exploration to life, following Darwin, Wallace and Wilson, three naturalists whose fieldwork changed how we see the natural world.
+                  </p>
+                  <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(245,247,246,0.60)" }}>
+                    Next, students use modern techniques and tools to revisit their traces and to digitize nature. From the great voyages to today&apos;s tools, the goal stays the same: to keep learning from nature.
+                  </p>
+
+                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 border-t" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+                    {DIGITAL_NATURALISM.naturalists.map((n, i) => (
+                      <div key={n.name} className={`py-4 sm:pr-4 ${i > 0 ? "border-t sm:border-t-0 sm:border-l sm:pl-4" : ""}`} style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+                        <div className="text-sm font-semibold text-white">{n.name}</div>
+                        <div className="text-xs mt-0.5 tabular-nums" style={{ color: "rgba(245,247,246,0.45)" }}>{n.years}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 flex flex-wrap items-center gap-4">
+                    <a
+                      href={DIGITAL_NATURALISM.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-85"
+                      style={{ background: COLORS.blue }}
+                    >
+                      Explore Digital Naturalism <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>
+                    <span className="text-xs" style={{ color: "rgba(245,247,246,0.40)" }}>digital-naturalism.com</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </section>
         </main>
 
