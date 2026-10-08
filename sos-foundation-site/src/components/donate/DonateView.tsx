@@ -52,7 +52,7 @@ const IMPACT_AREAS = [
     label: "Open Data Infrastructure",
     color: COLORS.mech,
     description:
-      "Build and maintain the shared datasets, tools, and platforms — including the Internet of Bioinspiration (IoBI) and Discovery Commons — that make nature's knowledge accessible to all.",
+      "Build and maintain the shared datasets, tools, and platforms — including the Internet of Bioinspiration (IoBI) and Map of the Unknown — that make nature's knowledge accessible to all.",
   },
 ];
 

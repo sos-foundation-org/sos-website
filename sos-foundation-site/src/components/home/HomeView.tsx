@@ -104,7 +104,7 @@ const DIVISIONS: Record<DivKey, any> = {
     question: "What if nature's knowledge were open, searchable, and accessible to everyone?",
     thesis:
       "Open knowledge infrastructure makes nature's design intelligence findable and usable — connecting researchers, educators, and innovators through shared data and tools.",
-    anchors: ["Discovery Commons", "Internet of Bioinspiration (IoBI)", "Open datasets & tools"],
+    anchors: ["Map of the Unknown", "Internet of Bioinspiration (IoBI)", "Open datasets & tools"],
 
     explainTitle: "Mechanism layer",
     explainBody:

@@ -251,7 +251,7 @@ const EDUCATION_TRACKS = [
   { label: "AI Skills", desc: "Use AI to learn, connect across fields, and support research" },
   { label: "Digitize Nature", desc: "IoBI, Mountain Digital Twins, and open tools" },
   { label: "Mentored Research", desc: "Interdisciplinary projects with top-institution mentors" },
-  { label: "Real Contributions", desc: "Discovery Commons, datasets, publications" },
+  { label: "Real Contributions", desc: "Map of the Unknown, datasets, publications" },
 ];
 
 // ─── Spacer ──────────────────────────────────────────────────────────────────
@@ -644,7 +644,7 @@ export default function AboutView() {
                     {/* Mechanism */}
                     <line x1="640" y1="188" x2="640" y2="216" stroke={COLORS.mech} strokeWidth="0.8" strokeOpacity="0.3" />
                     <rect x="560" y="220" width="160" height="24" rx="12" fill={COLORS.mech} fillOpacity="0.08" stroke={COLORS.mech} strokeWidth="0.8" strokeOpacity="0.4" />
-                    <text x="640" y="236" textAnchor="middle" fill={COLORS.mech} fontSize="10" fontWeight="500">Discovery Commons</text>
+                    <text x="640" y="236" textAnchor="middle" fill={COLORS.mech} fontSize="10" fontWeight="500">Map of the Unknown</text>
                     <rect x="605" y="250" width="70" height="24" rx="12" fill={COLORS.mech} fillOpacity="0.08" stroke={COLORS.mech} strokeWidth="0.8" strokeOpacity="0.4" />
                     <text x="640" y="266" textAnchor="middle" fill={COLORS.mech} fontSize="10" fontWeight="500">IoBI</text>
 
@@ -724,7 +724,7 @@ export default function AboutView() {
             name="Knowledge Systems & Open Infrastructure"
             question="What if nature's knowledge were open, searchable, and accessible to everyone?"
             thesis="Open knowledge infrastructure makes nature's design intelligence findable and usable — connecting researchers, educators, and innovators through shared data and tools."
-            anchors={["Discovery Commons", "Internet of Bioinspiration (IoBI)", "Open datasets & tools"]}
+            anchors={["Map of the Unknown", "Internet of Bioinspiration (IoBI)", "Open datasets & tools"]}
             explainTitle="Mechanism layer"
             explainBody="Mechanism is where knowledge becomes accessible — when open infrastructure, shared datasets, and contributor networks make nature's design intelligence available to those who need it."
             color={COLORS.mech}

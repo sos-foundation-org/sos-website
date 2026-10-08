@@ -157,7 +157,7 @@ const TRACKS = [
   },
   {
     num: "05", title: "Real Contributions", color: COLORS.mech,
-    desc: "The endpoint is not a grade. It is a contribution that others can build on: Discovery Commons entries, datasets, and publications.",
+    desc: "The endpoint is not a grade. It is a contribution that others can build on: Map of the Unknown entries, datasets, and publications.",
   },
 ];
 
@@ -349,7 +349,7 @@ export default function EducationView() {
                     In SOS Education, research is not a reward for finishing coursework. It is the coursework. Students enter real projects that span ecology, data science, AI, design, and community engagement from day one.
                   </p>
                   <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(245,247,246,0.60)" }}>
-                    A student digitizing moth specimens learns biology, imaging technology, data management, and scientific communication simultaneously because the project demands it. This is not a simulation. The data they produce enters Discovery Commons. The analyses they run contribute to publications. The tools they build become part of IoBI.
+                    A student digitizing moth specimens learns biology, imaging technology, data management, and scientific communication simultaneously because the project demands it. This is not a simulation. The data they produce enters Map of the Unknown. The analyses they run contribute to publications. The tools they build become part of IoBI.
                   </p>
                 </div>
                 <div className="md:col-span-5">
@@ -359,7 +359,7 @@ export default function EducationView() {
                       {[
                         { label: "Not simulated", detail: "Real research questions, real data, real publications" },
                         { label: "Not siloed", detail: "Every project crosses at least two disciplines" },
-                        { label: "Not temporary", detail: "Contributions persist in Discovery Commons and IoBI" },
+                        { label: "Not temporary", detail: "Contributions persist in Map of the Unknown and IoBI" },
                         { label: "Not unsupported", detail: "Active mentorship from Harvard-affiliated researchers" },
                       ].map((item) => (
                         <div key={item.label}>
