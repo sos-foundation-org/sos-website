@@ -88,7 +88,7 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "SOS 教育：<a href=\"https://sos-commons.vercel.app/education\" target=\"_blank\" rel=\"noopener noreferrer\">sos-commons.vercel.app/education</a>",
+      text: "<a href=\"/education\">SOS 教育</a>",
     },
   ],
 };
