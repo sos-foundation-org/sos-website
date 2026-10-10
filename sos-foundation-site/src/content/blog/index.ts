@@ -17,6 +17,8 @@ import { post as antsBanned } from "./posts/should-buying-and-selling-ants-be-ba
 import { post as antsBannedZh } from "./posts/should-buying-and-selling-ants-be-banned.zh";
 import { post as aiLearn } from "./posts/when-ai-can-answer-questions-what-do-we-still-need-to-learn";
 import { post as aiLearnZh } from "./posts/when-ai-can-answer-questions-what-do-we-still-need-to-learn.zh";
+import { post as digitalNaturalism } from "./posts/why-we-built-digital-naturalism";
+import { post as digitalNaturalismZh } from "./posts/why-we-built-digital-naturalism.zh";
 
 const ALL_POSTS: Post[] = [
   welcomeToTheSosBlog,
@@ -29,6 +31,8 @@ const ALL_POSTS: Post[] = [
   antsBannedZh,
   aiLearn,
   aiLearnZh,
+  digitalNaturalism,
+  digitalNaturalismZh,
   // ↑ add new posts here
 ];
 
