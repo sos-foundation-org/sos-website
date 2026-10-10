@@ -15,7 +15,7 @@ export const post: Post = {
   coverAlt:
     "Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings",
   date: "2026-10-10",
-  authorId: "wei-ping-chan",
+  authorId: "cong-liu",
   tags: ["education"],
   body: [
     {

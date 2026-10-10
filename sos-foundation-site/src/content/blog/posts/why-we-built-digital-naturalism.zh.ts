@@ -19,7 +19,7 @@ export const post: Post = {
   coverAlt:
     "Digital Naturalism：航线地图和野外笔记，旁边是一台为蝴蝶翅膀做数字化拍摄的相机装置",
   date: "2026-10-10",
-  authorId: "wei-ping-chan",
+  authorId: "cong-liu",
   tags: ["education"],
   body: [
     {
