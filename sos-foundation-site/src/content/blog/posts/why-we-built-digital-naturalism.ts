@@ -22,7 +22,7 @@ export const post: Post = {
   body: [
     {
       type: "paragraph",
-      text: "We have just added Digital Naturalism to the SOS Education page. It is an interactive map of three natural history journeys: Charles Darwin's voyage on HMS Beagle (1831–1836), Alfred Russel Wallace's travels in the Amazon (1848–1852) and the Malay Archipelago (1854–1862), and E. O. Wilson's fieldwork across the twentieth century. You sail each route port by port. At every stop you read what the naturalist saw, collected, and thought there. I have been building it as a side project, and in this post I want to explain why, and why it belongs in SOS Education.",
+      text: "We have just added Digital Naturalism to the SOS Education page. It is an interactive map of three natural history journeys: Charles Darwin's voyage on HMS Beagle (1831–1836), Alfred Russel Wallace's travels in the Amazon (1848–1852) and the Malay Archipelago (1854–1862), and E. O. Wilson's fieldwork across the twentieth century. You sail each route port by port. At every stop you read what the naturalist saw, collected, and thought there. We have been building it as a side project, and in this post we want to explain why, and why it belongs in SOS Education.",
     },
     { type: "heading", text: "How they came to know", level: 2 },
     {
@@ -31,7 +31,7 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "What interests me most is not that they were right, but how they came to know. The popular story says Darwin saw the finches on the Galápagos and understood evolution on the spot. The record is different. Darwin did not even note which island most of his finches came from. The giant fossils at Punta Alta, the seashells high in the Andes, and an earthquake that lifted the coast of Chile all came first, and the idea itself took shape only after he returned to London. Wallace reached the same idea without family money, a university position, or a navy ship. He paid for his travels by selling the specimens he collected.",
+      text: "What interests us most is not that they were right, but how they came to know. The popular story says Darwin saw the finches on the Galápagos and understood evolution on the spot. The record is different. Darwin did not even note which island most of his finches came from. The giant fossils at Punta Alta, the seashells high in the Andes, and an earthquake that lifted the coast of Chile all came first, and the idea itself took shape only after he returned to London. Wallace reached the same idea without family money, a university position, or a navy ship. He paid for his travels by selling the specimens he collected.",
     },
     {
       type: "paragraph",
@@ -40,7 +40,7 @@ export const post: Post = {
     { type: "heading", text: "Learning from nature with today's tools", level: 2 },
     {
       type: "paragraph",
-      text: "At SOS we often say: keep learning from nature. The great naturalists did this with a hand lens, a net, and a notebook. We have much more. When you open the app, Darwin greets you with a line I wrote for him: \"With your modern eyes and my old field notes, perhaps together we'll spot the clues I missed the first time.\" That line is the main idea of the whole project.",
+      text: "At SOS we often say: keep learning from nature. The great naturalists did this with a hand lens, a net, and a notebook. We have much more. When you open the app, Darwin greets you with a line we wrote for him: \"With your modern eyes and my old field notes, perhaps together we'll spot the clues I missed the first time.\" That line is the main idea of the whole project.",
     },
     {
       type: "paragraph",
@@ -48,11 +48,11 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "The same idea runs through SOS research. We built a multispectral imaging system that records butterfly wings in ultraviolet, visible, and infrared light, including colors no human eye can see. Museum collections are also being digitized. Many of Wilson's specimens are kept at Harvard's Museum of Comparative Zoology, where I do my research, and the app links directly to those museum records. A specimen collected for one purpose a century ago can answer questions its collector never thought to ask.",
+      text: "The same idea runs through SOS research. We built a multispectral imaging system that records butterfly wings in ultraviolet, visible, and infrared light, including colors no human eye can see. Museum collections are also being digitized. Many of Wilson's specimens are kept at Harvard's Museum of Comparative Zoology, where one of our researchers is based, and the app links directly to those museum records. A specimen collected for one purpose a century ago can answer questions its collector never thought to ask.",
     },
     {
       type: "paragraph",
-      text: "I also think revisiting these stops may change how big findings are made. In Darwin's time, a finding depended on who could join a long voyage. Today a student anywhere can study the same places through open data, museum records, and satellite maps, and then add new observations of their own. If many people each add a careful piece, I believe we can find things that one voyage could not.",
+      text: "We also think revisiting these stops may change how big findings are made. In Darwin's time, a finding depended on who could join a long voyage. Today a student anywhere can study the same places through open data, museum records, and satellite maps, and then add new observations of their own. If many people each add a careful piece, we believe we can find things that one voyage could not.",
     },
     { type: "heading", text: "Why it belongs in SOS Education", level: 2 },
     {
@@ -70,7 +70,7 @@ export const post: Post = {
     { type: "heading", text: "Try it", level: 2 },
     {
       type: "paragraph",
-      text: "Digital Naturalism is free and needs no account. It works on phones and tablets, and the voyages can be read in English or Chinese. Teachers can find three ready lesson flows, about 45 minutes each, on the For Educators page. I am now preparing a fourth voyage: Maria Sibylla Merian's 1699 journey to Suriname to study insects and the plants they live on.",
+      text: "Digital Naturalism is free and needs no account. It works on phones and tablets, and the voyages can be read in English or Chinese. Teachers can find three ready lesson flows, about 45 minutes each, on the For Educators page. We are now preparing a fourth voyage: Maria Sibylla Merian's 1699 journey to Suriname to study insects and the plants they live on.",
     },
     {
       type: "paragraph",
