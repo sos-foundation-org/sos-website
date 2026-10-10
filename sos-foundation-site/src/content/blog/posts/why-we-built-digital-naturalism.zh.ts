@@ -21,7 +21,7 @@ export const post: Post = {
   coverCredit:
     "截图：Digital Naturalism。地图图块来自 Stamen Design（CC BY 3.0），数据来自 OpenStreetMap",
   date: "2026-10-10",
-  authorId: "cong-liu",
+  authorId: "sos-foundation",
   tags: ["education"],
   body: [
     {

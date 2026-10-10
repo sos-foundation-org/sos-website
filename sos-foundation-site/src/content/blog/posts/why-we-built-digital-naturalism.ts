@@ -17,7 +17,7 @@ export const post: Post = {
   coverCredit:
     "Screenshot: Digital Naturalism. Map tiles by Stamen Design (CC BY 3.0), data by OpenStreetMap",
   date: "2026-10-10",
-  authorId: "cong-liu",
+  authorId: "sos-foundation",
   tags: ["education"],
   body: [
     {
