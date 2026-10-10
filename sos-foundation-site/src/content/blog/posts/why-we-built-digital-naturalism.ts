@@ -11,9 +11,11 @@ export const post: Post = {
   title: "Why We Built Digital Naturalism",
   excerpt:
     "Retracing the voyages of Darwin, Wallace, and Wilson with today's tools, and why learning how they came to know belongs in SOS Education.",
-  cover: "/pics/digital_naturalism.jpg",
+  cover: "/pics/digital-naturalism-voyage-map.jpg",
   coverAlt:
-    "Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings",
+    "Digital Naturalism app: the HMS Beagle on a watercolor map of the Atlantic at Porto Praya, Cape Verde, with the voyage port list on the left and Darwin's field notes on the right",
+  coverCredit:
+    "Screenshot: Digital Naturalism. Map tiles by Stamen Design (CC BY 3.0), data by OpenStreetMap",
   date: "2026-10-10",
   authorId: "cong-liu",
   tags: ["education"],

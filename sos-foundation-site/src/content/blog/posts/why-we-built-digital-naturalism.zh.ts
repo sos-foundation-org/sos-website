@@ -15,9 +15,11 @@ export const post: Post = {
   title: "为什么做 Digital Naturalism",
   excerpt:
     "用今天的工具重走达尔文、华莱士和威尔逊的旅程，以及它为什么属于 SOS 教育。",
-  cover: "/pics/digital_naturalism.jpg",
+  cover: "/pics/digital-naturalism-voyage-map.jpg",
   coverAlt:
-    "Digital Naturalism：航线地图和野外笔记，旁边是一台为蝴蝶翅膀做数字化拍摄的相机装置",
+    "Digital Naturalism 网站截图：小猎犬号停在水彩风格大西洋地图上的佛得角普拉亚港，左侧是航程站点列表，右侧是达尔文的野外记录",
+  coverCredit:
+    "截图：Digital Naturalism。地图图块来自 Stamen Design（CC BY 3.0），数据来自 OpenStreetMap",
   date: "2026-10-10",
   authorId: "cong-liu",
   tags: ["education"],
