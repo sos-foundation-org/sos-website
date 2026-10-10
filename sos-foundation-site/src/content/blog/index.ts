@@ -145,16 +145,26 @@ export function formatDate(iso: string): string {
   return `${MONTHS[m - 1]} ${d}, ${y}`;
 }
 
-/** Rough reading-time estimate from the post body (~200 wpm). */
+// CJK ideographs / kana / hangul are counted per character — Chinese has no
+// spaces, so splitting on whitespace would count a whole paragraph as one word.
+const CJK = /[぀-ヿ㐀-䶿一-鿿가-힯豈-﫿]/g;
+
+/**
+ * Rough reading-time estimate from the post body: ~200 wpm for space-separated
+ * words, ~400 characters per minute for CJK text. Mixed text sums both.
+ */
 export function readingTime(post: Post): string {
-  const words = post.body.reduce((n, b) => {
+  let words = 0;
+  let cjkChars = 0;
+  for (const b of post.body) {
     if (b.type === "paragraph" || b.type === "heading" || b.type === "quote") {
       const plain = b.text.replace(/<[^>]+>/g, " ");
-      return n + plain.split(/\s+/).filter(Boolean).length;
+      cjkChars += plain.match(CJK)?.length ?? 0;
+      words += plain.replace(CJK, " ").split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
     }
-    return n;
-  }, 0);
-  return `${Math.max(1, Math.round(words / 200))} min read`;
+  }
+  const minutes = words / 200 + cjkChars / 400;
+  return `${Math.max(1, Math.round(minutes))} min read`;
 }
 
 // ─── Filter facets ───────────────────────────────────────────────────────────
