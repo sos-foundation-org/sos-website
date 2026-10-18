@@ -868,21 +868,21 @@ export default function AboutView() {
               </a>
 
               {/* Ecotone 兼容並續 — forum co-organized with NTU & NYCU; external site.
-                  The poster is pinned top-left so its title block is never cropped;
-                  the copy sits over the dark "below ground" half. */}
+                  The poster is drawn at 140% of the card width (capped at 560px so
+                  its dark half always sits under the copy), pinned top-left, so its title block is never cropped or oversized. The
+                  card background matches the poster's dark "below ground" edge, so
+                  the space under it reads as one continuous image behind the copy. */}
               <a href={ECOTONE.url} target="_blank" rel="noopener noreferrer" className="group relative md:col-span-5 flex flex-col justify-end rounded-3xl min-h-[400px] md:min-h-[460px] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
-                <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ background: "#151310" }}>
-                  <Image src={ECOTONE.image} alt="Ecotone 兼容並續 forum poster: a tree and mushrooms above ground, and a web of roots linking disciplines below" fill className="object-cover transition-transform duration-[1200ms] ease-out origin-top-left group-hover:scale-[1.03]" style={{ objectPosition: "left top" }} sizes="(max-width: 768px) 100vw, 480px" />
-                  {/* Phones fit less poster under more copy, so their scrim starts higher. */}
-                  <div className="absolute inset-0 md:hidden" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 36%, rgba(8,24,36,0.88) 50%, rgba(8,24,36,0.92) 100%)" }} />
-                  <div className="absolute inset-0 hidden md:block" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 52%, rgba(8,24,36,0.70) 66%, rgba(8,24,36,0.90) 100%)" }} />
+                <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ background: "#15120D" }}>
+                  <Image src={ECOTONE.image} alt="Ecotone 兼容並續 forum poster: a tree and mushrooms above ground, and a web of roots linking disciplines below" width={1559} height={818} className="absolute left-0 top-0 h-auto max-w-none transition-transform duration-[1200ms] ease-out origin-top-left group-hover:scale-[1.03]" style={{ width: "min(140%, 560px)" }} sizes="560px" />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(21,18,13,0) 45%, rgba(21,18,13,0.85) 100%)" }} />
                 </div>
                 <div className="relative flex flex-col gap-4 p-5 sm:p-7">
                   <div className="min-w-0">
                     <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Forum · NTU × NYCU × SOS</div>
-                    <div className="text-xl md:text-2xl font-semibold tracking-tight text-white">{ECOTONE.latest.title}</div>
+                    <div className="text-2xl md:text-3xl font-semibold tracking-tight text-white">Ecotone <span lang="zh-Hant">兼容並續</span></div>
                     <p className="mt-1.5 text-sm" style={{ color: "rgba(255,255,255,0.80)" }}>
-                      {ECOTONE.latest.volume} · 16 Nov, NTU Gongguan &middot; 17 Nov, NYCU Hsinchu
+                      {ECOTONE.latest.volume} · {ECOTONE.latest.title} — 16 Nov, NTU Gongguan &middot; 17 Nov, NYCU Hsinchu
                     </p>
                   </div>
                   <span className="self-start inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
