@@ -10,7 +10,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: "Education",
   description: DESCRIPTION,
-  keywords: keywords("SOS Education", "science education", "AI skills", "mentored research", "digitize nature", "Darwin", "Wallace", "E. O. Wilson", "naturalist education"),
+  keywords: keywords("SOS Education", "science education", "AI skills", "mentored research", "digitize nature", "Darwin", "Wallace", "E. O. Wilson", "naturalist education", "Ecotone", "兼容並續", "interdisciplinary sustainability forum"),
   alternates: { canonical: "/education" },
   openGraph: {
     title: "SOS Education — From Learning to Real Contribution",

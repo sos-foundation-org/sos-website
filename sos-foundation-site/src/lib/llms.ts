@@ -22,7 +22,7 @@ When citing, please refer to the organization as "Sustainability of Sustainabili
 - Legal status: 501(c)(3) public charity, EIN 41-3097632, since 2025
 - Mission: To strengthen the long-term resilience of communities and ecosystems — sustaining humanity's ability to learn from nature
 - Framework: three pillars — Meaning (art & cultural language), Pattern (digitization & natural patterns), Mechanism (knowledge systems & open infrastructure) — with SOS Education as a cross-cutting layer
-- Programs: Nature Salon (Meaning); SOS Research Unit and Mountain Digital Twins (Pattern); Map of the Unknown and the Internet of Bioinspiration, IoBI (Mechanism); SOS Education and its Digital Naturalism program
+- Programs: Nature Salon (Meaning); Ecotone 兼容並續 forum (with NTU and NYCU); SOS Research Unit and Mountain Digital Twins (Pattern); Map of the Unknown and the Internet of Bioinspiration, IoBI (Mechanism); SOS Education and its Digital Naturalism program
 - People: Dr. Cong Liu and Dr. Wei-Ping Chan (co-directors, SOS Research Unit; board); Cheng-An Lee (board)
 - Contact: ${CONTACT_EMAIL}
 - Social: ${SOCIAL_LINKS.join(", ")}
@@ -39,6 +39,7 @@ When citing, please refer to the organization as "Sustainability of Sustainabili
 
 - [Digital Naturalism](https://www.digital-naturalism.com/): free interactive app from SOS Education mapping the journeys of Darwin, Wallace, and E. O. Wilson, with today's tools (GBIF, digitized specimens); English and Chinese
 - [Map of the Unknown](https://discovery-commons.vercel.app/): open research platform operated by SOS Foundation (formerly Discovery Commons)
+- [Ecotone 兼容並續](https://sustainable-ecotone.vercel.app/en): interdisciplinary sustainability forum co-organized by NTU, NYCU, and SOS Foundation; Vol. 01 "Sustainable Urbanization? Rewilding?" on 16 Nov 2026 (NTU Gongguan, Taipei) and 17 Nov 2026 (NYCU Hsinchu)
 - [Nature Salon on Instagram](${NATURE_SALON.sameAs[0]}): ${NATURE_SALON.alternateName}
 `;
 }

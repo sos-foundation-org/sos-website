@@ -50,6 +50,11 @@ export const FAQS: Faq[] = [
       "Map of the Unknown (formerly Discovery Commons) is an open research platform operated by the SOS Foundation — a shared map of what we do not yet understand, and where discovery can begin. A thoughtful question earns the same credit as a published result, and contributors of all backgrounds and education levels are welcome, from field naturalists to theoretical physicists and humanities scholars.",
   },
   {
+    question: "What is Ecotone (兼容並續)?",
+    answer:
+      "Ecotone (兼容並續) is an interdisciplinary sustainability forum co-organized by National Taiwan University, National Yang Ming Chiao Tung University, and the SOS Foundation. Named after the zone where two ecosystems meet, each volume brings together speakers from different fields and countries. Vol. 01, \"Sustainable Urbanization? Rewilding?\", takes place on 16 November 2026 at NTU's Gongguan Campus in Taipei and 17 November 2026 at NYCU's Hsinchu Campus. Details and registration: https://sustainable-ecotone.vercel.app/en",
+  },
+  {
     question: "What is SOS Education?",
     answer:
       "SOS Education connects students and communities to real research. Its philosophy is that education should not end with learning but lead to real contributions. It has five tracks: Community & Communication, AI Skills, Digitize Nature, Mentored Research, and Real Contributions.",

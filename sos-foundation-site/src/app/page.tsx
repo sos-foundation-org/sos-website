@@ -12,7 +12,7 @@ const SHORT =
 export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
-  keywords: keywords("nonprofit", "Meaning Pattern Mechanism", "Internet of Bioinspiration", "Map of the Unknown", "nature digitization"),
+  keywords: keywords("nonprofit", "Meaning Pattern Mechanism", "Internet of Bioinspiration", "Map of the Unknown", "nature digitization", "Ecotone", "兼容並續", "interdisciplinary sustainability forum"),
   alternates: { canonical: "/" },
   openGraph: {
     title: TITLE,

@@ -6,7 +6,7 @@
 
 import { SITE_URL } from "./site";
 import { FAQS } from "@/content/faq";
-import { EVENTS, NATURE_SALON } from "@/content/events";
+import { ECOTONE, EVENTS, NATURE_SALON } from "@/content/events";
 import { getLanguagesInUse, type Post } from "@/content/blog";
 
 export const SITE_NAME = "SOS Foundation";
@@ -231,13 +231,18 @@ export function faqJsonLd() {
   };
 }
 
-/** Nature Salon series plus any confirmed events from content/events.ts. */
+/** Nature Salon and Ecotone series plus confirmed events from content/events.ts. */
 export function eventsJsonLd() {
-  const seriesId = `${SITE_URL}/#nature-salon`;
-  const series = {
+  const seriesIds = {
+    "nature-salon": `${SITE_URL}/#nature-salon`,
+    ecotone: `${SITE_URL}/#ecotone`,
+  } as const;
+  const coOrganizers = ECOTONE.organizers.map((o) => ({ "@type": "CollegeOrUniversity", name: o.name, url: o.url }));
+
+  const natureSalon = {
     "@context": "https://schema.org",
     "@type": "EventSeries",
-    "@id": seriesId,
+    "@id": seriesIds["nature-salon"],
     name: NATURE_SALON.name,
     alternateName: NATURE_SALON.alternateName,
     description: NATURE_SALON.description,
@@ -245,6 +250,18 @@ export function eventsJsonLd() {
     sameAs: NATURE_SALON.sameAs,
     organizer: { "@id": ORG_ID },
     audience: { "@type": "Audience", audienceType: "Artists, scientists, and entrepreneurs" },
+  };
+
+  const ecotone = {
+    "@context": "https://schema.org",
+    "@type": "EventSeries",
+    "@id": seriesIds.ecotone,
+    name: ECOTONE.name,
+    alternateName: ECOTONE.alternateName,
+    description: ECOTONE.description,
+    url: ECOTONE.url,
+    image: absoluteUrl(ECOTONE.image),
+    organizer: [{ "@id": ORG_ID }, ...coOrganizers],
   };
 
   const events = EVENTS.map((e) => ({
@@ -263,9 +280,9 @@ export function eventsJsonLd() {
       : { "@type": "Place", name: e.location?.name, address: e.location?.address },
     ...(e.image ? { image: absoluteUrl(e.image) } : {}),
     ...(e.url ? { url: e.url } : {}),
-    organizer: { "@id": ORG_ID },
-    ...(e.series === "nature-salon" ? { superEvent: { "@id": seriesId } } : {}),
+    organizer: e.series === "ecotone" ? [{ "@id": ORG_ID }, ...coOrganizers] : { "@id": ORG_ID },
+    ...(e.series ? { superEvent: { "@id": seriesIds[e.series] } } : {}),
   }));
 
-  return [series, ...events];
+  return [natureSalon, ecotone, ...events];
 }

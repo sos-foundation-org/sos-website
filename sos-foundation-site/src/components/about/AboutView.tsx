@@ -20,6 +20,7 @@ import MobileNav from "@/components/ui/MobileNav";
 import { POSTS, formatDate, getAuthor, getCategory } from "@/content/blog";
 import { HIGHLIGHT_SLUGS, HIGHLIGHT_ROTATION_MS } from "@/content/blog/highlights";
 import { FAQS } from "@/content/faq";
+import { ECOTONE } from "@/content/events";
 
 // ─── Design tokens — identical to main site ──────────────────────────────────
 const COLORS = {
@@ -859,6 +860,29 @@ export default function AboutView() {
                 </div>
                 <span className="self-end sm:self-auto shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
                   View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </a>
+
+            {/* Ecotone 兼容並續 — forum co-organized with NTU & NYCU; external site.
+                Same minimum-aspect, content-in-flow layout as the Digital Naturalism card. */}
+            <a href={ECOTONE.url} target="_blank" rel="noopener noreferrer" className="group relative mt-6 flex flex-col justify-end rounded-3xl aspect-square sm:aspect-[16/9] lg:aspect-[21/9] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
+              <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ background: "#F2EEE4" }}>
+                <Image src={ECOTONE.image} alt="Ecotone 兼容並續 forum poster: a tree and mushrooms above ground, and a web of roots linking disciplines below" fill className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" style={{ objectPosition: "center 70%" }} sizes="(max-width: 1152px) 100vw, 1152px" />
+                {/* Phones stack more text on the square crop, so the scrim starts higher there. */}
+                <div className="absolute inset-0 sm:hidden" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 20%, rgba(8,24,36,0.80) 50%, rgba(8,24,36,0.92) 100%)" }} />
+                <div className="absolute inset-0 hidden sm:block" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 50%, rgba(8,24,36,0.85) 100%)" }} />
+              </div>
+              <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 p-5 sm:p-8">
+                <div className="min-w-0">
+                  <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Forum · NTU × NYCU × SOS</div>
+                  <div className="text-2xl md:text-4xl font-semibold tracking-tight text-white">Ecotone <span lang="zh-Hant">兼容並續</span></div>
+                  <p className="mt-2 max-w-xl text-sm md:text-base" style={{ color: "rgba(255,255,255,0.80)" }}>
+                    {ECOTONE.latest.volume} · {ECOTONE.latest.title} — 16 Nov, NTU Gongguan &middot; 17 Nov, NYCU Hsinchu
+                  </p>
+                </div>
+                <span className="self-end sm:self-auto shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                  Visit &amp; register <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </div>
             </a>

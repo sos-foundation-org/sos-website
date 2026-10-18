@@ -10,6 +10,7 @@ import {
   Instagram,
   Facebook,
 } from "lucide-react";
+import { ECOTONE } from "@/content/events";
 import MobileNav from "@/components/ui/MobileNav";
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
@@ -507,6 +508,54 @@ export default function EducationView() {
                     >
                       Discover with Digital Naturalism <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </a>                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </section>
+
+          <Spacer />
+
+          {/* ── Featured program — Ecotone 兼容並續 (forum, Community & Communication) ── */}
+          <section id="edu-ecotone" className="mx-auto max-w-6xl px-5 py-20 md:py-28 scroll-mt-16">
+            <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+              <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase mb-2 md:mb-4" style={{ color: COLORS.gold }}>Featured Program · Community &amp; Communication</div>
+              <h2 className="text-4xl md:text-6xl font-semibold tracking-tight text-white">
+                Ecotone <span lang="zh-Hant" className="font-medium" style={{ color: "rgba(245,247,246,0.65)" }}>兼容並續</span>
+              </h2>
+              <p className="mt-4 text-lg md:text-xl" style={{ color: "rgba(245,247,246,0.70)" }}>{ECOTONE.tagline}</p>
+
+              <a href={ECOTONE.url} target="_blank" rel="noopener noreferrer" className="group mt-10 block overflow-hidden rounded-3xl border transition-transform duration-200 hover:scale-[1.005]" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+                <Image
+                  src={ECOTONE.image}
+                  alt="Ecotone 兼容並續 forum poster: a tree and mushrooms above ground, and below ground a web of roots linking fields such as ecology, climate, landscape design and technology"
+                  width={1559}
+                  height={818}
+                  className="w-full h-auto"
+                  sizes="(max-width: 1152px) 100vw, 1152px"
+                />
+              </a>
+
+              <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+                <div className="md:col-span-7">
+                  <p className="text-lg leading-relaxed" style={{ color: "rgba(245,247,246,0.80)" }}>
+                    An ecotone is the zone where two ecosystems meet, and often the place richest in species. Ecotone 兼容並續 is an interdisciplinary sustainability forum co-organized by National Taiwan University, National Yang Ming Chiao Tung University, and SOS Foundation.
+                  </p>
+                  <p className="mt-4 text-base leading-relaxed" style={{ color: "rgba(245,247,246,0.60)" }}>
+                    Each volume places speakers from different fields and countries side by side, from ecology and climate to literature, landscape design, and medicine, so that students and the public can see sustainability from the edges where disciplines meet.
+                  </p>
+                </div>
+                <div className="md:col-span-5">
+                  <div className="rounded-3xl border p-6" style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.03)" }}>
+                    <div className="text-xs font-medium tracking-widest uppercase" style={{ color: COLORS.gold }}>{ECOTONE.latest.volume}</div>
+                    <h3 className="mt-2 text-xl font-semibold text-white">{ECOTONE.latest.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(245,247,246,0.60)" }}>{ECOTONE.latest.question}</p>
+                    <ul className="mt-4 space-y-1.5 text-sm" style={{ color: "rgba(245,247,246,0.80)" }}>
+                      {ECOTONE.latest.sessions.map((s) => <li key={s}>{s}</li>)}
+                    </ul>
+                    <a href={ECOTONE.url} target="_blank" rel="noopener noreferrer" className="group mt-6 inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-85" style={{ background: COLORS.blue }}>
+                      Visit Ecotone &amp; register <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
