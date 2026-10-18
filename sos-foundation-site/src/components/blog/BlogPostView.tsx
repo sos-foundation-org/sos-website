@@ -130,7 +130,7 @@ export default function BlogPostView({
                 <div className="leading-tight">
                   <div className="text-sm font-medium text-white">{author.name}</div>
                   <div className="text-xs text-white/45">
-                    {formatDate(post.date)} · {readingTime(post)}
+                    <time dateTime={post.date}>{formatDate(post.date)}</time> · {readingTime(post)}
                   </div>
                 </div>
               </div>

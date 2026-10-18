@@ -19,6 +19,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import MobileNav from "@/components/ui/MobileNav";
 import { POSTS, formatDate, getAuthor, getCategory } from "@/content/blog";
 import { HIGHLIGHT_SLUGS, HIGHLIGHT_ROTATION_MS } from "@/content/blog/highlights";
+import { FAQS } from "@/content/faq";
 
 // ─── Design tokens — identical to main site ──────────────────────────────────
 const COLORS = {
@@ -913,6 +914,25 @@ export default function AboutView() {
                   </div>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <Spacer />
+
+          {/* ── FAQ — same text as the FAQPage JSON-LD (content/faq.ts) ── */}
+          <section id="about-faq" aria-labelledby="about-faq-title" className="mx-auto max-w-3xl px-5 py-20 md:py-28">
+            <div className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium" style={{ background: "rgba(255,255,255,0.12)", color: "rgba(245,247,246,0.85)" }}>FAQ</div>
+            <h2 id="about-faq-title" className="mt-4 text-2xl md:text-4xl font-semibold text-white">Frequently asked questions</h2>
+            <div className="mt-8 divide-y border-y" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+              {FAQS.map((f) => (
+                <details key={f.question} className="group py-5" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-base md:text-lg font-medium text-white [&::-webkit-details-marker]:hidden">
+                    <h3 className="font-medium">{f.question}</h3>
+                    <span aria-hidden className="mt-1 shrink-0 text-white/50 transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="mt-3 text-base leading-relaxed" style={{ color: "rgba(245,247,246,0.70)" }}>{f.answer}</p>
+                </details>
+              ))}
             </div>
           </section>
 
