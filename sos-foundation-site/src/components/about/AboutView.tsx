@@ -843,49 +843,54 @@ export default function AboutView() {
               <AboutWorkCard card={WORK.spotlight} />
             </div>
 
-            {/* Digital Naturalism — full-width feature, leads to its section on /education.
-                The aspect ratio is a minimum: content sits in flow so phones grow instead of clipping. */}
-            <a href="/education#edu-digital-naturalism" className="group relative mt-6 flex flex-col justify-end rounded-3xl aspect-square sm:aspect-[16/9] lg:aspect-[21/9] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
-              <div className="absolute inset-0 rounded-3xl overflow-hidden">
-                <Image src="/pics/digital_naturalism.jpg" alt="Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings" fill className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" style={{ objectPosition: "center 58%" }} sizes="(max-width: 1152px) 100vw, 1152px" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 40%, rgba(8,24,36,0.82) 100%)" }} />
-              </div>
-              <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 p-5 sm:p-8">
-                <div className="min-w-0">
-                  <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Education · Featured program</div>
-                  <div className="text-2xl md:text-4xl font-semibold tracking-tight text-white">Digital Naturalism</div>
-                  <p className="mt-2 max-w-xl text-sm md:text-base" style={{ color: "rgba(255,255,255,0.75)" }}>
-                    Learn from the great voyages. Learn the tools of today. Keep learning from nature.
-                  </p>
+            {/* Featured programs — asymmetric 7/5 pair at equal height, so the two
+                read as a set without the stiffness of a 50/50 split. Content sits in
+                flow (min-height, not a fixed aspect) so phones grow instead of clipping. */}
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-12 gap-5">
+              {/* Digital Naturalism — leads to its section on /education */}
+              <a href="/education#edu-digital-naturalism" className="group relative md:col-span-7 flex flex-col justify-end rounded-3xl min-h-[400px] md:min-h-[460px] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
+                <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                  <Image src="/pics/digital_naturalism.jpg" alt="Digital Naturalism: a voyage map and field journal beside a camera rig digitizing butterfly wings" fill className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" style={{ objectPosition: "center 58%" }} sizes="(max-width: 768px) 100vw, 680px" />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 40%, rgba(8,24,36,0.85) 100%)" }} />
                 </div>
-                <span className="self-end sm:self-auto shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
-                  View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </div>
-            </a>
+                <div className="relative flex flex-col gap-4 p-5 sm:p-7">
+                  <div className="min-w-0">
+                    <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Education · Featured program</div>
+                    <div className="text-2xl md:text-3xl font-semibold tracking-tight text-white">Digital Naturalism</div>
+                    <p className="mt-2 max-w-md text-sm md:text-base" style={{ color: "rgba(255,255,255,0.75)" }}>
+                      Learn from the great voyages. Learn the tools of today. Keep learning from nature.
+                    </p>
+                  </div>
+                  <span className="self-start inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                    View Details <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
+              </a>
 
-            {/* Ecotone 兼容並續 — forum co-organized with NTU & NYCU; external site.
-                Same minimum-aspect, content-in-flow layout as the Digital Naturalism card. */}
-            <a href={ECOTONE.url} target="_blank" rel="noopener noreferrer" className="group relative mt-6 flex flex-col justify-end rounded-3xl aspect-square sm:aspect-[16/9] lg:aspect-[21/9] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
-              <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ background: "#F2EEE4" }}>
-                <Image src={ECOTONE.image} alt="Ecotone 兼容並續 forum poster: a tree and mushrooms above ground, and a web of roots linking disciplines below" fill className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]" style={{ objectPosition: "center 70%" }} sizes="(max-width: 1152px) 100vw, 1152px" />
-                {/* Phones stack more text on the square crop, so the scrim starts higher there. */}
-                <div className="absolute inset-0 sm:hidden" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 20%, rgba(8,24,36,0.80) 50%, rgba(8,24,36,0.92) 100%)" }} />
-                <div className="absolute inset-0 hidden sm:block" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 50%, rgba(8,24,36,0.85) 100%)" }} />
-              </div>
-              <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-4 p-5 sm:p-8">
-                <div className="min-w-0">
-                  <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Forum · NTU × NYCU × SOS</div>
-                  <div className="text-2xl md:text-4xl font-semibold tracking-tight text-white">Ecotone <span lang="zh-Hant">兼容並續</span></div>
-                  <p className="mt-2 max-w-xl text-sm md:text-base" style={{ color: "rgba(255,255,255,0.80)" }}>
-                    {ECOTONE.latest.volume} · {ECOTONE.latest.title} — 16 Nov, NTU Gongguan &middot; 17 Nov, NYCU Hsinchu
-                  </p>
+              {/* Ecotone 兼容並續 — forum co-organized with NTU & NYCU; external site.
+                  The poster is pinned top-left so its title block is never cropped;
+                  the copy sits over the dark "below ground" half. */}
+              <a href={ECOTONE.url} target="_blank" rel="noopener noreferrer" className="group relative md:col-span-5 flex flex-col justify-end rounded-3xl min-h-[400px] md:min-h-[460px] cursor-pointer transition-transform duration-200 hover:scale-[1.005]">
+                <div className="absolute inset-0 rounded-3xl overflow-hidden" style={{ background: "#151310" }}>
+                  <Image src={ECOTONE.image} alt="Ecotone 兼容並續 forum poster: a tree and mushrooms above ground, and a web of roots linking disciplines below" fill className="object-cover transition-transform duration-[1200ms] ease-out origin-top-left group-hover:scale-[1.03]" style={{ objectPosition: "left top" }} sizes="(max-width: 768px) 100vw, 480px" />
+                  {/* Phones fit less poster under more copy, so their scrim starts higher. */}
+                  <div className="absolute inset-0 md:hidden" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 36%, rgba(8,24,36,0.88) 50%, rgba(8,24,36,0.92) 100%)" }} />
+                  <div className="absolute inset-0 hidden md:block" style={{ background: "linear-gradient(180deg, rgba(8,24,36,0) 52%, rgba(8,24,36,0.70) 66%, rgba(8,24,36,0.90) 100%)" }} />
                 </div>
-                <span className="self-end sm:self-auto shrink-0 inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
-                  Visit &amp; register <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
-              </div>
-            </a>
+                <div className="relative flex flex-col gap-4 p-5 sm:p-7">
+                  <div className="min-w-0">
+                    <div className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: COLORS.gold }}>Forum · NTU × NYCU × SOS</div>
+                    <div className="text-xl md:text-2xl font-semibold tracking-tight text-white">{ECOTONE.latest.title}</div>
+                    <p className="mt-1.5 text-sm" style={{ color: "rgba(255,255,255,0.80)" }}>
+                      {ECOTONE.latest.volume} · 16 Nov, NTU Gongguan &middot; 17 Nov, NYCU Hsinchu
+                    </p>
+                  </div>
+                  <span className="self-start inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-sm font-medium text-white transition-opacity group-hover:opacity-85" style={{ background: COLORS.blue }}>
+                    Visit &amp; register <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </div>
+              </a>
+            </div>
           </section>
 
           <Spacer />
