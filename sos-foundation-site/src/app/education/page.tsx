@@ -70,7 +70,9 @@ export default function EducationPage() {
             name: "Digital Naturalism",
             url: "https://www.digital-naturalism.com/",
             description:
-              "Digital Naturalism is an SOS Education program that brings the age of exploration to life by following naturalists Charles Darwin, Alfred Russel Wallace, and Edward O. Wilson, then has students use modern tools to revisit their traces and digitize nature.",
+              "Digital Naturalism is a free interactive app from SOS Education that maps the natural history journeys of Charles Darwin, Alfred Russel Wallace, and Edward O. Wilson. Students follow each route stop by stop, reason from the evidence before seeing the naturalist's explanation, and use today's tools such as GBIF and digitized museum specimens.",
+            isAccessibleForFree: true,
+            inLanguage: ["en", "zh"],
             provider: { "@id": ORG_ID },
             about: ["Natural history", "Biodiversity", "Nature digitization", "Charles Darwin", "Alfred Russel Wallace", "Edward O. Wilson"],
           },

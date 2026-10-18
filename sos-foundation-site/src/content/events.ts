@@ -23,12 +23,12 @@ export type SosEvent = {
   series?: "nature-salon";
 };
 
-/** The recurring Nature Salon series (Meaning pillar). */
+/** The Nature Salon series (Meaning pillar). */
 export const NATURE_SALON = {
   name: "Nature Salon",
   alternateName: "The Sustainability Dialogue for Artists, Scientists & Entrepreneurs",
   description:
-    "Nature Salon is the SOS Foundation's recurring sustainability dialogue that brings artists, scientists, and entrepreneurs together to give sustainability a shared language through art, design, and conversation.",
+    "Nature Salon is the SOS Foundation's sustainability dialogue that brings artists, scientists, and entrepreneurs together to give sustainability a shared language through art, design, and conversation.",
   image: "/pics/Nature_Salon.jpg",
   sameAs: ["https://www.instagram.com/sustainability.dialogue/"],
 };

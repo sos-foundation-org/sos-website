@@ -37,7 +37,7 @@ When citing, please refer to the organization as "Sustainability of Sustainabili
 
 ## External projects
 
-- [Digital Naturalism](https://www.digital-naturalism.com/): SOS Education program following Darwin, Wallace, and E. O. Wilson, then digitizing nature with today's tools
+- [Digital Naturalism](https://www.digital-naturalism.com/): free interactive app from SOS Education mapping the journeys of Darwin, Wallace, and E. O. Wilson, with today's tools (GBIF, digitized specimens); English and Chinese
 - [Map of the Unknown](https://discovery-commons.vercel.app/): open research platform operated by SOS Foundation (formerly Discovery Commons)
 - [Nature Salon on Instagram](${NATURE_SALON.sameAs[0]}): ${NATURE_SALON.alternateName}
 `;

@@ -32,22 +32,22 @@ export const FAQS: Faq[] = [
   {
     question: "What is Digital Naturalism?",
     answer:
-      "Digital Naturalism is a featured SOS Education program. It brings the age of exploration to life by following three naturalists — Charles Darwin, Alfred Russel Wallace, and Edward O. Wilson — and then has students use modern tools to revisit their traces and digitize nature. Its motto: learn from the great voyages, learn the tools of today, keep learning from nature.",
+      "Digital Naturalism is a free interactive app from SOS Education that maps three natural history journeys: Charles Darwin's voyage on HMS Beagle, Alfred Russel Wallace's travels in the Amazon and the Malay Archipelago, and E. O. Wilson's fieldwork. Students sail each route stop by stop, commit to their own explanation before seeing the naturalist's, and use today's tools such as GBIF and digitized museum specimens. It needs no account, works on phones and tablets, is available in English and Chinese, and includes lesson flows for teachers. Its motto: learn from the great voyages, learn the tools of today, keep learning from nature.",
   },
   {
     question: "What is bioinspiration, and what is the Internet of Bioinspiration (IoBI)?",
     answer:
-      "Bioinspiration is learning from how evolved organisms solve problems to inform sustainable design and innovation. The Internet of Bioinspiration (IoBI) is an SOS project that turns natural collections — such as digitized insect specimens — into structured, computable, openly accessible knowledge for research, education, and bioinspired design.",
+      "Bioinspiration means understanding how evolved structures in nature can inform sustainable design and innovation. The Internet of Bioinspiration (IoBI) is part of the SOS Foundation's open knowledge infrastructure (Mechanism pillar): pipelines of large-scale digitization, imaging and spectral acquisition, and machine learning that translate natural systems into structured, computationally accessible data and connect biological patterns with engineering and design.",
   },
   {
     question: "What is the SOS Research Unit?",
     answer:
-      "The SOS Research Unit, co-directed by Dr. Cong Liu and Dr. Wei-Ping Chan, translates nature into adaptive futures through ecology, evolutionary biology, data science, and AI. Its work covers nature digitization, biodiversity and climate change biology, conservation genomics, morphology, and bioinspiration, including the IoBI and Mountain Digital Twins (MDT) projects.",
+      "The SOS Research Unit is the research arm of the SOS Foundation, co-directed by Dr. Cong Liu and Dr. Wei-Ping Chan, working across ecology, evolutionary biology, data science, and AI. Its research themes are nature digitization and bioinspired translation; knowledge infrastructure and digital ecosystems; conservation and species decline; evolutionary biology and functional morphology; climate change and mountain ecosystems; and biosecurity and invasion biology. Its flagship projects include the Internet of Bioinspiration (IoBI) and Mountain Digital Twins (MDT).",
   },
   {
     question: "What is Map of the Unknown?",
     answer:
-      "Map of the Unknown (formerly Discovery Commons) is an open research platform operated by the SOS Foundation — a shared map of what we do not yet understand about nature, where a thoughtful question earns the same credit as a published result.",
+      "Map of the Unknown (formerly Discovery Commons) is an open research platform operated by the SOS Foundation — a shared map of what we do not yet understand, and where discovery can begin. A thoughtful question earns the same credit as a published result, and contributors of all backgrounds and education levels are welcome, from field naturalists to theoretical physicists and humanities scholars.",
   },
   {
     question: "What is SOS Education?",
