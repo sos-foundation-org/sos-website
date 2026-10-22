@@ -1,303 +1,256 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { COLORS } from "@/lib/theme";
-import { ChartFrame, INK, Slider, isZh, useWidth } from "./shared";
+import { ChartFrame, INK, isZh, useWidth } from "./shared";
 
-// ─── "Not seeing it is not the same as it not being there" ───────────────────
+// ─── A short survey can easily miss a rare animal ────────────────────────────
 // Chance that a survey records an animal on none of `days` days, when each day
-// has an independent chance `p` of recording it: (1 − p)^days. Illustrative,
-// not field data. Readers move the daily chance and the survey length (by
-// slider or by dragging across the chart) and watch the miss rate change.
+// has an independent chance p of recording it: (1 − p)^days. Illustrative,
+// not field data. Follows the manuscript's chart: three curves, two callouts
+// on the 5% curve. The curves draw in on scroll; hovering or dragging across
+// the chart reads all three at that day.
 
 const MAX_DAYS = 60;
-const PRESETS = [0.02, 0.05, 0.1];
-/** Where along each dashed reference curve its label sits, in days. */
-const LABEL_DAY: Record<number, number> = { 0.02: 46, 0.05: 34, 0.1: 24 };
+const AXIS = "#C9C9C2";
+const GUIDE = "#E3E3DE";
+
+const CURVES = [
+  { p: 0.02, color: "#1FA97A", labelX: 24.5, labelY: 0.67 },
+  { p: 0.05, color: "#E8643A", labelX: 23, labelY: 0.38 },
+  { p: 0.1, color: "#2B78D0", labelX: 23, labelY: 0.13 },
+];
 
 const TEXT = {
   en: {
     title: "A short survey can easily miss a rare animal",
-    subtitle:
-      "At a site where the animal really lives, the chance that a survey records it on none of its days",
-    missLead: (d: number) => `chance a ${d}-day survey records no animal at all`,
-    sureLead: "days needed to be 95% sure of at least one record",
-    pLabel: "Chance of recording it on any one day",
-    dLabel: "Length of survey",
-    days: (d: number) => `${d} day${d === 1 ? "" : "s"}`,
+    subtitle: "Chance of recording no sightings at a site where the animal does live",
+    legend: "Daily chance of recording the animal:",
+    perDay: (n: number) => `${n}% per day`,
+    ann1: ["10 days at 5% per day:", "60% chance of seeing nothing"],
+    ann2: "30 days: still 21%",
+    yAxis: "Chance of recording nothing (%)",
     xAxis: "Days of survey",
-    yAxis: "Chance of no record",
-    sure: "95% sure",
-    perDay: (n: number) => `${n}% a day`,
-    beyond: (n: number) => `95% sure only after ${n} days`,
-    hint: "Drag across the chart, or use the sliders",
-    aria: (p: number, d: number, miss: number) =>
-      `Line chart. With a ${p}% daily chance of recording the animal, the chance of recording it on none of ${d} survey days is ${miss}%.`,
+    day: (d: number) => `Day ${d}`,
+    hint: "Hover or drag across the chart to read the curves",
+    note: [
+      "Illustration, not data from the Zhangye project. Assumes independent survey days with a fixed daily chance p:",
+      "chance of recording nothing = (1 − p) ^ days.",
+    ],
+    aria: "Line chart. With a 5% daily chance of recording the animal, a 10-day survey still has a 60% chance of recording nothing, and a 30-day survey 21%. Curves for 2% and 10% per day are shown for comparison.",
   },
   zh: {
     title: "短期調查很容易漏掉稀有動物",
-    subtitle: "在確實有這種動物生活的地點，調查若干天後仍「一次都沒記錄到」的機率",
-    missLead: (d: number) => `調查 ${d} 天，一次都沒記錄到的機率`,
-    sureLead: "要有 95% 把握至少記錄到一次，所需天數",
-    pLabel: "每天記錄到這種動物的機率",
-    dLabel: "調查天數",
-    days: (d: number) => `${d} 天`,
-    xAxis: "調查天數",
-    yAxis: "一次都沒記錄到的機率",
-    sure: "95% 把握",
+    subtitle: "在確有該動物生活的地點，調查若干天後仍「一次都沒記錄到」的機率",
+    legend: "每天記錄到該動物的機率：",
     perDay: (n: number) => `每天 ${n}%`,
-    beyond: (n: number) => `要 ${n} 天才有 95% 把握`,
-    hint: "在圖上拖曳，或使用下方滑桿",
-    aria: (p: number, d: number, miss: number) =>
-      `折線圖。每天記錄機率為 ${p}% 時，調查 ${d} 天一次都沒記錄到的機率為 ${miss}%。`,
+    ann1: ["每天 5%，調查 10 天：", "仍有 60% 的機率一次也看不到"],
+    ann2: "調查 30 天：仍有 21%",
+    yAxis: "一次都沒記錄到的機率（%）",
+    xAxis: "調查天數",
+    day: (d: number) => `第 ${d} 天`,
+    hint: "滑過或拖曳圖表，即可讀取各曲線的數值",
+    note: [
+      "示意圖，並非張掖開發案的實際資料。假設每天調查相互獨立、每天的記錄機率 p 固定：",
+      "一次都沒記錄到的機率 = (1 − p) ^ 天數。",
+    ],
+    aria: "折線圖。每天記錄機率為 5% 時，調查 10 天仍有 60% 的機率一次都沒記錄到，調查 30 天仍有 21%。圖中另以每天 2% 與 10% 的曲線作比較。",
   },
 };
 
 const miss = (p: number, d: number) => Math.pow(1 - p, d);
-const daysFor95 = (p: number) => Math.ceil(Math.log(0.05) / Math.log(1 - p));
 
 export default function DetectionChart({ lang }: { lang?: string }) {
   const t = isZh(lang) ? TEXT.zh : TEXT.en;
-  const [p, setP] = useState(0.05);
-  const [days, setDays] = useState(10);
   const [wrapRef, width] = useWidth<HTMLDivElement>();
   const svgRef = useRef<SVGSVGElement>(null);
   const inView = useInView(svgRef, { once: true, margin: "-80px" });
+  const [day, setDay] = useState<number | null>(null);
 
-  const narrow = width < 480;
-  const m = { top: 18, right: 18, bottom: 44, left: narrow ? 40 : 52 };
-  const height = Math.round(Math.min(380, Math.max(260, width * 0.56)));
+  const narrow = width < 520;
+  // Text scales with the chart, keeping the original's proportions.
+  const fs = Math.max(11, Math.min(14, width * 0.02));
+  const m = { top: 16, right: narrow ? 10 : 20, bottom: 52, left: narrow ? 34 : 62 };
+  const height = Math.round(Math.min(460, Math.max(280, width * 0.6)));
   const iw = Math.max(1, width - m.left - m.right);
   const ih = height - m.top - m.bottom;
   const x = (d: number) => m.left + (d / MAX_DAYS) * iw;
   const y = (v: number) => m.top + (1 - v) * ih;
 
-  // Same number of points for every curve, so framer-motion can tween `d`.
-  const curve = (q: number) => {
+  const curve = (p: number) => {
     let s = "";
     for (let i = 0; i <= MAX_DAYS * 2; i++) {
       const d = i / 2;
-      s += `${i ? "L" : "M"}${x(d).toFixed(1)},${y(miss(q, d)).toFixed(1)}`;
+      s += `${i ? "L" : "M"}${x(d).toFixed(1)},${y(miss(p, d)).toFixed(1)}`;
     }
     return s;
   };
-  const main = useMemo(() => curve(p), [p, width, height]); // eslint-disable-line react-hooks/exhaustive-deps
-  const area = `${main}L${x(MAX_DAYS)},${y(0)}L${x(0)},${y(0)}Z`;
 
-  const missPct = Math.round(miss(p, days) * 100);
-  const n95 = daysFor95(p);
-  const pPct = Math.round(p * 100);
-
-  const pickDay = (clientX: number) => {
+  const pick = (clientX: number) => {
     const box = svgRef.current?.getBoundingClientRect();
     if (!box) return;
     const d = Math.round(((clientX - box.left - m.left) / iw) * MAX_DAYS);
-    setDays(Math.min(MAX_DAYS, Math.max(1, d)));
+    setDay(Math.min(MAX_DAYS, Math.max(0, d)));
   };
 
-  const accent = COLORS.data;
-  const warm = "#D9623B";
-  const mx = x(days);
-  const my = y(miss(p, days));
-  const labelLeft = mx > m.left + iw * 0.62;
+  // Callouts: start-anchored where the original puts them; on narrow screens
+  // they hug the right edge so they never run off the chart.
+  const a1 = { x: x(10), y: y(miss(0.05, 10)) };
+  const a2 = { x: x(30), y: y(miss(0.05, 30)) };
+  const t1 = narrow ? { x: m.left + iw, y: y(0.93), anchor: "end" } : { x: x(28), y: y(0.9), anchor: "start" };
+  const t2 = narrow ? { x: m.left + iw, y: y(0.33), anchor: "end" } : { x: x(32.5), y: y(0.3), anchor: "start" };
+  const reveal = { initial: { opacity: 0 }, animate: { opacity: inView ? (day === null ? 1 : 0.25) : 0 } };
+
+  // Tooltip box for the hovered day.
+  const tipW = narrow ? 118 : 138;
+  const tipX = day !== null && x(day) + tipW + 14 > m.left + iw ? x(day) - tipW - 10 : (day !== null ? x(day) + 10 : 0);
 
   return (
     <ChartFrame title={t.title} subtitle={t.subtitle}>
-      {/* Headline numbers */}
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <div className="rounded-xl p-3 sm:p-4" style={{ background: "rgba(217,98,59,0.08)" }}>
-          <div className="text-3xl sm:text-4xl font-semibold tabular-nums" style={{ color: warm }}>
-            {missPct}%
-          </div>
-          <div className="mt-1 text-xs sm:text-sm leading-snug" style={{ color: INK.body }}>
-            {t.missLead(days)}
-          </div>
-        </div>
-        <div className="rounded-xl p-3 sm:p-4" style={{ background: "rgba(46,156,154,0.08)" }}>
-          <div className="text-3xl sm:text-4xl font-semibold tabular-nums" style={{ color: accent }}>
-            {n95}
-          </div>
-          <div className="mt-1 text-xs sm:text-sm leading-snug" style={{ color: INK.body }}>
-            {t.sureLead}
-          </div>
-        </div>
+      {/* Legend */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm" style={{ color: INK.body }}>
+        <span>{t.legend}</span>
+        {CURVES.map((c) => (
+          <span key={c.p} className="inline-flex items-center gap-2 tabular-nums">
+            <span className="inline-block h-[3px] w-7 rounded-full" style={{ background: c.color }} />
+            {Math.round(c.p * 100)}%
+          </span>
+        ))}
       </div>
 
-      {/* Chart */}
-      <div ref={wrapRef} className="mt-4 select-none">
+      {narrow && (
+        <p className="mt-3 text-xs" style={{ color: INK.body }}>
+          {t.yAxis}
+        </p>
+      )}
+
+      <div ref={wrapRef} className={narrow ? "mt-1 select-none" : "mt-3 select-none"}>
         <svg
           ref={svgRef}
           width={width}
           height={height}
           role="img"
-          aria-label={t.aria(pPct, days, missPct)}
-          className="block touch-pan-y cursor-crosshair"
-          onPointerDown={(e) => pickDay(e.clientX)}
-          onPointerMove={(e) => (e.buttons || e.pointerType === "mouse") && pickDay(e.clientX)}
+          aria-label={t.aria}
+          className="block touch-pan-y"
+          onPointerDown={(e) => pick(e.clientX)}
+          onPointerMove={(e) => (e.buttons || e.pointerType === "mouse") && pick(e.clientX)}
+          onPointerLeave={(e) => e.pointerType === "mouse" && setDay(null)}
         >
-          <defs>
-            <linearGradient id="detect-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={accent} stopOpacity={0.22} />
-              <stop offset="100%" stopColor={accent} stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
-
-          {/* Grid + y ticks */}
+          {/* Grid + axes */}
           {[0, 0.25, 0.5, 0.75, 1].map((v) => (
             <g key={v}>
-              <line x1={m.left} x2={m.left + iw} y1={y(v)} y2={y(v)} stroke={v ? INK.grid : INK.faint} />
-              <text x={m.left - 8} y={y(v)} dy="0.32em" textAnchor="end" fontSize={12} fill={INK.muted}>
-                {v * 100}%
+              {v > 0 && <line x1={m.left} x2={m.left + iw} y1={y(v)} y2={y(v)} stroke={GUIDE} strokeWidth={1.5} />}
+              <text x={m.left - 8} y={y(v)} dy="0.35em" textAnchor="end" fontSize={fs} fill={INK.muted}>
+                {v * 100}
               </text>
             </g>
           ))}
-          {/* x ticks */}
+          <line x1={m.left} x2={m.left} y1={m.top} y2={m.top + ih} stroke={AXIS} strokeWidth={1.5} />
+          <line x1={m.left} x2={m.left + iw} y1={m.top + ih} y2={m.top + ih} stroke={AXIS} strokeWidth={1.5} />
           {[0, 10, 20, 30, 40, 50, 60].map((d) => (
-            <text key={d} x={x(d)} y={m.top + ih + 18} textAnchor="middle" fontSize={12} fill={INK.muted}>
+            <text key={d} x={x(d)} y={m.top + ih + 20} textAnchor="middle" fontSize={fs} fill={INK.muted}>
               {d}
             </text>
           ))}
-          <text x={m.left + iw / 2} y={height - 4} textAnchor="middle" fontSize={12} fill={INK.body}>
+          <text x={m.left + iw / 2} y={height - 6} textAnchor="middle" fontSize={fs + 1} fill={INK.body}>
             {t.xAxis}
           </text>
-
-          {/* Reference curves for the three illustrative daily chances */}
-          {PRESETS.filter((q) => q !== p).map((q) => {
-            const ld = LABEL_DAY[q];
-            return (
-              <motion.g
-                key={q}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: inView ? 1 : 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-              >
-                <path d={curve(q)} fill="none" stroke={INK.faint} strokeWidth={1.5} strokeDasharray="4 4" />
-                <text x={x(ld)} y={y(miss(q, ld)) - 6} textAnchor="middle" fontSize={11} fill={INK.muted}>
-                  {t.perDay(Math.round(q * 100))}
-                </text>
-              </motion.g>
-            );
-          })}
-
-          {/* 95%-sure marker */}
-          {n95 <= MAX_DAYS ? (
-            <g>
-              <line
-                x1={x(n95)} x2={x(n95)} y1={m.top} y2={m.top + ih}
-                stroke={accent} strokeDasharray="3 4" strokeOpacity={0.7}
-              />
-              <text
-                x={x(n95) + (x(n95) > m.left + iw * 0.8 ? -6 : 6)}
-                y={m.top + 12}
-                textAnchor={x(n95) > m.left + iw * 0.8 ? "end" : "start"}
-                fontSize={12}
-                fontWeight={600}
-                fill={accent}
-              >
-                {t.sure} · {t.days(n95)}
-              </text>
-            </g>
-          ) : (
-            <text x={m.left + iw} y={m.top + 12} textAnchor="end" fontSize={12} fontWeight={600} fill={accent}>
-              {t.beyond(n95)} →
+          {!narrow && (
+            <text
+              transform={`translate(18 ${m.top + ih / 2}) rotate(-90)`}
+              textAnchor="middle"
+              fontSize={fs}
+              fill={INK.body}
+            >
+              {t.yAxis}
             </text>
           )}
 
-          {/* Main curve */}
-          <motion.path
-            d={area}
-            fill="url(#detect-area)"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: inView ? 1 : 0, d: area }}
-            transition={{ opacity: { duration: 0.8, delay: 0.6 }, d: { duration: 0.35 } }}
-          />
-          <motion.path
-            fill="none"
-            stroke={accent}
-            strokeWidth={3}
-            strokeLinecap="round"
-            initial={{ pathLength: 0, d: main }}
-            animate={{ pathLength: inView ? 1 : 0, d: main }}
-            transition={{ pathLength: { duration: 1.4, ease: "easeInOut" }, d: { duration: 0.35 } }}
-          />
-
-          {/* Selected day */}
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: inView ? 1 : 0 }} transition={{ delay: 1.2 }}>
-            <line x1={mx} x2={mx} y1={my} y2={m.top + ih} stroke={warm} strokeOpacity={0.5} />
-            <motion.circle
-              r={7}
-              cx={mx}
-              cy={my}
-              initial={false}
-              fill={warm}
-              stroke="white"
-              strokeWidth={3}
-              animate={{ cx: mx, cy: my }}
-              transition={{ duration: 0.2 }}
+          {/* Curves */}
+          {CURVES.map((c, i) => (
+            <motion.path
+              key={c.p}
+              d={curve(c.p)}
+              fill="none"
+              stroke={c.color}
+              strokeWidth={narrow ? 2.5 : 3}
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: inView ? 1 : 0 }}
+              transition={{ duration: 1.4, delay: 0.15 * i, ease: "easeInOut" }}
             />
-            <text
-              x={mx + (labelLeft ? -12 : 12)}
-              y={my - 12}
-              textAnchor={labelLeft ? "end" : "start"}
-              fontSize={13}
-              fontWeight={600}
-              fill={warm}
-              stroke="white"
-              strokeWidth={4}
-              paintOrder="stroke"
+          ))}
+
+          {/* Curve labels (on phones the legend carries this instead) */}
+          {!narrow && CURVES.map((c) => (
+            <motion.text
+              key={c.p}
+              x={x(c.labelX)}
+              y={y(c.labelY)}
+              fontSize={fs}
+              fill={INK.body}
+              {...reveal}
+              transition={{ duration: 0.4, delay: day === null ? 1.4 : 0 }}
             >
-              {t.days(days)} → {missPct}%
+              {t.perDay(Math.round(c.p * 100))}
+            </motion.text>
+          ))}
+
+          {/* Callouts on the 5% curve */}
+          <motion.g {...reveal} transition={{ duration: 0.5, delay: day === null ? 1.7 : 0 }}>
+            <line
+              x1={a1.x + 8} y1={a1.y - 3}
+              x2={narrow ? t1.x - 60 : x(30.5)} y2={t1.y + fs * 1.9}
+              stroke="#8A8A85" strokeWidth={1.5}
+            />
+            <text x={t1.x} y={t1.y} textAnchor={t1.anchor as "start" | "end"} fontSize={fs + 1} fill={INK.strong}>
+              <tspan x={t1.x}>{t.ann1[0]}</tspan>
+              <tspan x={t1.x} dy="1.25em">{t.ann1[1]}</tspan>
             </text>
+            <line
+              x1={a2.x + 8} y1={a2.y - 2}
+              x2={narrow ? t2.x - 30 : x(34.5)} y2={t2.y + fs * 0.6}
+              stroke="#8A8A85" strokeWidth={1.5}
+            />
+            <text x={t2.x} y={t2.y} textAnchor={t2.anchor as "start" | "end"} fontSize={fs + 1} fill={INK.strong}>
+              {t.ann2}
+            </text>
+            {[a1, a2].map((a, i) => (
+              <circle key={i} cx={a.x} cy={a.y} r={narrow ? 6 : 7.5} fill="#E8643A" stroke="white" strokeWidth={2.5} />
+            ))}
           </motion.g>
+
+          {/* Crosshair readout */}
+          {day !== null && inView && (
+            <g pointerEvents="none">
+              <line x1={x(day)} x2={x(day)} y1={m.top} y2={m.top + ih} stroke={INK.muted} strokeDasharray="3 4" />
+              {CURVES.map((c) => (
+                <circle key={c.p} cx={x(day)} cy={y(miss(c.p, day))} r={5.5} fill={c.color} stroke="white" strokeWidth={2} />
+              ))}
+              <g transform={`translate(${tipX} ${m.top + 6})`}>
+                <rect width={tipW} height={fs * 5.6} rx={8} fill="white" stroke={GUIDE} />
+                <text x={10} y={fs * 1.45} fontSize={fs} fontWeight={600} fill={INK.strong}>
+                  {t.day(day)}
+                </text>
+                {CURVES.map((c, i) => (
+                  <text key={c.p} x={10} y={fs * (2.75 + i * 1.2)} fontSize={fs - 0.5} fill={c.color} className="tabular-nums">
+                    {t.perDay(Math.round(c.p * 100))} · {Math.round(miss(c.p, day) * 100)}%
+                  </text>
+                ))}
+              </g>
+            </g>
+          )}
         </svg>
-        <p className="mt-1 text-xs" style={{ color: INK.muted }}>
-          {t.hint}
-        </p>
       </div>
 
-      {/* Controls */}
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <div>
-          <Slider
-            label={t.pLabel}
-            value={pPct}
-            display={`${pPct}%`}
-            min={1}
-            max={20}
-            step={1}
-            color={accent}
-            onChange={(v) => setP(v / 100)}
-          />
-          <div className="mt-2 flex gap-2">
-            {PRESETS.map((q) => (
-              <button
-                key={q}
-                type="button"
-                onClick={() => setP(q)}
-                className="rounded-full border px-3 py-0.5 text-xs transition-colors"
-                style={{
-                  borderColor: q === p ? accent : INK.faint,
-                  background: q === p ? accent : "transparent",
-                  color: q === p ? "white" : INK.body,
-                }}
-              >
-                {Math.round(q * 100)}%
-              </button>
-            ))}
-          </div>
-        </div>
-        <Slider
-          label={t.dLabel}
-          value={days}
-          display={t.days(days)}
-          min={1}
-          max={MAX_DAYS}
-          step={1}
-          color={warm}
-          onChange={setDays}
-        />
-      </div>
+      <p className="mt-1 text-xs" style={{ color: INK.muted }}>
+        {t.hint}
+      </p>
+      <p className="mt-3 text-xs leading-relaxed" style={{ color: INK.muted }}>
+        {t.note[0]}
+        <br />
+        {t.note[1]}
+      </p>
     </ChartFrame>
   );
 }
