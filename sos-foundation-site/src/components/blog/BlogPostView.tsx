@@ -180,7 +180,7 @@ export default function BlogPostView({
                 background: "rgba(245,247,246,0.96)",
               }}
             >
-              <PostBody body={post.body} accent={accent} />
+              <PostBody body={post.body} accent={accent} lang={postLang} />
             </motion.article>
 
             {/* Share buttons */}

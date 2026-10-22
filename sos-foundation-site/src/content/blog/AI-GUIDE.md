@@ -108,7 +108,14 @@ slide taller, on phones especially. Keep it short:
 { type: "divider" }
 { type: "video", src: "/video/x.mp4", poster: "/pics/p.jpg", loop: false }
 { type: "embed", provider: "youtube", id: "VIDEO_ID", caption: "..." }
+{ type: "chart", chart: "detection-probability", caption: "..." }
 ```
+
+`chart` embeds an interactive, animated chart from
+`src/components/blog/charts/index.tsx` (`detection-probability`,
+`soil-crust-recovery`). Each chart picks its own strings from the post's `lang`,
+so the same block goes in every translation. A new chart is a new component
+there — this is the one case where you do edit `src/components/blog/`.
 
 `paragraph`, `heading`, and `quote` accept inline HTML — `<strong>`, `<em>`,
 and `<a href>`. Nothing else does. An animated `.gif` goes in an `image` block.

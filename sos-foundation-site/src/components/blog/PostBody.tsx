@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { COLORS } from "@/lib/theme";
 import type { Block } from "@/content/blog/types";
+import { CHARTS, type ChartId } from "./charts";
 
 // ─── Article body renderer ───────────────────────────────────────────────────
 // Turns an ordered list of content blocks into the article. Add support for a
@@ -18,7 +19,7 @@ function Caption({ text }: { text?: string }) {
   );
 }
 
-function BlockView({ block, accent }: { block: Block; accent: string }) {
+function BlockView({ block, accent, lang }: { block: Block; accent: string; lang?: string }) {
   switch (block.type) {
     case "heading":
       return block.level === 3 ? (
@@ -126,6 +127,17 @@ function BlockView({ block, accent }: { block: Block; accent: string }) {
       );
     }
 
+    case "chart": {
+      const Chart = CHARTS[block.chart as ChartId];
+      if (!Chart) return null;
+      return (
+        <figure className="mt-8">
+          <Chart lang={lang} />
+          <Caption text={block.caption} />
+        </figure>
+      );
+    }
+
     case "quote":
       return (
         <blockquote
@@ -165,14 +177,17 @@ function BlockView({ block, accent }: { block: Block; accent: string }) {
 export default function PostBody({
   body,
   accent = COLORS.data,
+  lang,
 }: {
   body: Block[];
   accent?: string;
+  /** The post's language, passed on to blocks that render their own text. */
+  lang?: string;
 }) {
   return (
     <div>
       {body.map((block, i) => (
-        <BlockView key={i} block={block} accent={accent} />
+        <BlockView key={i} block={block} accent={accent} lang={lang} />
       ))}
     </div>
   );

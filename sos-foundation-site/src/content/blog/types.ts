@@ -62,6 +62,11 @@ export type Block =
   | { type: "embed"; provider: "youtube" | "vimeo"; id: string; caption?: string }
   /** A 2–3 column image grid. */
   | { type: "gallery"; images: { src: string; alt?: string }[]; caption?: string }
+  /**
+   * An interactive chart, by id from components/blog/charts/index.tsx
+   * (e.g. "detection-probability"). It renders in the post's language.
+   */
+  | { type: "chart"; chart: string; caption?: string }
   /** A pull quote. */
   | { type: "quote"; text: string; cite?: string }
   /** A thin horizontal rule for separating sections. */

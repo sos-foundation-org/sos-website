@@ -25,7 +25,7 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "In October 2026, a wind farm under construction in the desert north of Zhangye, in Gansu Province, drew public attention. The Chinese Felid Conservation Alliance (猫盟, CFCA), a conservation group, said its cameras had recorded Pallas’s cats in the area for years, and that some of the turbine sites overlap with the cats’ habitat. The local environment bureau said the project had completed the required approvals, that the site lies outside protected areas and ecological protection red lines, and that construction complies with the relevant rules. It also said it has asked experts to collect data and assess the effects on wildlife, and that it will take in views from all sides and take effective measures to protect wildlife in the area.",
+      text: "In October 2026, a wind farm under construction in the desert north of Zhangye, in Gansu Province, drew public attention. The Chinese Felid Conservation Alliance (貓盟, CFCA), a conservation group, said its cameras had recorded Pallas’s cats in the area for years, and that some of the turbine sites overlap with the cats’ habitat. The local environment bureau said the project had completed the required approvals, that the site lies outside protected areas and ecological protection red lines, and that construction complies with the relevant rules. It also said it has asked experts to collect data and assess the effects on wildlife, and that it will take in views from all sides and take effective measures to protect wildlife in the area.",
     },
     {
       type: "paragraph",
@@ -34,7 +34,7 @@ export const post: Post = {
     { type: "heading", text: "Who lives in an “empty” desert", level: 2 },
     {
       type: "paragraph",
-      text: "The Pallas’s cat (兔狲) is a small wild cat, only a little bigger than a house cat. Its gray fur has white tips that make it look frosted. It has short legs, a flat face, and small ears set low on its head, so it can peek over a rock without showing much of itself. Unlike a house cat, it has round pupils. Its fur is very dense, enough to keep it warm in winters that can drop to minus 50 degrees Celsius in parts of its range. By day it rests in rock crevices or marmot burrows. From dusk to dawn it hunts pikas, gerbils, and other small mammals, often by waiting at the exit of a burrow. In open ground, it can lie flat and still, looking like a gray rock, to hide from eagles.",
+      text: "The Pallas’s cat (兔猻) is a small wild cat, only a little bigger than a house cat. Its gray fur has white tips that make it look frosted. It has short legs, a flat face, and small ears set low on its head, so it can peek over a rock without showing much of itself. Unlike a house cat, it has round pupils. Its fur is very dense, enough to keep it warm in winters that can drop to minus 50 degrees Celsius in parts of its range. By day it rests in rock crevices or marmot burrows. From dusk to dawn it hunts pikas, gerbils, and other small mammals, often by waiting at the exit of a burrow. In open ground, it can lie flat and still, looking like a gray rock, to hide from eagles.",
     },
     {
       type: "paragraph",
@@ -50,7 +50,7 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "Some important life here is easy to overlook, because it grows on the ground itself. In many deserts, the soil surface is held together by a thin living crust of cyanobacteria, lichens, and mosses. This crust keeps the soil from blowing away and adds nitrogen to it. Fa cai (发菜), a hair-like cyanobacterium that grows on these dry soils, has also been recorded here. It is protected in China at Class I.",
+      text: "Some important life here is easy to overlook, because it grows on the ground itself. In many deserts, the soil surface is held together by a thin living crust of cyanobacteria, lichens, and mosses. This crust keeps the soil from blowing away and adds nitrogen to it. Fa cai (髮菜), a hair-like cyanobacterium that grows on these dry soils, has also been recorded here. It is protected in China at Class I.",
     },
     { type: "heading", text: "Why clean energy is coming to the desert", level: 2 },
     {
@@ -76,9 +76,8 @@ export const post: Post = {
       text: "<strong>First, not seeing an animal is not the same as the animal not being there.</strong> Pallas’s cats are rare, their fur blends into the desert, and they spend much of their time in rock crevices and burrows, so a survey team can easily walk past one. Imagine a team that has a 5 percent chance of recording a cat on any one day at a site where cats really live. After 10 days of survey, the chance that they record no cat at all is still 60 percent. After 30 days it is still about 21 percent (Figure 2). This is why ecologists report how hard they looked, not only what they found. It is also why long-term monitoring is so valuable. Cameras that run for months or years, whether they are set by research teams, conservation groups, or agencies, give rare animals many more chances to show up in the records.",
     },
     {
-      type: "image",
-      src: "/pics/pallas-cat-survey-detection-en.jpg",
-      alt: "Line chart: the chance of recording no animal at all falls as survey days increase, for daily detection chances of 2, 5 and 10 percent",
+      type: "chart",
+      chart: "detection-probability",
       caption: "Figure 2. How a short survey can miss a rare animal. This is an illustration, not data from the Zhangye project. Chart: SOS Foundation.",
     },
     {
@@ -86,9 +85,8 @@ export const post: Post = {
       text: "<strong>Second, damage in a desert heals on a very slow clock.</strong> A cleared patch of forest starts to grow back within a few years. The living crust on desert soil is different. When heavy vehicles break it, it recovers very slowly. In the Mojave Desert in the United States, researchers studied tank tracks left by army training during the Second World War. About 55 years later, the tracks were still visible. The cyanobacteria had recovered to 46 to 65 percent of the undisturbed level, and some lichens on open ground had recovered less than 10 percent. If recovery continues at that pace, the authors estimated, full recovery could take nearly 2,000 years (Figure 3).",
     },
     {
-      type: "image",
-      src: "/pics/desert-soil-crust-recovery-en.jpg",
-      alt: "Dot chart: recovery of cyanobacteria and lichens in WWII tank tracks in the Mojave Desert, from 3 to 65 percent of undisturbed levels",
+      type: "chart",
+      chart: "soil-crust-recovery",
       caption: "Figure 3. Recovery of desert soil crust inside WWII tank tracks in the Mojave Desert, about 55 years after the damage. Data: Belnap & Warren (2002). Chart: SOS Foundation.",
     },
     {
@@ -135,7 +133,7 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "Local government notice, as reported by 新黄河 (Sohu, October 20, 2026): <a href=\"https://www.sohu.com/a/1090029531_121347613\" target=\"_blank\" rel=\"noopener noreferrer\">sohu.com</a>",
+      text: "Local government notice, as reported by 新黃河 (Sohu, October 20, 2026): <a href=\"https://www.sohu.com/a/1090029531_121347613\" target=\"_blank\" rel=\"noopener noreferrer\">sohu.com</a>",
     },
     {
       type: "paragraph",
@@ -175,7 +173,7 @@ export const post: Post = {
     },
     {
       type: "paragraph",
-      text: "State Council notice banning the collection and sale of fa cai (国发〔2000〕13号, June 14, 2000): <a href=\"https://www.beijing.gov.cn/zhengce/zhengcefagui/qtwj/202307/t20230719_3165943.html\" target=\"_blank\" rel=\"noopener noreferrer\">beijing.gov.cn</a>",
+      text: "State Council notice banning the collection and sale of fa cai (國發〔2000〕13號, June 14, 2000): <a href=\"https://www.beijing.gov.cn/zhengce/zhengcefagui/qtwj/202307/t20230719_3165943.html\" target=\"_blank\" rel=\"noopener noreferrer\">beijing.gov.cn</a>",
     },
     {
       type: "paragraph",
