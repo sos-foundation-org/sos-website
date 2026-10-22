@@ -19,6 +19,8 @@ import { post as aiLearn } from "./posts/when-ai-can-answer-questions-what-do-we
 import { post as aiLearnZh } from "./posts/when-ai-can-answer-questions-what-do-we-still-need-to-learn.zh";
 import { post as digitalNaturalism } from "./posts/why-we-built-digital-naturalism";
 import { post as digitalNaturalismZh } from "./posts/why-we-built-digital-naturalism.zh";
+import { post as pallassCats } from "./posts/clean-energy-and-desert-wildlife-pallass-cats-of-zhangye";
+import { post as pallassCatsZh } from "./posts/clean-energy-and-desert-wildlife-pallass-cats-of-zhangye.zh";
 
 const ALL_POSTS: Post[] = [
   welcomeToTheSosBlog,
@@ -33,6 +35,8 @@ const ALL_POSTS: Post[] = [
   aiLearnZh,
   digitalNaturalism,
   digitalNaturalismZh,
+  pallassCats,
+  pallassCatsZh,
   // ↑ add new posts here
 ];
 
