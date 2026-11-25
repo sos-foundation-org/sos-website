@@ -124,7 +124,6 @@ export const post: Post = {
     {
       type: "quote",
       text: "Waiting is praying.",
-      cite: "Wong Mee Na",
     },
     {
       type: "paragraph",

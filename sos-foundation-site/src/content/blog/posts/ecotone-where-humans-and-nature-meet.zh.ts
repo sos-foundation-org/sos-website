@@ -120,7 +120,6 @@ export const post: Post = {
     {
       type: "quote",
       text: "Waiting is praying，等待，也是一種祈禱。",
-      cite: "黃美娜",
     },
     {
       type: "paragraph",
