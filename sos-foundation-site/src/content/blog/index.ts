@@ -21,6 +21,8 @@ import { post as digitalNaturalism } from "./posts/why-we-built-digital-naturali
 import { post as digitalNaturalismZh } from "./posts/why-we-built-digital-naturalism.zh";
 import { post as pallassCats } from "./posts/clean-energy-and-desert-wildlife-pallass-cats-of-zhangye";
 import { post as pallassCatsZh } from "./posts/clean-energy-and-desert-wildlife-pallass-cats-of-zhangye.zh";
+import { post as ecotone2026 } from "./posts/ecotone-where-humans-and-nature-meet";
+import { post as ecotone2026Zh } from "./posts/ecotone-where-humans-and-nature-meet.zh";
 
 const ALL_POSTS: Post[] = [
   welcomeToTheSosBlog,
@@ -37,6 +39,8 @@ const ALL_POSTS: Post[] = [
   digitalNaturalismZh,
   pallassCats,
   pallassCatsZh,
+  ecotone2026,
+  ecotone2026Zh,
   // ↑ add new posts here
 ];
 
