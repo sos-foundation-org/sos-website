@@ -134,6 +134,11 @@ scientists cover. Extend it so the new person's field is included.
   set unless Ping asks.
 - Pick 1–2 papers per person: first-author, and preferably related to an
   SOS theme.
+- **Only papers where the member is a leading author** (first, co-first,
+  or last/senior). Don't add big-collaboration papers where they sit
+  mid-list, even in a strong journal (Ping declined Kawahara et al. 2023,
+  Nature Ecology & Evolution, for Wei-Ping). Existing mid-list entries in
+  very strong journals (e.g. Katzke et al. 2026, Nature Methods) stay.
 
 `FEATURED_PUBS` (the six image cards at the top) is directors' flagship
 work only; don't add to it unless asked (it needs a 16:9 image).
