@@ -106,7 +106,9 @@ const DIRECTORS = [
 ];
 
 // ─── Research Scientists ──────────────────────────────────────────────────────
-// To add a member, push one more object onto the array below — the layout stacks automatically.
+// To add a member, follow README_AI.md in this folder: it lists every other
+// place that must change too (publications, themes, header totals, About page).
+// Push one more object onto the array below; the layout stacks automatically.
 // Fields:
 //   name / title / affiliation / role   — card header (keep title as "Research Scientist, SOS Research Unit")
 //   bio                                  — 2–4 sentence introduction

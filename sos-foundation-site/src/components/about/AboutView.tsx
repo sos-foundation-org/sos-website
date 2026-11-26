@@ -763,7 +763,7 @@ export default function AboutView() {
                     <div className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: "rgba(255,255,255,0.55)" }}>Pattern</div>
                     <div className="text-xl font-semibold text-white">SOS Research Unit</div>
                     <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
-                      Co-directed by Cong Liu &amp; Wei-Ping Chan — bridging natural history and computational innovation. 40+ publications, 800+ citations.
+                      Co-directed by Cong Liu &amp; Wei-Ping Chan — bridging natural history and computational innovation. 65+ publications, 1,500+ citations.
                     </p>
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {["IoBI", "MDT", "Nature Digitization", "Conservation Genomics"].map((tag) => (
