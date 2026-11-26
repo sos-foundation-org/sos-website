@@ -159,15 +159,15 @@ Current contributions: 03 Conservation (Liu, Chan, Tang),
 ### 3.6 Header totals (Research hero + About)
 
 The hero badges and the About page show the **sum over all members**,
-rounded down to a "+" figure. Update both places together.
+rounded down to a "+" figure (65+, 1,500+, 2,200+…). Update both places together.
 
 | Member | Publications | Citations | Source |
 |---|---|---|---|
-| Cong Liu | 34+ | 800+ | `DIRECTORS` metrics |
-| Wei-Ping Chan | 6+ | (included in 800+? unknown) | `DIRECTORS` metrics |
+| Cong Liu | 34+ | 836+ | Google Scholar screenshots, 2026-11-27 (top 20 papers; the rest each ≤ 17) |
+| Wei-Ping Chan | 6+ | 630 | Google Scholar screenshot, 2026-11-27 (top 10 papers) |
 | Qian Tang | 20+ | 640+ | qt37t247.github.io/cv |
 | Wen-Chien Lee | 8 | 136 | Google Scholar screenshot, 2026-11-27 |
-| **Total** | **68 → "65+"** | **1,576 → "1,500+"** | |
+| **Total** | **68 → "65+"** | **2,242 → "2,200+"** | |
 
 Add the new person's row, re-sum, round down (65+, 1,500+, 2,000+…).
 Update this table in the same commit.

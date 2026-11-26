@@ -599,7 +599,7 @@ export default function ResearchView() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
-                  {["SOS Foundation", "65+ Publications", "1,500+ Citations"].map((badge) => (
+                  {["SOS Foundation", "65+ Publications", "2,200+ Citations"].map((badge) => (
                     <span
                       key={badge}
                       className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm text-white/80"
