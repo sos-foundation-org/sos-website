@@ -161,6 +161,36 @@ const SCIENTISTS: Array<{
     photoAlt: "Wen-Chien Lee",
     accentColor: COLORS.green,
   },
+  {
+    // Bio from QT_bio_SOS.docx (2026-11-26), English only. Education from
+    // https://qt37t247.github.io/cv/
+    name: "Qian Tang",
+    title: "Research Scientist, SOS Research Unit",
+    affiliation: "Research Associate, Florida Museum of Natural History",
+    role: "Ecologist · Evolutionary Biologist",
+    bio: "Qian Tang is an ecologist and an evolutionary biologist. Qian uses both simulations and empirical data to investigate eco-evolutionary responses of different organisms to environmental change. Qian is particularly interested in discovering mechanisms that drive adaptation at different spatial and temporal scales. Qian is now working on a project that investigates the evolution of silk, aiming to explore the origin and the ecological context of the silk diversity in Lepidoptera (moths and butterflies) and Trichoptera (caddisflies).",
+    themes: ["Ecology", "Population Genomics", "Phylogenetics", "Entomology"],
+    education: [
+      {
+        degree: "Ph.D., Department of Biological Sciences",
+        institution: "National University of Singapore, Singapore",
+        years: "2011 – 2016",
+      },
+      {
+        degree: "B.Sc., School of Life Sciences",
+        institution: "Wuhan University, Wuhan, China",
+        years: "2007 – 2011",
+      },
+    ],
+    links: [
+      { label: "Personal Website", url: "https://qt37t247.github.io/" },
+      { label: "Google Scholar", url: "https://scholar.google.com/citations?hl=en&user=yY5Ds1sAAAAJ" },
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/qian-tang-nus/" },
+    ],
+    photo: "/pics/Qian-Tang.jpg",
+    photoAlt: "Qian Tang",
+    accentColor: COLORS.blue,
+  },
 ];
 
 // Theme card images crop to aspect-[16/7] (≈2.29:1), so supply landscape images
@@ -199,9 +229,10 @@ const THEMES = [
     color: COLORS.art,
     photo: "/pics/light_trap.JPG",
     description:
-      "Insects are declining globally, yet causes and trajectories remain poorly resolved. This theme takes a multi-evidence approach — combining population genomics with long-term behavioral and light-trap time series to track changes in abundance and community composition, integrating molecular, observational, and ecological data to disentangle the roles of habitat loss, climate change, and chemical pollution.",
+      "Insects and other invertebrates are declining globally, yet causes and trajectories remain poorly resolved. This theme takes a multi-evidence approach, combining population genomics with long-term behavioral and light-trap time series to track changes in abundance, genetic diversity, and community composition. It integrates molecular, observational, and ecological data to disentangle the roles of habitat loss, climate change, and chemical pollution in species decline.",
     liu: "Museum genomics detecting endemic decline (Science, 2025)",
     chan: "Long-term behavioral datasets tracking decline (Proc R Soc B, 2025)",
+    tang: "Geo-climatic drivers of Asian horseshoe crab viability (Conservation Letters, 2025)",
   },
   {
     number: "04",
@@ -228,6 +259,7 @@ const THEMES = [
       "Climate velocity frameworks and environmental variability models applied to biodiversity datasets to predict community turnover under future climate scenarios and mountain ecosystem shifts.",
 
     chan: "Climate velocity in mountains (Nature, 2024); range size (Science, 2016)",
+    lee: "Reactive nitrogen transport in Taiwan mountain forests (Atmos Chem Phys, 2026)",
   },
   {
     number: "06",
@@ -238,6 +270,7 @@ const THEMES = [
     description:
       "Monitoring online wildlife trade platforms to quantify the movement of non-native species and assess invasion risk pathways. This work develops surveillance frameworks for detecting high-risk organisms in e-commerce networks before they establish in new environments — combining large-scale data scraping, species identification, and risk modelling.",
     liu: "Monitoring online ant trade reveals high invasion risk (Biological Conservation, 2023)",
+    tang: "Origin and global spread of the German cockroach (PNAS, 2024)",
   },
 ];
 
@@ -321,45 +354,59 @@ const PUBLICATIONS: Array<{
         journal: "Nature Methods",
         bold: "Liu C",
       },
+      {
+        id: 2,
+        authors: "Lee WC, et al.",
+        title: "Size-resolved isotope analysis reveals anthropogenic reactive nitrogen transport and transformation in Taiwan mountain forests: A case study",
+        journal: "Atmospheric Chemistry and Physics",
+        bold: "Lee WC",
+      },
     ],
   },
   {
     year: 2025,
     entries: [
       {
-        id: 2,
+        id: 3,
         authors: "Liu C, et al.",
         title: "Genomic signatures indicate massive decline of endemic island insects",
         journal: "Science",
         bold: "Liu C",
       },
       {
-        id: 3,
+        id: 4,
         authors: "Vidal MC, Liu C, et al.",
         title: "Partner dependency alters patterns of coevolutionary selection in mutualisms",
         journal: "PNAS",
         bold: "Liu C",
       },
       {
-        id: 4,
+        id: 5,
         authors: "Liu C & Vidal MC",
         title: "Dispersal promotes stability of exploited mutualisms",
         journal: "ISME Journal",
         bold: "Liu C",
       },
       {
-        id: 5,
+        id: 6,
         authors: "Chan WP, et al.",
         title: "Historical behavioural data disentangle evolutionary and environmental drivers of recent declines in insect attraction to light",
         journal: "Proceedings of the Royal Society B",
         bold: "Chan WP",
       },
       {
-        id: 6,
+        id: 7,
         authors: "Lin PA, Chan WP (co-first), et al.",
         title: "Coevolution of Lepidoptera and their host plants: The salient aroma hypothesis",
         journal: "Proceedings of the Royal Society B",
         bold: "Chan WP",
+      },
+      {
+        id: 8,
+        authors: "Tang Q, et al.",
+        title: "Evolution and viability of Asian horseshoe crabs appear tightly linked to geo-climatic dynamics in the Sunda Shelf",
+        journal: "Conservation Letters",
+        bold: "Tang Q",
       },
     ],
   },
@@ -367,11 +414,18 @@ const PUBLICATIONS: Array<{
     year: 2024,
     entries: [
       {
-        id: 7,
+        id: 9,
         authors: "Chan WP, et al.",
         title: "Climate velocities and species tracking in global mountain regions",
         journal: "Nature",
         bold: "Chan WP",
+      },
+      {
+        id: 10,
+        authors: "Tang Q, et al.",
+        title: "Solving the 250-year-old mystery of the origin and global spread of the German cockroach",
+        journal: "PNAS",
+        bold: "Tang Q",
       },
     ],
   },
@@ -379,21 +433,21 @@ const PUBLICATIONS: Array<{
     year: 2023,
     entries: [
       {
-        id: 8,
+        id: 11,
         authors: "Liu C, et al.",
         title: "GABI-I: Global ant biodiversity informatics",
         journal: "Ecology",
         bold: "Liu C",
       },
       {
-        id: 9,
+        id: 12,
         authors: "Wang Z, …, Liu C, et al.",
         title: "Monitoring online ant trade reveals high invasion risk",
         journal: "Biological Conservation",
         bold: "Liu C",
       },
       {
-        id: 10,
+        id: 13,
         authors: "Wang Z, Chan WP (co-first), et al.",
         title: "One in five butterfly species sold online across borders",
         journal: "Biological Conservation",
@@ -405,7 +459,7 @@ const PUBLICATIONS: Array<{
     year: 2022,
     entries: [
       {
-        id: 11,
+        id: 14,
         authors: "Chan WP, et al.",
         title: "A high-throughput multispectral imaging system for museum specimens",
         journal: "Communications Biology",
@@ -417,7 +471,7 @@ const PUBLICATIONS: Array<{
     year: 2016,
     entries: [
       {
-        id: 12,
+        id: 15,
         authors: "Chan WP, et al.",
         title: "Seasonal and daily climate variation have opposite effects on species elevational range size",
         journal: "Science",
@@ -543,7 +597,7 @@ export default function ResearchView() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
-                  {["SOS Foundation", "40+ Publications", "800+ Citations"].map((badge) => (
+                  {["SOS Foundation", "65+ Publications", "1,500+ Citations"].map((badge) => (
                     <span
                       key={badge}
                       className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm text-white/80"
@@ -823,8 +877,9 @@ export default function ResearchView() {
                 Meet the Research Scientists
               </h2>
               <p className="mt-3 text-base" style={{ color: "rgba(255,255,255,0.55)" }}>
-                Specialists who extend the unit into new domains — from atmospheric chemistry to
-                the environmental signals that shape ecological systems.
+                Specialists who extend the unit into new domains, from atmospheric chemistry and the
+                environmental signals that shape ecological systems to the genomics and evolution of
+                insects.
               </p>
             </motion.div>
 
@@ -1102,6 +1157,28 @@ export default function ResearchView() {
                           <span className="text-xs text-white/55 leading-snug">{theme.chan}</span>
                         </div>
                       )}
+                      {theme.tang && (
+                        <div className="flex items-start gap-2">
+                          <span
+                            className="text-[10px] font-semibold shrink-0 mt-0.5 w-7"
+                            style={{ color: COLORS.blue }}
+                          >
+                            Tang
+                          </span>
+                          <span className="text-xs text-white/55 leading-snug">{theme.tang}</span>
+                        </div>
+                      )}
+                      {theme.lee && (
+                        <div className="flex items-start gap-2">
+                          <span
+                            className="text-[10px] font-semibold shrink-0 mt-0.5 w-7"
+                            style={{ color: COLORS.green }}
+                          >
+                            Lee
+                          </span>
+                          <span className="text-xs text-white/55 leading-snug">{theme.lee}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -1227,7 +1304,7 @@ export default function ResearchView() {
                 Publication record
               </h2>
               <p className="mt-3 text-base" style={{ color: "rgba(255,255,255,0.55)" }}>
-                Co-director names appear in bold. Full lists on personal websites.
+                Research Unit members appear in bold. Full lists on personal websites.
               </p>
             </motion.div>
 
